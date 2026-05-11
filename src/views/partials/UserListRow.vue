@@ -4,7 +4,9 @@ import Badge from '@/views/components/Badge.vue'
 import TextButton from '@/views/components/TextButton.vue'
 import { useAuthStore } from '@/store/auth.js'
 import FilledButton from '@/views/components/FilledButton.vue'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const currentUsername = useAuthStore().currentUsername
 defineProps({
   user: {
@@ -40,10 +42,10 @@ defineProps({
       </div>
     </TableRow>
     <TableRow align="center">
-      <Badge type="success">Active</Badge>
+      <Badge type="success">{{ t('partials.activeUser') }}</Badge>
     </TableRow>
     <TableRow align="center">
-      <span class="text-sm text-gray-700"> Administrator </span>
+      <span class="text-sm text-gray-700"> {{ t('partials.administrator') }} </span>
     </TableRow>
     <TableRow align="center" v-if="currentUsername === user.username" flex>
       <FilledButton
@@ -52,19 +54,19 @@ defineProps({
         v-if="!user.totpEnabled"
         :loading="isRequestRunningForTotp"
         :click="enableTotpCurrentUser"
-        >Enable TOTP
+        >{{ t('partials.enableTOTP') }}
       </FilledButton>
       <FilledButton type="danger" slim v-else :loading="isRequestRunningForTotp" :click="disableTotpCurrentUser"
-        >Disable TOTP
+        >{{ t('partials.disableTOTP') }}
       </FilledButton>
     </TableRow>
     <TableRow align="center" v-else>
-      <Badge type="success" v-if="user.totpEnabled">TOTP Enabled</Badge>
-      <Badge type="danger" v-else>TOTP Disabled</Badge>
+      <Badge type="success" v-if="user.totpEnabled">{{ t('partials.totpEnabled') }}</Badge>
+      <Badge type="danger" v-else>{{ t('partials.totpDisabled') }}</Badge>
     </TableRow>
     <TableRow align="right">
       <TextButton :click="() => deleteUser(user)" type="danger" :disabled="currentUsername === user.username">
-        Delete
+        {{ t('common.delete') }}
       </TextButton>
     </TableRow>
   </tr>

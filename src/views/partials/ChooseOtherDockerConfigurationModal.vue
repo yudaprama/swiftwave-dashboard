@@ -5,6 +5,9 @@ import { useLazyQuery, useQuery } from '@vue/apollo-composable'
 import gql from 'graphql-tag'
 import { toast } from 'vue-sonner'
 import FilledButton from '@/views/components/FilledButton.vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const props = defineProps({
   onApplyConfiguration: {
@@ -93,24 +96,24 @@ defineExpose({
 <template>
   <teleport to="body">
     <ModalDialog :close-modal="closeModal" :is-open="isModalOpen" width="lg">
-      <template v-slot:header>Pick Service Configuration</template>
+      <template v-slot:header>{{ t('partials.pickServiceConfig') }}</template>
       <template v-slot:body>
-        <i>If you feel the detected service is incorrect, choose the correct one from the list. </i>
+        <i>{{ t('partials.incorrectServiceHint') }} </i>
         <p class="mt-1">
-          <b>Note:</b> Also you can just tap on <b>View / Modify Dockerfile</b> button to add custom configuration.
+          <b>{{ t('common.note') }}:</b> {{ t('partials.viewModifyDockerfileNote') }}
         </p>
 
         <!-- Type Field -->
         <div class="mt-4">
           <label class="block text-sm font-medium text-gray-700" for="selected_docker_config">
-            Available Service Configuration
+            {{ t('partials.availableServiceConfig') }}
           </label>
           <div class="mt-1">
             <select
               id="selected_docker_config"
               v-model="choosenDockerConfig"
               class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
-              <option selected value="">Choose From List</option>
+              <option selected value="">{{ t('partials.chooseFromList') }}</option>
               <option v-for="dockerConfig in availableDockerConfigs" :key="dockerConfig" :value="dockerConfig">
                 {{ dockerConfig }}
               </option>
@@ -125,7 +128,7 @@ defineExpose({
           :loading="isDockerConfigurationsLoading"
           class="w-full"
           :click="fetchAndApplyConfiguration">
-          Fetch & Apply Configuration
+          {{ t('partials.fetchApplyConfig') }}
         </FilledButton>
       </template>
     </ModalDialog>

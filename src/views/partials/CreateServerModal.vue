@@ -6,6 +6,9 @@ import { useMutation } from '@vue/apollo-composable'
 import gql from 'graphql-tag'
 import { toast } from 'vue-sonner'
 import { preventSpaceInput } from '@/vendor/utils.js'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const props = defineProps({
   callbackOnCreate: {
@@ -65,7 +68,7 @@ onServerRegisterSuccess(() => {
   newServerDetails.ip = ''
   newServerDetails.user = 'root'
   newServerDetails.ssh_port = 22
-  toast.success('Server registered successfully\nProceed for server setup')
+  toast.success(t('partials.serverRegisteredSuccess'))
   props.callbackOnCreate()
 })
 
@@ -82,13 +85,13 @@ defineExpose({
 <template>
   <teleport to="body">
     <ModalDialog :close-modal="closeModal" :is-open="isModalOpen">
-      <template v-slot:header>Add New Server</template>
+      <template v-slot:header>{{ t('partials.addNewServer') }}</template>
       <template v-slot:body>
-        Enter all the details to register a new server
+        {{ t('partials.enterServerDetails') }}
         <form @submit.prevent="">
           <!--  IP Field   -->
           <div class="mt-4">
-            <label class="block text-sm font-medium text-gray-700" for="ip"> IP Address </label>
+            <label class="block text-sm font-medium text-gray-700" for="ip"> {{ t('partials.ipAddress') }} </label>
             <div class="mt-1">
               <input
                 id="ip"
@@ -102,7 +105,7 @@ defineExpose({
           </div>
           <!--  SSH Port Field   -->
           <div class="mt-4">
-            <label class="block text-sm font-medium text-gray-700" for="ssh_port"> SSH Port </label>
+            <label class="block text-sm font-medium text-gray-700" for="ssh_port"> {{ t('partials.sshPort') }} </label>
             <div class="mt-1">
               <input
                 id="ssh_port"
@@ -116,7 +119,7 @@ defineExpose({
           </div>
           <!--  User Field   -->
           <div class="mt-4">
-            <label class="block text-sm font-medium text-gray-700" for="user"> User </label>
+            <label class="block text-sm font-medium text-gray-700" for="user"> {{ t('partials.user') }} </label>
             <div class="mt-1">
               <input
                 id="user"
@@ -128,8 +131,7 @@ defineExpose({
                 type="text" />
               <p class="pt-2 text-xs text-gray-800">
                 <span class="pr-1 font-semibold text-red-500">*</span>
-                If you want to choose any other user than <b>root</b>, make sure that if you have setup permissions
-                required for installation for that user.
+                {{ t('partials.nonRootUserNote') }}
               </p>
             </div>
           </div>
@@ -137,7 +139,7 @@ defineExpose({
       </template>
       <template v-slot:footer>
         <FilledButton :click="registerServer" :loading="isServerRegistering" type="primary"
-          >Register Server
+          >{{ t('servers.createTitle') }}
         </FilledButton>
       </template>
     </ModalDialog>

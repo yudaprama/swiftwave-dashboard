@@ -6,6 +6,9 @@ import gql from 'graphql-tag'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import FilledButton from '@/views/components/FilledButton.vue'
 import { toast } from 'vue-sonner'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const props = defineProps({
   applicationIds: {
@@ -26,7 +29,7 @@ const openModal = () => {
 }
 const closeModal = () => {
   if (isRestarting.value) {
-    toast.error('Wait until application restart initiation is completed')
+    toast.error(t('partials.restartWait'))
     return
   }
   isLoadingApplicationDetailsFirstTime.value = true
@@ -102,8 +105,8 @@ const restartApplications = async () => {
   }
   toast.success(
     props.applicationIds.length > 1
-      ? 'Applications restart initiated successfully'
-      : 'Application restart initiated successfully'
+      ? t('partials.restartsSuccess')
+      : t('partials.restartSuccess')
   )
   isRestarting.value = false
   closeModal()
@@ -116,10 +119,10 @@ const restartApplications = async () => {
 <template>
   <ModalDialog :is-open="isOpen" :close-modal="closeModal">
     <template v-slot:header>
-      <span>Restart Application<span v-if="props.applicationIds.length > 1">s</span></span>
+      <span>{{ t('partials.restartApplications') }}<span v-if="props.applicationIds.length > 1">s</span></span>
     </template>
     <template v-slot:body>
-      <p v-if="isLoadingApplicationDetailsFirstTime">Loading application details...</p>
+      <p v-if="isLoadingApplicationDetailsFirstTime">{{ t('partials.loadingAppDetails') }}</p>
       <div v-else class="mt-2">
         <div v-for="app in applicationDetails" :key="app.id" class="flex w-full flex-row items-center gap-2">
           <font-awesome-icon
@@ -138,7 +141,7 @@ const restartApplications = async () => {
         :click="restartApplications"
         :loading="isRestarting"
         :disabled="isRestarting || isLoadingApplicationDetailsFirstTime"
-        >Restart Application<span v-if="props.applicationIds.length > 1">s</span></FilledButton
+        >{{ t('partials.restartApplication') }}<span v-if="props.applicationIds.length > 1">s</span></FilledButton
       >
     </template>
   </ModalDialog>

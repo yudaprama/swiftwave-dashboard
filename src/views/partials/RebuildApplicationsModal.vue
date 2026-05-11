@@ -6,6 +6,9 @@ import gql from 'graphql-tag'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import FilledButton from '@/views/components/FilledButton.vue'
 import { toast } from 'vue-sonner'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const props = defineProps({
   applicationIds: {
@@ -26,7 +29,7 @@ const openModal = () => {
 }
 const closeModal = () => {
   if (isRebuilding.value) {
-    toast.error('Wait until application rebuild initiation is completed')
+    toast.error(t('partials.rebuildWait'))
     return
   }
   isLoadingApplicationDetailsFirstTime.value = true
@@ -102,8 +105,8 @@ const rebuildApplications = async () => {
   }
   toast.success(
     props.applicationIds.length > 1
-      ? 'Applications rebuild initiated successfully'
-      : 'Application rebuild initiated successfully'
+      ? t('partials.rebuildsSuccess')
+      : t('partials.rebuildSuccess')
   )
   isRebuilding.value = false
   closeModal()
@@ -116,11 +119,11 @@ const rebuildApplications = async () => {
 <template>
   <ModalDialog :is-open="isOpen" :close-modal="closeModal">
     <template v-slot:header>
-      <span>Rebuild Application<span v-if="props.applicationIds.length > 1">s</span></span>
+      <span>{{ t('partials.rebuildApplications') }}<span v-if="props.applicationIds.length > 1">s</span></span>
     </template>
     <template v-slot:body>
-      Rebuild all the applications and redeploy them
-      <p v-if="isLoadingApplicationDetailsFirstTime" class="mt-2">Loading application details...</p>
+      {{ t('partials.rebuildHint') }}
+      <p v-if="isLoadingApplicationDetailsFirstTime" class="mt-2">{{ t('partials.loadingAppDetails') }}</p>
       <div v-else>
         <div v-for="app in applicationDetails" :key="app.id" class="mt-2 flex w-full flex-row items-center gap-2">
           <font-awesome-icon
@@ -139,7 +142,7 @@ const rebuildApplications = async () => {
         :click="rebuildApplications"
         :loading="isRebuilding"
         :disabled="isRebuilding || isLoadingApplicationDetailsFirstTime"
-        >Rebuild Application<span v-if="props.applicationIds.length > 1">s</span></FilledButton
+        >{{ t('partials.rebuildApplication') }}<span v-if="props.applicationIds.length > 1">s</span></FilledButton
       >
     </template>
   </ModalDialog>

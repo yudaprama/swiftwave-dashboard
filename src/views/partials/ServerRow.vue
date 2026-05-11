@@ -13,6 +13,9 @@ import { toast } from 'vue-sonner'
 import SetupResourceMonitoring from '@/views/partials/SetupResourceMonitoring.vue'
 import ChangeServerIpModal from '@/views/partials/ChangeServerIpModal.vue'
 import ChangeServerSshPortModal from '@/views/partials/ChangeServerSshPortModal.vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const props = defineProps({
   server: {
@@ -151,10 +154,10 @@ demoteToWorkerError((error) => {
 
 demoteToWorkerDone((val) => {
   if (val.data.demoteServerToWorker) {
-    toast.success('Server has been demoted to worker node\nThis can take upto 5 minutes to reflect in the system')
+    toast.success(t('partials.demoteWorkerSuccess'))
     props.refetchServers()
   } else {
-    toast.error('Failed to demote server to worker')
+    toast.error(t('partials.demoteWorkerFail'))
   }
 })
 
@@ -181,10 +184,10 @@ promoteToManagerError((error) => {
 
 promoteToManagerDone((val) => {
   if (val.data.promoteServerToManager) {
-    toast.success('Server has been promoted to manager node\nThis can take upto 5 minutes to reflect in the system')
+    toast.success(t('partials.promoteManagerSuccess'))
     props.refetchServers()
   } else {
-    toast.error('Failed to promote server to manager')
+    toast.error(t('partials.promoteManagerFail'))
   }
 })
 
@@ -228,16 +231,16 @@ disableDeploymentOnServerError((error) => {
 
 disableDeploymentOnServerDone((val) => {
   if (val.data.restrictDeploymentOnServer) {
-    toast.success('Deployments have been disabled on the requested server')
+    toast.success(t('partials.deploymentsDisabled'))
     props.refetchServers()
   } else {
-    toast.error('Failed to disable deployments on server')
+    toast.error(t('partials.disableDeploymentFail'))
   }
 })
 
 const disableDeploymentOnServer = () => {
   const confirmation = confirm(
-    'Are you sure that you want to disable deployments on this server ?\n All deployments will be moved to other servers.\nYour applications may face downtime of few seconds.'
+    t('partials.disableDeployConfirm')
   )
   if (confirmation) {
     disableDeploymentOnServerRaw({
@@ -263,16 +266,16 @@ enableDeploymentOnServerError((error) => {
 
 enableDeploymentOnServerDone((val) => {
   if (val.data.allowDeploymentOnServer) {
-    toast.success('Deployments have been enabled on the requested server')
+    toast.success(t('partials.deploymentsEnabled'))
     props.refetchServers()
   } else {
-    toast.error('Failed to enable deployments on server')
+    toast.error(t('partials.enableDeploymentFail'))
   }
 })
 
 const enableDeploymentOnServer = () => {
   const confirmation = confirm(
-    'Are you sure that you want to enable deployments on this server ?\n Swiftwave will try to redistribute deployments to other servers.\n Your applications may face downtime of few seconds.'
+    t('partials.enableDeployConfirm')
   )
   if (confirmation) {
     enableDeploymentOnServerRaw({
@@ -319,10 +322,10 @@ onDeleteServerError((error) => {
 
 onDeleteServerDone((val) => {
   if (val.data.deleteServer) {
-    toast.success('Server has been deleted')
+    toast.success(t('partials.serverDeleted'))
     props.refetchServers()
   } else {
-    toast.error('Failed to delete server')
+    toast.error(t('partials.serverDeleteFail'))
   }
 })
 
@@ -343,16 +346,16 @@ disableMaintenanceModeError((error) => {
 
 disableMaintenanceModeDone((val) => {
   if (val.data.putServerOutOfMaintenanceMode) {
-    toast.success('Maintenance mode has been disabled on the requested server')
+    toast.success(t('partials.maintenanceDisabled'))
     props.refetchServers()
   } else {
-    toast.error('Failed to disable maintenance mode on server')
+    toast.error(t('partials.disableMaintenanceFail'))
   }
 })
 
 const disableMaintenanceMode = () => {
   const confirmation = confirm(
-    'Are you sure that you want to disable maintenance mode on this server ?\n\nAll your application will be moved to other servers.'
+    t('partials.disableMaintenanceConfirm')
   )
   if (confirmation) {
     disableMaintenanceModeRaw({
@@ -377,16 +380,16 @@ enableMaintenanceModeError((error) => {
 
 enableMaintenanceModeDone((val) => {
   if (val.data.putServerInMaintenanceMode) {
-    toast.success('Maintenance mode has been enabled on the requested server')
+    toast.success(t('partials.maintenanceEnabled'))
     props.refetchServers()
   } else {
-    toast.error('Failed to enable maintenance mode on server')
+    toast.error(t('partials.enableMaintenanceFail'))
   }
 })
 
 const enableMaintenanceMode = () => {
   const confirmation = confirm(
-    'Are you sure that you want to enable maintenance mode on this server ?\n\nAll your application will be moved to other servers.\nThe proxy on the selected server will be disabled also during the maintenance mode.\n'
+    t('partials.enableMaintenanceConfirm')
   )
   if (confirmation) {
     enableMaintenanceModeRaw({
@@ -429,89 +432,89 @@ const enableMaintenanceMode = () => {
       <Badge v-else type="danger" class="capitalize">{{ server.swarmNodeStatus }}</Badge>
     </TableRow>
     <TableRow align="center">
-      <Badge v-if="server.status === 'online'" type="success">Online</Badge>
-      <Badge v-else-if="server.status === 'offline'" type="danger">Offline</Badge>
-      <Badge v-else-if="server.status === 'preparing'" type="warning">Preparing</Badge>
+      <Badge v-if="server.status === 'online'" type="success">{{ t('partials.online') }}</Badge>
+      <Badge v-else-if="server.status === 'offline'" type="danger">{{ t('partials.offline') }}</Badge>
+      <Badge v-else-if="server.status === 'preparing'" type="warning">{{ t('partials.preparing') }}</Badge>
       <FilledButton v-else-if="server.status === 'needs_setup'" type="primary" :click="setupServer" slim>
-        <font-awesome-icon icon="fa-solid fa-wrench" />&nbsp;&nbsp;&nbsp;Setup Server
+        <font-awesome-icon icon="fa-solid fa-wrench" />&nbsp;&nbsp;&nbsp;{{ t('partials.setupServerBtn') }}
       </FilledButton>
     </TableRow>
     <TableRow align="center">
-      <Badge v-if="server.maintenanceMode && !isSetupRequired" type="danger">ON</Badge>
-      <Badge v-else-if="!isSetupRequired" type="success">OFF</Badge>
+      <Badge v-if="server.maintenanceMode && !isSetupRequired" type="danger">{{ t('partials.on') }}</Badge>
+      <Badge v-else-if="!isSetupRequired" type="success">{{ t('partials.off') }}</Badge>
       <span v-else></span>
     </TableRow>
     <TableRow align="center">
-      <Badge v-if="server.swarmMode === 'manager' && !isSetupRequired" type="success">Manager</Badge>
-      <Badge v-else-if="server.swarmMode === 'worker' && !isSetupRequired" type="warning">Worker</Badge>
+      <Badge v-if="server.swarmMode === 'manager' && !isSetupRequired" type="success">{{ t('partials.manager') }}</Badge>
+      <Badge v-else-if="server.swarmMode === 'worker' && !isSetupRequired" type="warning">{{ t('partials.worker') }}</Badge>
       <span v-else></span>
     </TableRow>
     <TableRow align="center">
-      <Badge v-if="server.scheduleDeployments && !isSetupRequired" type="success">Enabled</Badge>
-      <Badge v-else-if="!isSetupRequired" type="danger">Disabled</Badge>
+      <Badge v-if="server.scheduleDeployments && !isSetupRequired" type="success">{{ t('common.enabled') }}</Badge>
+      <Badge v-else-if="!isSetupRequired" type="danger">{{ t('common.disabled') }}</Badge>
       <span v-else></span>
     </TableRow>
     <TableRow align="center">
       <Badge v-if="server.proxyEnabled && server.proxyType === 'active' && !isSetupRequired" type="success"
-        >Active
+        >{{ t('partials.active') }}
       </Badge>
       <Badge v-else-if="server.proxyEnabled && server.proxyType === 'backup' && !isSetupRequired" type="warning"
-        >Backup
+        >{{ t('partials.backup') }}
       </Badge>
-      <Badge v-else-if="!server.proxyEnabled && !isSetupRequired" type="danger">Disabled</Badge>
+      <Badge v-else-if="!server.proxyEnabled && !isSetupRequired" type="danger">{{ t('common.disabled') }}</Badge>
       <span v-else></span>
     </TableRow>
 
     <TableRow align="center" flex>
       <FilledButton type="primary" slim :click="openAnalyticsPage">
-        <font-awesome-icon icon="fa-solid fa-chart-column" />&nbsp;&nbsp;&nbsp;Analytics
+        <font-awesome-icon icon="fa-solid fa-chart-column" />&nbsp;&nbsp;&nbsp;{{ t('serverAnalytics.title') }}
       </FilledButton>
     </TableRow>
     <TableRow align="center" flex>
       <FilledButton type="primary" slim :click="openLogsPage">
-        <font-awesome-icon icon="fa-solid fa-book" />&nbsp;&nbsp;&nbsp;View Logs
+        <font-awesome-icon icon="fa-solid fa-book" />&nbsp;&nbsp;&nbsp;{{ t('serverLogs.title') }}
       </FilledButton>
     </TableRow>
     <TableRow align="right" flex>
       <FilledButton type="ghost" slim ref="actionsBtnRef" :click="onClickActions">
-        <font-awesome-icon icon="fa-solid fa-ellipsis-vertical" />&nbsp;&nbsp;&nbsp;Show Actions
+        <font-awesome-icon icon="fa-solid fa-ellipsis-vertical" />&nbsp;&nbsp;&nbsp;{{ t('partials.showActions') }}
       </FilledButton>
     </TableRow>
   </tr>
 
   <div class="z-1 actions-menu" ref="actionsMenuRef" @click="closeMenu">
     <ul>
-      <li @click="openWebConsole"><font-awesome-icon icon="fa-solid fa-terminal" />&nbsp;&nbsp;&nbsp;Web Console</li>
+      <li @click="openWebConsole"><font-awesome-icon icon="fa-solid fa-terminal" />&nbsp;&nbsp;&nbsp;{{ t('partials.webConsole') }}</li>
       <li v-if="server.proxyEnabled && !isSetupRequired" @click="disableProxy">
-        <font-awesome-icon icon="fa-solid fa-diagram-project" />&nbsp;&nbsp;&nbsp;Disable Ingress Proxy
+        <font-awesome-icon icon="fa-solid fa-diagram-project" />&nbsp;&nbsp;&nbsp;{{ t('partials.disableIngressProxy') }}
       </li>
       <li v-if="!server.proxyEnabled && !isSetupRequired" @click="enableProxy">
-        <font-awesome-icon icon="fa-solid fa-diagram-project" />&nbsp;&nbsp;&nbsp;Enable Ingress Proxy
+        <font-awesome-icon icon="fa-solid fa-diagram-project" />&nbsp;&nbsp;&nbsp;{{ t('partials.enableIngressProxy') }}
       </li>
       <li v-if="server.swarmMode === 'manager' && !isSetupRequired" @click="demoteToWorker">
-        <font-awesome-icon icon="fa-solid fa-angle-down" />&nbsp;&nbsp;&nbsp;Demote to Swarm Worker
+        <font-awesome-icon icon="fa-solid fa-angle-down" />&nbsp;&nbsp;&nbsp;{{ t('partials.demoteSwarmWorker') }}
       </li>
       <li v-if="server.swarmMode === 'worker' && !isSetupRequired" @click="promoteToManager">
-        <font-awesome-icon icon="fa-solid fa-angle-up" />&nbsp;&nbsp;&nbsp;Promote to Swarm Manager
+        <font-awesome-icon icon="fa-solid fa-angle-up" />&nbsp;&nbsp;&nbsp;{{ t('partials.promoteSwarmManager') }}
       </li>
       <li v-if="!isSetupRequired && !server.maintenanceMode" @click="enableMaintenanceMode">
-        <font-awesome-icon icon="fa-solid fa-person-digging" />&nbsp;&nbsp;&nbsp;Enable Maintenance Mode
+        <font-awesome-icon icon="fa-solid fa-person-digging" />&nbsp;&nbsp;&nbsp;{{ t('partials.enableMaintenanceMode') }}
       </li>
       <li v-if="!isSetupRequired && server.maintenanceMode" @click="disableMaintenanceMode">
-        <font-awesome-icon icon="fa-solid fa-person-digging" />&nbsp;&nbsp;&nbsp;Disable Maintenance Mode
+        <font-awesome-icon icon="fa-solid fa-person-digging" />&nbsp;&nbsp;&nbsp;{{ t('partials.disableMaintenanceMode') }}
       </li>
       <li v-if="server.scheduleDeployments && !isSetupRequired" @click="disableDeploymentOnServer">
-        <font-awesome-icon icon="fa-solid fa-stop" />&nbsp;&nbsp;&nbsp;Disable Deployment on Server
+        <font-awesome-icon icon="fa-solid fa-stop" />&nbsp;&nbsp;&nbsp;{{ t('partials.disableDeploymentOnServer') }}
       </li>
       <li v-if="!server.scheduleDeployments && !isSetupRequired" @click="enableDeploymentOnServer">
-        <font-awesome-icon icon="fa-solid fa-play" />&nbsp;&nbsp;&nbsp;Enable Deployment on Server
+        <font-awesome-icon icon="fa-solid fa-play" />&nbsp;&nbsp;&nbsp;{{ t('partials.enableDeploymentOnServer') }}
       </li>
       <li v-if="!isSetupRequired" @click="setupResourceMonitoring">
-        <font-awesome-icon icon="fa-solid fa-hammer" />&nbsp;&nbsp;&nbsp;Setup Resource Monitoring
+        <font-awesome-icon icon="fa-solid fa-hammer" />&nbsp;&nbsp;&nbsp;{{ t('partials.setupResourceMonitoring') }}
       </li>
-      <li @click="changeServerIp"><font-awesome-icon icon="fa-solid fa-globe" />&nbsp;&nbsp;&nbsp;Change Server IP</li>
+      <li @click="changeServerIp"><font-awesome-icon icon="fa-solid fa-globe" />&nbsp;&nbsp;&nbsp;{{ t('partials.changeServerIP') }}</li>
       <li @click="changeServerSSHPort">
-        <font-awesome-icon icon="fa-solid fa-globe" />&nbsp;&nbsp;&nbsp;Change Server SSH Port
+        <font-awesome-icon icon="fa-solid fa-globe" />&nbsp;&nbsp;&nbsp;{{ t('partials.changeServerSSHPort') }}
       </li>
       <li @click="deleteServer">
         <p class="font-medium text-danger-500">

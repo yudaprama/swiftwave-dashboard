@@ -6,6 +6,7 @@ import { TabPanel } from '@headlessui/vue'
 import { useLazyQuery, useQuery } from '@vue/apollo-composable'
 import gql from 'graphql-tag'
 import { toast } from 'vue-sonner'
+import { useI18n } from 'vue-i18n'
 import FilledButton from '@/views/components/FilledButton.vue'
 import createTar from '@swiftwave/tartplus'
 import DockerfileEditor from '@/views/partials/DeployApplication/DockerfileEditor.vue'
@@ -14,6 +15,8 @@ import { getHttpBaseUrl } from '@/vendor/utils.js'
 import CreateImageRegistryCredentialModal from '@/views/partials/CreateImageRegistryCredentialModal.vue'
 import CreateGitCredentialModal from '@/views/partials/CreateGitCredentialModal.vue'
 import ChooseOtherDockerConfigurationModal from '@/views/partials/ChooseOtherDockerConfigurationModal.vue'
+
+const { t } = useI18n()
 
 const props = defineProps({
   applicationSourceType: {
@@ -337,12 +340,12 @@ const openChooseOtherDockerConfigurationModal = computed(
     <div class="w-1/2 max-w-md">
       <!--  Git as Source  -->
       <div v-if="applicationSourceType === 'git'" class="w-full">
-        <p class="text-xl font-medium">Git Repository Information</p>
+        <p class="text-xl font-medium">{{ t('partials.gitRepoInfo') }}</p>
 
         <!-- Git Credentials -->
         <div class="mt-6">
           <label class="block text-sm font-medium text-gray-700" for="git_credential"
-            >Pick Git Credential (Optional)</label
+            >{{ t('partials.pickGitCredential') }}</label
           >
           <div class="mt-1">
             <select
@@ -350,16 +353,16 @@ const openChooseOtherDockerConfigurationModal = computed(
               v-model="stateRef.gitCredentialID"
               @change="fetchGitBranches"
               class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
-              <option selected value="0">No Credential</option>
+              <option selected value="0">{{ t('partials.noCredential') }}</option>
               <option v-for="credential in gitCredentials" :key="credential.id" :value="credential.id">
                 {{ credential.name }} [{{ credential.type }}]
               </option>
             </select>
           </div>
           <p class="mt-2 flex items-center text-sm">
-            Need to add credential for private repo ?
+            {{ t('partials.needPrivateRepoCred') }}
             <a @click="openCreateGitCredentialModal" class="ml-1.5 cursor-pointer font-bold text-primary-600"
-              >Click Here</a
+              >{{ t('partials.clickHere') }}</a
             >
           </p>
         </div>
@@ -367,7 +370,7 @@ const openChooseOtherDockerConfigurationModal = computed(
         <!-- Git Repository URL -->
         <div class="mt-4">
           <label class="block text-sm font-medium text-gray-700" for="git_repo_url"
-            >Git Repository URL<span class="text-red-600"> *</span></label
+            >{{ t('partials.gitRepoUrl') }}<span class="text-red-600"> *</span></label
           >
           <div class="mt-1">
             <input
@@ -376,7 +379,7 @@ const openChooseOtherDockerConfigurationModal = computed(
               autocomplete="off"
               class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
               name="name"
-              placeholder="Enter Git Repository URL"
+              :placeholder="t('partials.enterGitRepoUrl')"
               type="text"
               v-debounce:1000ms="fetchGitBranches" />
           </div>
@@ -385,9 +388,9 @@ const openChooseOtherDockerConfigurationModal = computed(
         <!-- Git Branch -->
         <div class="mt-4">
           <label class="block text-sm font-medium text-gray-700" for="name"
-            >Git Branch<span class="text-red-600"> *</span>
+            >{{ t('partials.gitBranch') }}<span class="text-red-600"> *</span>
             <span class="ml-2 italic" v-if="fetchingGitBranches"
-              ><font-awesome-icon icon="fa-solid fa-spinner" class="animate-spin" />&nbsp;&nbsp;Fetching...</span
+              ><font-awesome-icon icon="fa-solid fa-spinner" class="animate-spin" />&nbsp;&nbsp;{{ t('partials.fetching') }}</span
             >
           </label>
           <div class="mt-1">
@@ -395,7 +398,7 @@ const openChooseOtherDockerConfigurationModal = computed(
               id="git_credential"
               v-model="stateRef.gitBranch"
               class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
-              <option selected disabled value="">Select Branch</option>
+              <option selected disabled value="">{{ t('partials.selectBranch') }}</option>
               <option v-for="branch in availableGitBranches" :key="branch" :value="branch">
                 {{ branch }}
               </option>
@@ -405,7 +408,7 @@ const openChooseOtherDockerConfigurationModal = computed(
 
         <!-- Code Path -->
         <div class="mt-4">
-          <label class="block text-sm font-medium text-gray-700" for="name">Code Path</label>
+          <label class="block text-sm font-medium text-gray-700" for="name">{{ t('partials.codePath') }}</label>
           <div class="mt-1">
             <input
               id="name"
@@ -413,10 +416,10 @@ const openChooseOtherDockerConfigurationModal = computed(
               autocomplete="off"
               class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
               name="name"
-              placeholder="Absolute path of code (optional)"
+              :placeholder="t('partials.codePathHint')"
               type="text" />
             <p class="mt-1 text-xs text-gray-800">
-              * You need to specify this if your code is not in root directory of git
+              {{ t('partials.codePathNote') }}
             </p>
           </div>
         </div>
@@ -424,11 +427,11 @@ const openChooseOtherDockerConfigurationModal = computed(
 
       <!--  File upload source  -->
       <div v-else-if="applicationSourceType === 'sourceCode'" class="w-full">
-        <p class="text-xl font-medium">Upload Source Code</p>
+        <p class="text-xl font-medium">{{ t('partials.uploadSourceCodeTitle') }}</p>
         <!--    Source Code -->
         <div class="mt-4">
           <label class="mb-2 block text-sm font-medium text-gray-900 dark:text-white" for="source_code"
-            >Select Folder</label
+            >{{ t('partials.selectFolder') }}</label
           >
           <div class="mx-auto max-w-md space-y-8">
             <input
@@ -447,7 +450,7 @@ const openChooseOtherDockerConfigurationModal = computed(
           class="mt-4 w-full"
           type="secondary"
           @click="uploadSourceCode"
-          >Upload Code
+          >{{ t('partials.uploadCode') }}
         </FilledButton>
       </div>
       <!--  Docker Source  -->
@@ -455,7 +458,7 @@ const openChooseOtherDockerConfigurationModal = computed(
         <!-- Docker Image URL-->
         <div class="mt-6">
           <label class="block text-sm font-medium text-gray-700" for="docker_image"
-            >Docker Image <span class="text-red-600"> *</span>
+            >{{ t('partials.dockerImageLabel') }} <span class="text-red-600"> *</span>
           </label>
           <div class="mt-1">
             <input
@@ -464,30 +467,30 @@ const openChooseOtherDockerConfigurationModal = computed(
               autocomplete="off"
               class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
               name="name"
-              placeholder="Enter Docker Image URL"
+              :placeholder="t('partials.enterDockerImageUrl')"
               type="text" />
           </div>
         </div>
         <!-- Image Registry Credentials -->
         <div class="mt-4">
           <label class="block text-sm font-medium text-gray-700" for="image_registry_credential"
-            >Pick Image Registry Credential (Optional)
+            >{{ t('partials.pickImageRegCredential') }}
           </label>
           <div class="mt-1">
             <select
               id="image_registry_credential"
               v-model="stateRef.imageRegistryCredentialID"
               class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
-              <option selected value="0">No Credential</option>
+              <option selected value="0">{{ t('partials.noCredential') }}</option>
               <option v-for="credential in imageRegistryCredentials" :key="credential.id" :value="credential.id">
                 {{ credential.username }} - {{ credential.url }}
               </option>
             </select>
           </div>
           <p class="mt-2 flex items-center text-sm">
-            Need to add credential for private registry ?
+            {{ t('partials.needPrivateRegistryCred') }}
             <a @click="openCreateImageRegistryCredentialModal" class="ml-1.5 cursor-pointer font-bold text-primary-600"
-              >Click Here</a
+              >{{ t('partials.clickHere') }}</a
             >
           </p>
         </div>
@@ -499,7 +502,7 @@ const openChooseOtherDockerConfigurationModal = computed(
         class="mt-6 w-full"
         type="primary"
         @click="generateConfiguration"
-        >Generate Configuration
+        >{{ t('partials.generateConfiguration') }}
       </FilledButton>
     </div>
 
@@ -507,26 +510,26 @@ const openChooseOtherDockerConfigurationModal = computed(
     <div></div>
 
     <div v-if="stateRef.isDockerConfigurationGenerated" class="w-1/2 max-w-md">
-      <p class="text-xl font-medium">Generated Configuration</p>
+      <p class="text-xl font-medium">{{ t('partials.generatedConfiguration') }}</p>
       <FilledButton
         class="mt-6 w-full"
         slim
         type="secondary"
         v-if="applicationSourceType !== 'image'"
         :click="openChooseOtherDockerConfigurationModal"
-        >If detected service is incorrect, Click to change the configuration
+        >{{ t('partials.incorrectConfigChange') }}
       </FilledButton>
       <p class="mt-4 font-medium text-gray-700">
-        🏂 Detected Service Name -
+        {{ t('partials.detectedService') }}
         <span class="font-normal text-primary-600">{{ stateRef.detectedServiceName }}</span>
       </p>
       <FilledButton v-if="applicationSourceType !== 'image'" class="mt-4 w-full" @click="openDockerFileEditor"
-        >View / Modify Dockerfile
+        >{{ t('partials.viewModifyDockerfile') }}
       </FilledButton>
       <!-- Docker Command-->
       <div class="mt-4">
         <label class="block text-sm font-medium text-gray-700" for="docker_command"
-          >Docker Image Command (Optional)
+          >{{ t('partials.dockerCommand') }}
         </label>
         <div class="mt-1">
           <input
@@ -535,13 +538,13 @@ const openChooseOtherDockerConfigurationModal = computed(
             autocomplete="off"
             class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
             name="docker_command"
-            placeholder="Enter Docker Command"
+            :placeholder="t('partials.enterDockerCommand')"
             type="text" />
-          <p class="mt-1 text-xs text-gray-800">* It's just to override the default command of docker image</p>
+          <p class="mt-1 text-xs text-gray-800">{{ t('partials.dockerCommandNote') }}</p>
         </div>
       </div>
       <div v-if="stateRef.dockerBuildArgs.length !== 0">
-        <p class="mt-4 font-medium text-gray-700">🐳 Docker Build Args</p>
+        <p class="mt-4 font-medium text-gray-700">🐳 {{ t('partials.dockerBuildArgs') }}</p>
         <div class="w-full">
           <BuildArgInput
             v-for="buildArg in stateRef.dockerBuildArgs"
@@ -553,7 +556,7 @@ const openChooseOtherDockerConfigurationModal = computed(
         </div>
       </div>
       <FilledButton :click="() => finalizeApplicationSourceConfigurationAndMoveToNextTab(stateRef)" class="mt-8 w-full"
-        >Confirm & Proceed to Next Step
+        >{{ t('partials.confirmProceedNext') }}
       </FilledButton>
     </div>
     <div v-else class="w-1/2 max-w-md"></div>

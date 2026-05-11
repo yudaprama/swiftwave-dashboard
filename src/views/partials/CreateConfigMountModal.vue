@@ -4,6 +4,9 @@ import ModalDialog from '@/views/components/ModalDialog.vue'
 import { computed, reactive, ref } from 'vue'
 import { preventSpaceInput } from '@/vendor/utils.js'
 import { toast } from 'vue-sonner'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const props = defineProps({
   createConfigMount: {
@@ -55,18 +58,18 @@ defineExpose({
 
 <template>
   <ModalDialog :close-modal="closeModal" :is-open="isModalOpen" width="lg">
-    <template v-slot:header>Add Config Mount</template>
+    <template v-slot:header>{{ t('partials.addConfigMount') }}</template>
     <template v-slot:body>
-      Provide all the details for the new config mount.
+      {{ t('partials.provideConfigMountDetails') }}
       <form @submit.prevent="">
         <!--  Name Field   -->
         <div class="mt-4">
-          <label class="block text-sm font-medium text-gray-700"> Config Mount Path </label>
+          <label class="block text-sm font-medium text-gray-700"> {{ t('partials.configMountPath') }} </label>
           <div class="mt-1">
             <input
               v-model="newConfigMountDetails.mountingPath"
               class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
-              placeholder="Provide path for the config mount"
+              :placeholder="t('partials.configMountPathPlaceholder')"
               type="text"
               @keydown="preventSpaceInput" />
           </div>
@@ -75,32 +78,32 @@ defineExpose({
         <div class="mt-2 flex w-full flex-row gap-2">
           <!--   File UID     -->
           <div class="w-1/2">
-            <label class="block text-sm font-medium text-gray-700">File UID</label>
+            <label class="block text-sm font-medium text-gray-700">{{ t('partials.fileUID') }}</label>
             <div class="mt-1">
               <input
                 v-model="newConfigMountDetails.uid"
                 autocomplete="off"
                 class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
-                placeholder="File UID"
+                :placeholder="t('partials.fileUID')"
                 type="number" />
             </div>
           </div>
           <!--   File Gid     -->
           <div class="w-1/2">
-            <label class="block text-sm font-medium text-gray-700">File GID</label>
+            <label class="block text-sm font-medium text-gray-700">{{ t('partials.fileGID') }}</label>
             <div class="mt-1">
               <input
                 v-model="newConfigMountDetails.gid"
                 autocomplete="off"
                 class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
-                placeholder="Mount GID"
+                :placeholder="t('partials.mountGID')"
                 type="number" />
             </div>
           </div>
         </div>
 
         <div class="mt-2 w-full">
-          <label class="block text-sm font-medium text-gray-700">Config Content</label>
+          <label class="block text-sm font-medium text-gray-700">{{ t('partials.configContent') }}</label>
           <div class="mt-1">
             <textarea
               rows="20"
@@ -112,7 +115,7 @@ defineExpose({
     </template>
     <template v-slot:footer>
       <FilledButton type="primary" :click="registerConfigMount" :disabled="!isAllFieldsFilled"
-        >Confirm & Add
+        >{{ t('partials.confirmAdd') }}
       </FilledButton>
     </template>
   </ModalDialog>

@@ -7,6 +7,9 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import FilledButton from '@/views/components/FilledButton.vue'
 import { toast } from 'vue-sonner'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const props = defineProps({
   applicationIds: {
@@ -23,7 +26,7 @@ const openModal = () => {
 }
 const closeModal = () => {
   if (isDeleting.value) {
-    toast.error('Wait until application deletion is completed')
+    toast.error(t('partials.waitDeletion'))
     return
   }
   isLoadingApplicationDetailsFirstTime.value = true
@@ -97,7 +100,7 @@ const { mutate: deleteApplication } = useMutation(gql`
 `)
 
 const deleteApplications = async () => {
-  const confirmation = prompt('Type `delete` to confirm')
+  const confirmation = prompt(t('partials.typeDeleteConfirm'))
   if (confirmation !== 'delete') {
     return
   }
@@ -141,8 +144,8 @@ const deleteApplications = async () => {
       }
       toast.success(
         props.applicationIds.length > 1
-          ? 'Applications deletion initiated successfully ! It may take a few seconds to complete.'
-          : 'Application deletion initiated successfully ! It may take a few seconds to complete.'
+          ? t('partials.appsDeletionInitiated')
+          : t('partials.appDeletionInitiated')
       )
       isDeleting.value = false
       closeModal()
@@ -155,13 +158,13 @@ const deleteApplications = async () => {
 <template>
   <ModalDialog :is-open="isOpen" :close-modal="closeModal">
     <template v-slot:header>
-      <span>Delete Application<span v-if="props.applicationIds.length > 1">s</span></span>
+      <span>{{ t('partials.deleteApplications') }}<span v-if="props.applicationIds.length > 1">s</span></span>
     </template>
     <template v-slot:body>
       <div class="mb-2 mt-4 w-full rounded-md border border-warning-200 bg-warning-100 p-2 text-sm">
-        Don't close this window until all the app<span v-if="props.applicationIds.length > 1">s</span> are deleted.
+        {{ t('partials.dontCloseWindow') }}<span v-if="props.applicationIds.length > 1">s</span>.
       </div>
-      <p v-if="isLoadingApplicationDetailsFirstTime">Loading application details...</p>
+      <p v-if="isLoadingApplicationDetailsFirstTime">{{ t('partials.loadingAppDetails') }}</p>
       <div v-else class="mt-2">
         <div v-for="app in applicationDetails" :key="app.id" class="flex w-full flex-row items-center gap-2">
           <font-awesome-icon
@@ -171,7 +174,7 @@ const deleteApplications = async () => {
           <font-awesome-icon v-else icon="fa-regular fa-circle" class="text-base text-warning-500" />
           <span class="text-secondary-800"
             >{{ app.name }}&nbsp;<span v-if="(app?.ingressRules ?? []).length > 0"
-              >({{ (app?.ingressRules ?? []).length }} Ingress Rules)</span
+              >({{ (app?.ingressRules ?? []).length }} {{ t('partials.ingressRulesCount') }})</span
             ></span
           >
         </div>
@@ -184,7 +187,7 @@ const deleteApplications = async () => {
         :click="deleteApplications"
         :loading="isDeleting"
         :disabled="isDeleting || isLoadingApplicationDetailsFirstTime"
-        >Delete Application<span v-if="props.applicationIds.length > 1">s</span></FilledButton
+        >{{ t('partials.deleteApplication') }}<span v-if="props.applicationIds.length > 1">s</span></FilledButton
       >
     </template>
   </ModalDialog>
