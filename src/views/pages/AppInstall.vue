@@ -17,6 +17,9 @@ import Divider from '@/views/components/Divider.vue';
 import CreateDomainModal from '@/views/partials/CreateDomainModal.vue';
 import OutlinedButton from '@/views/components/OutlinedButton.vue';
 import ServerSelector from '@/views/partials/ServerSelector.vue';
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const route = useRoute();
 const router = useRouter();
@@ -259,7 +262,7 @@ const openInstallNowModal = () => {
 };
 
 const closeModal = () => {
-  if (confirm('Are you sure you want to cancel?')) {
+  if (confirm(t('deploy.cancelInstallConfirm'))) {
     isInstallNowModalOpen.value = false;
     setupSystem();
   }
@@ -299,7 +302,7 @@ const deployStackHelper = async () => {
   // verify ingress rules
   const isValid = await validateIngressRules();
   if (!isValid) {
-    toast.error('Please fix the ingress rules before deploying');
+    toast.error(t('deploy.fixIngressRules'))
     return;
   }
   let variablesForSubmission = [];
@@ -497,7 +500,7 @@ const noOfBlankFields = computed(() => {
         <MarkdownRenderer :source="stackDetails.docs.readme_description" />
       </div>
       <div v-else class="mt-12 w-full">
-        <p class="italic text-gray-800">No details available</p>
+        <p class="italic text-gray-800">{{ $t('deploy.noDetailsAvailable') }}</p>
       </div>
     </div>
     <!--  Installation Options  -->
@@ -505,7 +508,7 @@ const noOfBlankFields = computed(() => {
       <div class="flex flex-row items-center justify-center gap-2 pr-20">
         <FilledButton type="primary" :click="openInstallNowModal">
           <font-awesome-icon icon="fa-solid fa-hammer" class="mr-2" />
-          Install Now
+          {{ $t('deploy.installNow') }}
         </FilledButton>
       </div>
     </div>
@@ -520,16 +523,16 @@ const noOfBlankFields = computed(() => {
     :is-open="isInstallNowModalOpen && !isLoadingStack"
     non-cancelable
     :width="Object.keys(suggestedIngressRules).length !== 0 ? '6xl' : 'lg'">
-    <template v-slot:header>Install {{ stackDetails.docs.name }}</template>
+    <template v-slot:header>{{ $t('deploy.installTitle', { name: stackDetails.docs.name }) }}</template>
     <template v-slot:body>
-      Fill all the required information
+      {{ $t('deploy.fillRequiredInfo') }}
       <!--  App info    -->
       <div class="mt-4 flex w-full flex-row gap-8">
         <div class="flex w-full flex-col gap-2">
           <div v-if="currentPage === 1">
             <label class="block text-base font-medium text-gray-700">
-              <p>Application Name <span class="text-red-600"> *</span></p>
-              <p class="text-sm font-normal">Provide a name for your application</p>
+              <p>{{ $t('deploy.applicationNameLabel') }} <span class="text-red-600"> *</span></p>
+              <p class="text-sm font-normal">{{ $t('deploy.provideAppName') }}</p>
             </label>
             <div class="mt-1">
               <input
@@ -537,7 +540,7 @@ const noOfBlankFields = computed(() => {
                 class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
                 type="text"
                 @keydown="preventSpaceInput"
-                placeholder="Anything you like..." />
+                :placeholder="$t('deploy.anythingYouLike')" />
             </div>
           </div>
           <div v-for="key in formVariables">
@@ -633,12 +636,12 @@ const noOfBlankFields = computed(() => {
         <!--    Ingress rule configuration    -->
         <div class="flex w-full flex-col gap-1" v-show="Object.keys(suggestedIngressRules).length !== 0">
           <p class="text-base font-bold" v-show="Object.keys(configuredIngressRules).length !== 0">
-            Configure Ingress rules
+            {{ $t('deploy.configureIngressRules') }}
           </p>
           <p class="flex items-center text-sm">
-            Need to add a domain ?
+            {{ $t('deploy.needToAddDomain') }}
             <a @click="openNewDomainModal" class="ml-1.5 cursor-pointer font-bold text-primary-600"
-              >Click here to register domain</a
+              >{{ $t('deploy.clickHereToRegisterDomain') }}</a
             >
           </p>
           <div
@@ -676,17 +679,17 @@ const noOfBlankFields = computed(() => {
                         v-if="config.info.protocol === 'http' || config.info.protocol === 'https'"
                         v-model="config.info.domainId"
                         class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
-                        <option value="0">Select a domain</option>
+                        <option value="0">{{ $t('deploy.selectDomain') }}</option>
                         <option :value="domain.id" v-for="domain in domainList">
                           {{ domain.name }}
                         </option>
                       </select>
-                      <div v-else class="block w-full text-end text-sm italic">Use proxy IP with port</div>
+                      <div v-else class="block w-full text-end text-sm italic">{{ $t('deploy.useProxyIpWithPort') }}</div>
                       <!--   Port -->
                       <input
                         v-model="config.info.port"
                         class="block w-5/12 rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
-                        placeholder="Port"
+                        :placeholder="$t('deploy.port')"
                         type="number"
                         :readonly="!config.info.allowPortSelection" />
                       <!--  Arrow  -->
@@ -702,7 +705,7 @@ const noOfBlankFields = computed(() => {
                       </FilledButton>
                     </div>
                     <p class="text-sm text-red-600" v-if="config.info.exists">
-                      Ingress rule already exists, please choose different domain or port.
+                      {{ $t('deploy.ingressRuleExists') }}
                     </p>
                   </div>
                 </div>
@@ -716,7 +719,7 @@ const noOfBlankFields = computed(() => {
             " />
           <!--      Ignored Ingress Rules    -->
           <p class="text-base font-bold" v-show="Object.keys(ignoredIngressRules).length !== 0">
-            Ignored Ingress Rules
+            {{ $t('deploy.ignoredIngressRules') }}
           </p>
           <div v-for="(ingressRules, serviceName) in ignoredIngressRules" :key="serviceName">
             <p class="text-base font-medium">{{ replaceStackName(serviceName, formStateRef.STACK_NAME) }}</p>
@@ -743,9 +746,9 @@ const noOfBlankFields = computed(() => {
     </template>
     <template v-slot:footer>
       <div class="mt-4 flex w-full flex-row justify-between gap-2">
-        <FilledButton type="danger" :click="closeModal" :disabled="deployStackLoading">Cancel</FilledButton>
+        <FilledButton type="danger" :click="closeModal" :disabled="deployStackLoading">{{ $t('common.cancel') }}</FilledButton>
         <FilledButton type="primary" :loading="deployStackLoading" :disabled="!isFormFilled" :click="deployStackHelper"
-          >Start Installation
+          >{{ $t('deploy.startInstallation') }}
         </FilledButton>
       </div>
     </template>
@@ -753,7 +756,7 @@ const noOfBlankFields = computed(() => {
 
   <!--  Modal to show result    -->
   <ModalDialog :is-open="isResultModalOpen" :close-modal="closeResultModal" width="2xl">
-    <template v-slot:header>🎉 Deployed Successfully</template>
+    <template v-slot:header>{{ '\u{1F389}' }} {{ $t('deploy.deployedSuccessfully') }}</template>
     <template v-slot:body>
       <div class="flex flex-col space-y-3 pt-3">
         <div
@@ -779,11 +782,11 @@ const noOfBlankFields = computed(() => {
                   }).href
                 )
             ">
-            View
+            {{ $t('deploy.view') }}
           </FilledButton>
         </div>
         <div v-if="deployedApplicationsResult.length === 0" class="text-center text-gray-500">
-          No applications deployed
+          {{ $t('deploy.noApplicationsDeployed') }}
         </div>
 
         <div class="flex items-center gap-2">
@@ -827,7 +830,7 @@ const noOfBlankFields = computed(() => {
         class="w-full"
         :click="() => $router.replace('/applications')"
         :disabled="!isAllIngressRulesCreationAttempted"
-        >Go to Applications List
+        >{{ $t('deploy.goToApplicationsList') }}
       </FilledButton>
     </template>
   </ModalDialog>

@@ -4,7 +4,10 @@ import TableMessage from '@/views/components/Table/TableMessage.vue'
 import TableHeader from '@/views/components/Table/TableHeader.vue'
 import FilledButton from '@/views/components/FilledButton.vue'
 import { toRef } from 'vue'
+import { useI18n } from 'vue-i18n'
 import EnvironmentVariableRow from '@/views/partials/DeployApplication/EnvironmentVariableRow.vue'
+
+const { t } = useI18n()
 
 const props = defineProps({
   environmentVariablesKeys: {
@@ -55,19 +58,19 @@ const handlePaste = (event) => {
 <template>
   <Table :divider-between-rows="false" @paste="handlePaste">
     <template v-slot:header>
-      <TableHeader align="center">Variable Name</TableHeader>
-      <TableHeader align="center">Value</TableHeader>
-      <TableHeader align="right" class="w-[80px]">Delete</TableHeader>
+      <TableHeader align="center">{{ t('partials.envVarName') }}</TableHeader>
+      <TableHeader align="center">{{ t('partials.envVarValue') }}</TableHeader>
+      <TableHeader align="right" class="w-[80px]">{{ t('common.delete') }}</TableHeader>
     </template>
     <template v-slot:message>
       <TableMessage v-if="environmentVariablesKeys.length === 0" class="flex flex-col items-center">
-        No Environment Variables found.<br />
-        If your application requires environment variables, you can add them here.<br />
-        <FilledButton class="mt-3 max-w-fit" @click="addEnvironmentVariable">Add Environment Variable</FilledButton>
+        {{ t('partials.noEnvVars') }}<br />
+        {{ t('partials.envVarsHint') }}<br />
+        <FilledButton class="mt-3 max-w-fit" @click="addEnvironmentVariable">{{ t('partials.addEnvVar') }}</FilledButton>
       </TableMessage>
       <div v-else class="flex flex-row gap-3 px-4 pb-4 pt-2 text-sm text-gray-600">
-        <FilledButton slim @click="addEnvironmentVariable">Add Environment Variable</FilledButton>
-        Want to add more environment variables ?
+        <FilledButton slim @click="addEnvironmentVariable">{{ t('partials.addEnvVar') }}</FilledButton>
+        {{ t('partials.wantMoreEnvVars') }}
       </div>
     </template>
     <template v-slot:body>

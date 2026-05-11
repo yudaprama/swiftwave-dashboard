@@ -11,6 +11,9 @@ import TableMessage from '@/views/components/Table/TableMessage.vue'
 import Table from '@/views/components/Table/Table.vue'
 import TableRow from '@/views/components/Table/TableRow.vue'
 import { camelCaseToSpacedCapitalized } from '@/vendor/utils.js'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const router = useRouter()
 const applicationId = router.currentRoute.value.params.id
@@ -54,15 +57,15 @@ onDeploymentsError((err) => {
 <template>
   <Table class="">
     <template v-slot:header>
-      <TableHeader align="left">Deployment ID</TableHeader>
-      <TableHeader align="left">Deploy Date</TableHeader>
-      <TableHeader align="left">Source</TableHeader>
-      <TableHeader align="left" class="w-36">Status</TableHeader>
+      <TableHeader align="left">{{ $t('applicationDetails.deploymentId') }}</TableHeader>
+      <TableHeader align="left">{{ $t('applicationDetails.deployDate') }}</TableHeader>
+      <TableHeader align="left">{{ $t('applicationDetails.source') }}</TableHeader>
+      <TableHeader align="left" class="w-36">{{ $t('applicationDetails.deploymentStatus') }}</TableHeader>
     </template>
     <template v-slot:message>
       <TableMessage v-if="deployments.length === 0">
-        No deployed applications found.<br />
-        Click on the "Deploy New" button to deploy a new application.
+        {{ $t('applicationDetails.noDeploymentsTable') }}<br />
+        {{ $t('applicationDetails.noDeploymentsHint') }}
       </TableMessage>
     </template>
     <template v-slot:body>
@@ -131,7 +134,7 @@ onDeploymentsError((err) => {
                   class="nowrap max-w-[200px] overflow-hidden text-ellipsis">
                   {{ deployment.commitMessage }}
                 </p>
-                <p v-if="!(deployment.commitHash && deployment.commitMessage)" class="italic">not available</p>
+                <p v-if="!(deployment.commitHash && deployment.commitMessage)" class="italic">{{ $t('applicationDetails.notAvailable') }}</p>
               </div>
             </div>
             <div v-if="deployment.upstreamType === 'image'" class="space-y-1">
@@ -179,7 +182,7 @@ onDeploymentsError((err) => {
                   <polyline points="17 8 12 3 7 8" />
                   <line x1="12" x2="12" y1="3" y2="15" />
                 </svg>
-                <p>Source Uploaded Manually</p>
+                <p>{{ $t('applicationDetails.sourceUploadedManually') }}</p>
               </div>
             </div>
           </div>

@@ -18,6 +18,9 @@ import { useAuthStore } from '@/store/auth.js'
 import Badge from '@/views/components/Badge.vue'
 import CreatePersistentVolumeModal from '@/views/partials/CreatePersistentVolumeModal.vue'
 import SecuredText from '@/views/components/SecuredText.vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const authStore = useAuthStore()
 
@@ -46,7 +49,7 @@ const {
 const deletePersistentVolumeWithConfirmation = (persistent_volume) => {
   if (
     confirm(
-      'Are you sure you want to delete this persistent volume?\n[NOTE] If you have deleted volume bindings just a few seconds ago, please wait at-least a minute before deleting the persistent volume.'
+      t('pv.deleteConfirm')
     )
   ) {
     deletePersistentVolume({
@@ -57,7 +60,7 @@ const deletePersistentVolumeWithConfirmation = (persistent_volume) => {
 
 onDomainDeleteSuccess(() => {
   toast.success(
-    'Persistent volume deletion requested. If all conditions are met, the persistent volume will be deleted in the background.'
+    t('pv.deleteSuccess')
   )
   refetchPersistentVolumes()
 })
@@ -157,7 +160,7 @@ const uploadAndRestoreNow = () => {
     })
     .then((e) => {
       isRestoreNowButtonLoading.value = false
-      toast.success('Restore initiated successfully')
+      toast.success(t('pv.restoreSuccess'))
       closeRestoreNowModal()
     })
     .catch((err) => {
@@ -228,12 +231,12 @@ const showDetails = (volume) => {
 
     <!--    Modal for create restore -->
     <ModalDialog :close-modal="closeRestoreNowModal" :is-open="isRestoreNowModalOpen" non-cancelable>
-      <template v-slot:header>Restore `{{ selectedPersistentVolumeName }}` volume</template>
+      <template v-slot:header>{{ $t('pv.restoreTitle', { name: selectedPersistentVolumeName }) }}</template>
       <template v-slot:body>
-        Choose the backup file (*.tar.gz) to restore the volume.
+        {{ $t('pv.restoreBody') }}
         <div class="">
           <label class="block text-sm font-medium text-gray-900 dark:text-white" for="source_code"
-            >Select Restore File</label
+            >{{ $t('pv.selectRestoreFile') }}</label
           >
           <div class="mx-auto max-w-md space-y-8">
             <input
@@ -252,11 +255,11 @@ const showDetails = (volume) => {
             :disabled="isRestoreNowButtonDisabled"
             :loading="isRestoreNowButtonLoading"
             :click="uploadAndRestoreNow"
-            >Upload & Restore Now
+            >{{ $t('pv.uploadRestore') }}
             <span v-if="isRestoreNowButtonLoading" class="ml-2">{{ uploadPercentage }}%</span>
           </FilledButton>
           <FilledButton class="w-full" type="secondary" v-if="!isRestoreNowButtonLoading" :click="closeRestoreNowModal">
-            Cancel
+            {{ $t('common.cancel') }}
           </FilledButton>
         </div>
       </template>
@@ -264,11 +267,11 @@ const showDetails = (volume) => {
 
     <!--  Show Volume Details  -->
     <ModalDialog :close-modal="closeVolumeDetailsModal" :is-open="isVolumeDetailsModalOpen">
-      <template v-slot:header>Volume Details</template>
+      <template v-slot:header>{{ $t('pv.volumeDetails') }}</template>
       <template v-slot:body>
         <div class="mt-4 flex w-full flex-row gap-2">
           <div class="w-1/2">
-            <label class="block text-sm font-medium text-gray-700">Volume Name</label>
+            <label class="block text-sm font-medium text-gray-700">{{ $t('pv.volumeName') }}</label>
             <div class="mt-1">
               <p
                 class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
@@ -277,16 +280,16 @@ const showDetails = (volume) => {
             </div>
           </div>
           <div class="w-1/2">
-            <label class="block text-sm font-medium text-gray-700">Volume Type</label>
+            <label class="block text-sm font-medium text-gray-700">{{ $t('pv.volumeType') }}</label>
             <div class="mt-1">
-              <Badge type="success" v-if="selectedVolumeDetails.type === 'local'">Local</Badge>
+              <Badge type="success" v-if="selectedVolumeDetails.type === 'local'">{{ $t('pv.local') }}</Badge>
               <Badge type="warning" v-if="selectedVolumeDetails.type === 'nfs'"> &nbsp;&nbsp;NFS&nbsp;&nbsp;</Badge>
               <Badge type="warning" v-if="selectedVolumeDetails.type === 'cifs'">&nbsp;CIFS&nbsp;</Badge>
             </div>
           </div>
         </div>
         <div class="mt-4" v-if="selectedVolumeDetails.type === 'nfs'">
-          <label class="block text-sm font-medium text-gray-700">NFS Config</label>
+          <label class="block text-sm font-medium text-gray-700">{{ $t('pv.nfsConfig') }}</label>
           <div class="mt-1">
             <p
               class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
@@ -295,7 +298,7 @@ const showDetails = (volume) => {
           </div>
         </div>
         <div class="mt-4" v-if="selectedVolumeDetails.type === 'nfs'">
-          <label class="block text-sm font-medium text-gray-700">NFS Version</label>
+          <label class="block text-sm font-medium text-gray-700">{{ $t('pv.nfsVersion') }}</label>
           <div class="mt-1">
             <p
               class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
@@ -304,7 +307,7 @@ const showDetails = (volume) => {
           </div>
         </div>
         <div class="mt-4" v-if="selectedVolumeDetails.type === 'cifs'">
-          <label class="block text-sm font-medium text-gray-700">CIFS Host</label>
+          <label class="block text-sm font-medium text-gray-700">{{ $t('pv.cifsHost') }}</label>
           <div class="mt-1">
             <p
               class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
@@ -313,7 +316,7 @@ const showDetails = (volume) => {
           </div>
         </div>
         <div class="mt-4" v-if="selectedVolumeDetails.type === 'cifs'">
-          <label class="block text-sm font-medium text-gray-700">CIFS Share</label>
+          <label class="block text-sm font-medium text-gray-700">{{ $t('pv.cifsShare') }}</label>
           <div class="mt-1">
             <p
               class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
@@ -323,7 +326,7 @@ const showDetails = (volume) => {
         </div>
         <div class="mt-4 flex w-full flex-row gap-2" v-if="selectedVolumeDetails.type === 'cifs'">
           <div class="w-1/2">
-            <label class="block text-sm font-medium text-gray-700">Username</label>
+            <label class="block text-sm font-medium text-gray-700">{{ $t('common.username') }}</label>
             <div class="mt-1">
               <p
                 class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
@@ -332,7 +335,7 @@ const showDetails = (volume) => {
             </div>
           </div>
           <div class="w-1/2">
-            <label class="block text-sm font-medium text-gray-700">Password</label>
+            <label class="block text-sm font-medium text-gray-700">{{ $t('common.password') }}</label>
             <div class="mt-1">
               <SecuredText>{{ selectedVolumeDetails.cifsConfig.password }}</SecuredText>
             </div>
@@ -340,7 +343,7 @@ const showDetails = (volume) => {
         </div>
         <div class="mt-4 flex w-full flex-row gap-2" v-if="selectedVolumeDetails.type === 'cifs'">
           <div class="w-1/2">
-            <label class="block text-sm font-medium text-gray-700">File Mode</label>
+            <label class="block text-sm font-medium text-gray-700">{{ $t('pv.fileMode') }}</label>
             <div class="mt-1">
               <p
                 class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
@@ -349,7 +352,7 @@ const showDetails = (volume) => {
             </div>
           </div>
           <div class="w-1/2">
-            <label class="block text-sm font-medium text-gray-700">Dir Mode</label>
+            <label class="block text-sm font-medium text-gray-700">{{ $t('pv.dirMode') }}</label>
             <div class="mt-1">
               <p
                 class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
@@ -380,25 +383,25 @@ const showDetails = (volume) => {
         </div>
       </template>
       <template v-slot:footer>
-        <FilledButton :click="closeVolumeDetailsModal" type="primary">Close</FilledButton>
+        <FilledButton :click="closeVolumeDetailsModal" type="primary">{{ $t('common.close') }}</FilledButton>
       </template>
     </ModalDialog>
 
     <!-- Top Page bar   -->
     <PageBar>
-      <template v-slot:title>Persistent Volume</template>
-      <template v-slot:subtitle>Manage Persistent Volume</template>
+      <template v-slot:title>{{ $t('pv.title') }}</template>
+      <template v-slot:subtitle>{{ $t('pv.subtitle') }}</template>
       <template v-slot:buttons>
         <FilledButton :click="openCreatePersistentVolumeModal" type="primary">
           <font-awesome-icon icon="fa-solid fa-plus" class="mr-2" />
-          Add New
+          {{ $t('common.addNew') }}
         </FilledButton>
         <FilledButton type="ghost" :click="refetchPersistentVolumes">
           <font-awesome-icon
             icon="fa-solid fa-arrows-rotate"
             :class="{
               'animate-spin ': isPersistentVolumesLoading
-            }" />&nbsp;&nbsp; Refresh List
+            }" />&nbsp;&nbsp; {{ $t('common.refreshList') }}
         </FilledButton>
       </template>
     </PageBar>
@@ -406,17 +409,17 @@ const showDetails = (volume) => {
     <!-- Table -->
     <Table class="mt-8">
       <template v-slot:header>
-        <TableHeader align="left">Volume Name</TableHeader>
-        <TableHeader align="center">Details</TableHeader>
-        <TableHeader align="center">Size</TableHeader>
-        <TableHeader align="center">PV Backup</TableHeader>
-        <TableHeader align="center">PV Restore</TableHeader>
-        <TableHeader align="right">Actions</TableHeader>
+        <TableHeader align="left">{{ $t('pv.volumeName') }}</TableHeader>
+        <TableHeader align="center">{{ $t('pv.details') }}</TableHeader>
+        <TableHeader align="center">{{ $t('pv.size') }}</TableHeader>
+        <TableHeader align="center">{{ $t('pv.backup') }}</TableHeader>
+        <TableHeader align="center">{{ $t('pv.restore') }}</TableHeader>
+        <TableHeader align="right">{{ $t('common.actions') }}</TableHeader>
       </template>
       <template v-slot:message>
         <TableMessage v-if="persistentVolumes.length === 0">
-          No persistent volumes found.<br />
-          Click on the "Add New" button to create a new persistent volume.
+          {{ $t('pv.noVolumes') }}<br />
+          {{ $t('pv.clickAdd') }}
         </TableMessage>
       </template>
       <template v-slot:body>

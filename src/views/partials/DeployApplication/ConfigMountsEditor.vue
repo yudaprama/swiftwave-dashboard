@@ -6,9 +6,12 @@ import TextButton from '@/views/components/TextButton.vue'
 import TableRow from '@/views/components/Table/TableRow.vue'
 import FilledButton from '@/views/components/FilledButton.vue'
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import ModalDialog from '@/views/components/ModalDialog.vue'
 import Code from '@/views/components/Code.vue'
 import CreateConfigMountModal from '@/views/partials/CreateConfigMountModal.vue'
+
+const { t } = useI18n()
 
 defineProps({
   configMountsKeys: {
@@ -60,20 +63,20 @@ const openCreateConfigMountModal = () => {
 <template>
   <!-- Modal to view config mount content -->
   <ModalDialog :close-modal="closeConfigModal" :is-open="isConfigViewModalOpen" width="xl">
-    <template v-slot:header>Config Content</template>
+    <template v-slot:header>{{ t('partials.configContentLabel') }}</template>
     <template v-slot:body>
       <div class="mt-5">
-        <p v-if="selectedConfigId === null" class="italic">No config selected</p>
+        <p v-if="selectedConfigId === null" class="italic">{{ t('partials.noConfigSelected') }}</p>
         <Code v-else :show-copy-button="false">{{ configMountsMap[selectedConfigId].content }}</Code>
       </div>
     </template>
   </ModalDialog>
   <!-- Modal to edit config mount content -->
   <ModalDialog :close-modal="closeEditConfigModal" :is-open="isEditConfigModalOpen" width="xl">
-    <template v-slot:header>Edit Config Content</template>
+    <template v-slot:header>{{ t('partials.editConfigContent') }}</template>
     <template v-slot:body>
       <div class="mt-5">
-        <p v-if="selectedConfigId === null" class="italic">No config selected</p>
+        <p v-if="selectedConfigId === null" class="italic">{{ t('partials.noConfigSelected') }}</p>
         <textarea
           rows="20"
           class="mt-2 w-full rounded-lg border-gray-300 align-top shadow-sm focus:border-primary-500 focus:ring-primary-500"
@@ -87,15 +90,15 @@ const openCreateConfigMountModal = () => {
   <!--  Table to show config mounts  -->
   <Table>
     <template v-slot:header>
-      <TableHeader align="left">Path</TableHeader>
-      <TableHeader align="center">UID</TableHeader>
-      <TableHeader align="center">GID</TableHeader>
-      <TableHeader align="center">View Config</TableHeader>
-      <TableHeader align="center">Edit Config</TableHeader>
-      <TableHeader align="right">Delete</TableHeader>
+      <TableHeader align="left">{{ t('partials.path') }}</TableHeader>
+      <TableHeader align="center">{{ t('partials.uid') }}</TableHeader>
+      <TableHeader align="center">{{ t('partials.gid') }}</TableHeader>
+      <TableHeader align="center">{{ t('partials.viewConfig') }}</TableHeader>
+      <TableHeader align="center">{{ t('partials.editConfig') }}</TableHeader>
+      <TableHeader align="right">{{ t('common.delete') }}</TableHeader>
     </template>
     <template v-slot:message>
-      <TableMessage v-if="configMountsKeys.length === 0"> No Config Mounts found.</TableMessage>
+      <TableMessage v-if="configMountsKeys.length === 0">{{ t('partials.noConfigMounts') }}</TableMessage>
     </template>
     <template v-slot:body>
       <tr v-for="configMountKey in configMountsKeys" :key="configMountKey">
@@ -111,23 +114,23 @@ const openCreateConfigMountModal = () => {
           <div class="text-sm text-gray-900">{{ configMountsMap[configMountKey].gid }}</div>
         </TableRow>
         <TableRow align="center" flex>
-          <FilledButton type="primary" slim :click="() => openConfigModal(configMountKey)">View Config</FilledButton>
+          <FilledButton type="primary" slim :click="() => openConfigModal(configMountKey)">{{ t('partials.viewConfig') }}</FilledButton>
         </TableRow>
         <TableRow align="center" flex>
           <FilledButton type="primary" slim :click="() => openEditConfigModal(configMountKey)"
-            >Edit Config
+            >{{ t('partials.editConfig') }}
           </FilledButton>
         </TableRow>
         <TableRow align="right">
-          <TextButton type="danger" @click="() => deleteConfigMount(configMountKey)">Delete</TextButton>
+          <TextButton type="danger" @click="() => deleteConfigMount(configMountKey)">{{ t('common.delete') }}</TextButton>
         </TableRow>
       </tr>
     </template>
   </Table>
   <!-- More actions  -->
   <div class="mt-4 flex items-center justify-center gap-3 text-sm">
-    Need to add static config in your application ?
-    <FilledButton slim type="primary" :click="openCreateConfigMountModal">Add config mount</FilledButton>
+    {{ t('partials.needStaticConfig') }}
+    <FilledButton slim type="primary" :click="openCreateConfigMountModal">{{ t('partials.addConfigMountBtn') }}</FilledButton>
   </div>
 </template>
 

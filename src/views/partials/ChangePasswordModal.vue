@@ -6,6 +6,7 @@ import { onMounted, reactive } from 'vue'
 import { useMutation } from '@vue/apollo-composable'
 import gql from 'graphql-tag'
 import { toast } from 'vue-sonner'
+import { useI18n } from 'vue-i18n'
 
 
 const props = defineProps({
@@ -19,6 +20,7 @@ const props = defineProps({
   }
 })
 
+const { t } = useI18n()
 const passwordDetails = reactive({
   newPassword: '',
   oldPassword: ''
@@ -47,10 +49,10 @@ mutation ($input: PasswordUpdateInput) {
 
 onPasswordChangeSuccess((e) => {
   if (e.data.changePassword === true) {
-    toast.success('Password changed successfully')
+    toast.success(t('changePassword.success'))
     props.closeModal()
   } else {
-    toast.error('Password change failed')
+    toast.error(t('changePassword.error'))
   }
   resetPasswordDetails()
 })
@@ -68,17 +70,17 @@ onPasswordChangeFail((error) => {
       :close-modal="closeModal"
       :is-open="isModalOpen">
       <template v-slot:header>
-        Change Password
+        {{ $t('changePassword.title') }}
       </template>
       <template v-slot:body>
-        Enter details to change password.
+        {{ $t('changePassword.hint') }}
         <form @submit.prevent="changePassword">
           <!-- Username Field -->
           <div class="mt-4">
             <label
               class="block text-sm font-medium text-gray-700"
               for="oldPassword">
-              Old Password
+              {{ $t('partials.oldPassword') }}
             </label>
             <div class="mt-1">
               <input
@@ -86,7 +88,7 @@ onPasswordChangeFail((error) => {
                 v-model="passwordDetails.oldPassword"
                 autocomplete="off"
                 class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
-                placeholder="Old Password"
+                :placeholder="$t('partials.oldPasswordPlaceholder')"
                 type="password" />
             </div>
           </div>
@@ -95,7 +97,7 @@ onPasswordChangeFail((error) => {
             <label
               class="block text-sm font-medium text-gray-700"
               for="newPassword">
-              New Password
+              {{ $t('partials.newPassword') }}
             </label>
             <div class="mt-1">
               <input
@@ -103,7 +105,7 @@ onPasswordChangeFail((error) => {
                 v-model="passwordDetails.newPassword"
                 autocomplete="off"
                 class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
-                placeholder="New Password"
+                :placeholder="$t('partials.newPasswordPlaceholder')"
                 type="password" />
             </div>
           </div>
@@ -114,7 +116,7 @@ onPasswordChangeFail((error) => {
           :click="changePassword"
           :loading="isChangingPassword"
           type="primary"
-        >Change Password
+        >{{ $t('changePassword.title') }}
         </FilledButton>
       </template>
     </ModalDialog>

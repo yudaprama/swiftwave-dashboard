@@ -1,7 +1,10 @@
 <script setup>
 import { TabPanel } from '@headlessui/vue'
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import FilledButton from '@/views/components/FilledButton.vue'
+
+const { t } = useI18n()
 
 defineProps({
   finalizeApplicationSourceAndMoveToNextTab: {
@@ -18,7 +21,7 @@ const setSourceType = (type) => {
 
 <template>
   <TabPanel :key="1" class="flex h-full flex-col items-center justify-center space-y-6">
-    <p class="text-center text-lg font-medium text-gray-500">Select the source of your application</p>
+    <p class="text-center text-lg font-medium text-gray-500">{{ t('partials.selectSourceHint') }}</p>
     <div class="flex flex-row items-center justify-center space-x-6">
       <!--  Docker Image  -->
       <div
@@ -28,7 +31,7 @@ const setSourceType = (type) => {
         class="optionButton"
         @click.prevent="() => setSourceType('image')">
         <font-awesome-icon class="optionIcon" icon="fa-brands fa-docker" />
-        <p>Docker Image</p>
+        <p>{{ t('partials.dockerImageLabel') }}</p>
       </div>
       <!--  Git   -->
       <div
@@ -38,7 +41,7 @@ const setSourceType = (type) => {
         class="optionButton"
         @click.prevent="() => setSourceType('git')">
         <font-awesome-icon class="optionIcon" icon="fa-brands fa-git" />
-        <p>Git Repository</p>
+        <p>{{ t('deploy.gitRepository') }}</p>
       </div>
       <!--  Upload Code -->
       <div
@@ -48,7 +51,7 @@ const setSourceType = (type) => {
         class="optionButton"
         @click.prevent="() => setSourceType('sourceCode')">
         <font-awesome-icon class="optionIcon" icon="fa-solid fa-upload" />
-        <p>Upload Codes</p>
+        <p>{{ t('partials.uploadCodes') }}</p>
       </div>
     </div>
 
@@ -57,7 +60,7 @@ const setSourceType = (type) => {
       class="w-full"
       type="primary"
       @click="() => finalizeApplicationSourceAndMoveToNextTab(sourceType)">
-      Proceed to Next Page
+      {{ t('partials.proceedNextPage') }}
     </FilledButton>
   </TabPanel>
 </template>

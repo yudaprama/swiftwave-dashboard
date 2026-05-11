@@ -60,19 +60,19 @@ const openCreateServerModal = () => {
   <section class="mx-auto w-full max-w-7xl">
     <!-- Top Page bar   -->
     <PageBar>
-      <template v-slot:title>Registered Servers</template>
-      <template v-slot:subtitle>Take control of your servers</template>
+      <template v-slot:title>{{ $t('servers.title') }}</template>
+      <template v-slot:subtitle>{{ $t('servers.subtitle') }}</template>
       <template v-slot:buttons>
         <FilledButton type="primary" :click="openCreateServerModal">
           <font-awesome-icon icon="fa-solid fa-plus" />
-          &nbsp;&nbsp; Add Server
+          &nbsp;&nbsp; {{ $t('servers.addServer') }}
         </FilledButton>
         <FilledButton type="ghost" :click="refetchServers">
           <font-awesome-icon
             icon="fa-solid fa-arrows-rotate"
             :class="{
               'animate-spin ': isServersLoading
-            }" />&nbsp;&nbsp; Refresh List
+            }" />&nbsp;&nbsp; {{ $t('common.refreshList') }}
         </FilledButton>
       </template>
     </PageBar>
@@ -80,24 +80,24 @@ const openCreateServerModal = () => {
     <!-- Table -->
     <Table class="mt-8">
       <template v-slot:header>
-        <TableHeader align="left">Server</TableHeader>
-        <TableHeader align="center">SSH</TableHeader>
-        <TableHeader align="center">Node</TableHeader>
-        <TableHeader align="center">Status</TableHeader>
-        <TableHeader align="center">Maintenance</TableHeader>
-        <TableHeader align="center">Swarm</TableHeader>
-        <TableHeader align="center">Deployment</TableHeader>
-        <TableHeader align="center">Proxy</TableHeader>
-        <TableHeader align="center">Analytics</TableHeader>
-        <TableHeader align="center">Logs</TableHeader>
-        <TableHeader align="right">Actions</TableHeader>
+        <TableHeader align="left">{{ $t('servers.server') }}</TableHeader>
+        <TableHeader align="center">{{ $t('servers.ssh') }}</TableHeader>
+        <TableHeader align="center">{{ $t('servers.node') }}</TableHeader>
+        <TableHeader align="center">{{ $t('common.status') }}</TableHeader>
+        <TableHeader align="center">{{ $t('servers.maintenance') }}</TableHeader>
+        <TableHeader align="center">{{ $t('servers.swarm') }}</TableHeader>
+        <TableHeader align="center">{{ $t('servers.deployment') }}</TableHeader>
+        <TableHeader align="center">{{ $t('servers.proxy') }}</TableHeader>
+        <TableHeader align="center">{{ $t('servers.analytics') }}</TableHeader>
+        <TableHeader align="center">{{ $t('servers.logs') }}</TableHeader>
+        <TableHeader align="right">{{ $t('common.actions') }}</TableHeader>
       </template>
       <template v-slot:message>
         <TableMessage v-if="servers.length === 0">
-          No servers found.<br />
-          Click on the "Add Server" button to setup a new server.
+          {{ $t('servers.noServers') }}<br />
+          {{ $t('servers.clickAdd') }}
         </TableMessage>
-        <TableMessage v-if="isServersLoading"> Loading server list...</TableMessage>
+        <TableMessage v-if="isServersLoading"> {{ $t('servers.loading') }}</TableMessage>
       </template>
       <template v-slot:body>
         <ServerRow v-for="server in servers" :key="server.id" :server="server" :refetch-servers="refetchServers" />

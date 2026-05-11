@@ -107,49 +107,49 @@ const applicationGroups = computed(() => applicationGroupsResult.value?.applicat
   <section class="mx-auto w-full max-w-7xl">
     <!-- Deploy Apps Page bar   -->
     <PageBar>
-      <template v-slot:title>Deployed Services</template>
-      <template v-slot:subtitle>Manage your deployed services</template>
+      <template v-slot:title>{{ $t('applications.deployedServices') }}</template>
+      <template v-slot:subtitle>{{ $t('applications.manageServices') }}</template>
       <template v-slot:buttons>
         <FilledButton :click="deployNewApplication" type="primary">
           <font-awesome-icon icon="fa-solid fa-hammer" class="mr-2" />
-          Deploy App
+          {{ $t('applications.deployApp') }}
         </FilledButton>
         <FilledButton :click="installApplicationFromAppStore" type="primary">
           <font-awesome-icon icon="fa-solid fa-store" class="mr-2" />
-          App Store
+          {{ $t('applications.appStore') }}
         </FilledButton>
         <FilledButton type="ghost" :click="refreshData">
           <font-awesome-icon
             icon="fa-solid fa-arrows-rotate"
             :class="{
               'animate-spin ': isApplicationsLoading || isApplicationGroupsLoading
-            }" />&nbsp;&nbsp; Refresh List
+            }" />&nbsp;&nbsp; {{ $t('common.refreshList') }}
         </FilledButton>
       </template>
     </PageBar>
 
     <p class="mt-6 text-sm font-medium">
       <font-awesome-icon icon="fa-solid fa-hammer" class="me-1" />
-      Deployed Applications
+      {{ $t('applications.deployedApplications') }}
     </p>
 
     <!-- Applications Table -->
     <Table class="mt-2">
       <template v-slot:header>
-        <TableHeader align="left">Application Name</TableHeader>
-        <TableHeader align="center">Health Status</TableHeader>
-        <TableHeader align="center">Replicas</TableHeader>
-        <TableHeader align="center">Deploy Status</TableHeader>
-        <TableHeader align="center">Last Deployment</TableHeader>
-        <TableHeader align="right">View Details</TableHeader>
+        <TableHeader align="left">{{ $t('applications.applicationName') }}</TableHeader>
+        <TableHeader align="center">{{ $t('applications.healthStatus') }}</TableHeader>
+        <TableHeader align="center">{{ $t('applications.replicas') }}</TableHeader>
+        <TableHeader align="center">{{ $t('applications.deployStatus') }}</TableHeader>
+        <TableHeader align="center">{{ $t('applications.lastDeployment') }}</TableHeader>
+        <TableHeader align="right">{{ $t('applications.viewDetails') }}</TableHeader>
       </template>
       <template v-slot:message>
         <TableMessage v-if="applications.length === 0">
-          No deployed applications found.<br />
-          Click on the "Deploy App" button to deploy a new application.
+          {{ $t('applications.noApps') }}<br />
+          {{ $t('applications.clickDeploy') }}
         </TableMessage>
         <TableMessage v-if="isApplicationsLoading && applications.length === 0">
-          Loading deployed applications...
+          {{ $t('applications.loadingApps') }}
         </TableMessage>
       </template>
       <template v-slot:body>
@@ -160,23 +160,23 @@ const applicationGroups = computed(() => applicationGroupsResult.value?.applicat
     <!--  Deployed Projects Bar   -->
     <p class="mt-6 text-sm font-medium">
       <font-awesome-icon icon="fa-solid fa-layer-group" class="me-1" />
-      Deployed Projects
+      {{ $t('applications.deployedProjects') }}
     </p>
 
     <!-- Projects Table -->
     <Table class="mt-2">
       <template v-slot:header>
-        <TableHeader align="left">Project Name</TableHeader>
-        <TableHeader align="center">Health Status</TableHeader>
-        <TableHeader align="center">Total Services</TableHeader>
-        <TableHeader align="center">Healthy Services</TableHeader>
-        <TableHeader align="center">Unhealthy Services</TableHeader>
-        <TableHeader align="right">View Details</TableHeader>
+        <TableHeader align="left">{{ $t('applications.projectName') }}</TableHeader>
+        <TableHeader align="center">{{ $t('applications.healthStatus') }}</TableHeader>
+        <TableHeader align="center">{{ $t('applications.totalServices') }}</TableHeader>
+        <TableHeader align="center">{{ $t('applications.healthyServices') }}</TableHeader>
+        <TableHeader align="center">{{ $t('applications.unhealthyServices') }}</TableHeader>
+        <TableHeader align="right">{{ $t('applications.viewDetails') }}</TableHeader>
       </template>
       <template v-slot:message>
-        <TableMessage v-if="applicationGroups.length === 0"> No projects found.</TableMessage>
+        <TableMessage v-if="applicationGroups.length === 0"> {{ $t('applications.noProjects') }}</TableMessage>
         <TableMessage v-if="isApplicationGroupsLoading && applicationGroups.length === 0">
-          Loading deployed projects...
+          {{ $t('applications.loadingProjects') }}
         </TableMessage>
       </template>
       <template v-slot:body>

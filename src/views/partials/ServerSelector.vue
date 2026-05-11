@@ -60,7 +60,7 @@ onMounted(() => {
     <select
       class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
       v-model="selectedServerHostname">
-      <option value="" disabled selected>Select Server</option>
+      <option value="" disabled selected>{{ $t('partials.selectServer') }}</option>
       <option v-for="server in servers" :key="server.hostname" :value="server.hostname">
         {{ server.hostname }}
       </option>

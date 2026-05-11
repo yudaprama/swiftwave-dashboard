@@ -8,7 +8,7 @@
         name: 'Application Details Deployments',
         params: { id: $route.params.id }
       }">
-      Deployments
+      {{ $t('applicationDetails.deployments') }}
     </RouterLink>
     <RouterLink
       class="nav-element"
@@ -16,7 +16,7 @@
         name: 'Application Details Resource Stats',
         params: { id: $route.params.id }
       }">
-      Analytics
+      {{ $t('servers.analytics') }}
     </RouterLink>
     <RouterLink
       class="nav-element"
@@ -24,7 +24,7 @@
         name: 'Application Details Runtime Logs',
         params: { id: $route.params.id }
       }">
-      Runtime Log
+      {{ $t('applicationDetails.logs') }}
     </RouterLink>
     <RouterLink
       class="nav-element"
@@ -32,7 +32,7 @@
         name: 'Application Details Ingress Rules',
         params: { id: $route.params.id }
       }">
-      Ingress Rules
+      {{ $t('ingressRules.title') }}
     </RouterLink>
     <RouterLink
       class="nav-element"
@@ -40,7 +40,7 @@
         name: 'Application Details Persistent Volumes',
         params: { id: $route.params.id }
       }">
-      Persistent Volume
+      {{ $t('persistentVolumes.title') }}
     </RouterLink>
     <RouterLink
       class="nav-element"
@@ -48,7 +48,7 @@
         name: 'Application Details Environment Variables',
         params: { id: $route.params.id }
       }">
-      Environment Variables
+      {{ $t('deploy.environmentVariables') }}
     </RouterLink>
     <RouterLink
       class="nav-element"
@@ -56,7 +56,7 @@
         name: 'Application Details Config Mounts',
         params: { id: $route.params.id }
       }">
-      Static App Config
+      {{ $t('applicationDetails.configMounts') }}
     </RouterLink>
     <RouterLink
       class="nav-element"
@@ -64,7 +64,7 @@
         name: 'Application Details Update Source',
         params: { id: $route.params.id }
       }">
-      Update App Source
+      {{ $t('applicationDetails.updateSource') }}
     </RouterLink>
     <RouterLink
       class="nav-element"
@@ -72,7 +72,7 @@
         name: 'Application Details Deployment Config',
         params: { id: $route.params.id }
       }">
-      Deploy Config
+      {{ $t('deploy.dockerConfiguration') }}
     </RouterLink>
     <RouterLink
       class="nav-element"
@@ -80,7 +80,7 @@
         name: 'Application Details Webhook CI',
         params: { id: $route.params.id }
       }">
-      Configure Webhook
+      {{ $t('applicationDetails.webhook') }}
     </RouterLink>
     <RouterLink
       class="nav-element"
@@ -88,7 +88,7 @@
         name: 'Application Details Manage',
         params: { id: $route.params.id }
       }">
-      Actions
+      {{ $t('common.actions') }}
     </RouterLink>
     <RouterLink
       class="nav-element !text-red-500"
@@ -96,7 +96,7 @@
         name: 'Application Details Danger Zone',
         params: { id: $route.params.id }
       }">
-      Destroy
+      {{ $t('applicationDetails.destroy') }}
     </RouterLink>
   </div>
 </template>

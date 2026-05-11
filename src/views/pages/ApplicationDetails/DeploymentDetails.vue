@@ -13,6 +13,9 @@ import { toast } from 'vue-sonner'
 import StatusPulse from '@/views/components/StatusPulse.vue'
 import FilledButton from '@/views/components/FilledButton.vue'
 import { camelCaseToSpacedCapitalized } from '@/vendor/utils.js'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const router = useRouter()
 const deploymentId = router.currentRoute.value.params.deployment_id
@@ -133,9 +136,9 @@ const {
 
 onCancelDeploymentDone((val) => {
   if (val.data.cancelDeployment) {
-    toast.success('Deployment cancellation request sent.')
+    toast.success(t('applicationDetails.cancelSuccess'))
   } else {
-    toast.error('Deployment cancellation request failed.')
+    toast.error(t('applicationDetails.cancelError'))
   }
 })
 
@@ -146,13 +149,13 @@ onCancelDeploymentError((err) => {
 
 <template>
   <div v-if="deploymentLoading">
-    <p>Loading...</p>
+    <p>{{ $t('common.loading') }}</p>
   </div>
   <section v-else class="mx-auto w-full max-w-7xl text-sm">
     <div class="flex items-center gap-2">
       <p class="text-base font-bold">
         <font-awesome-icon icon="fa-solid fa-signal" />
-        Status
+        {{ $t('applicationDetails.deploymentStatus') }}
       </p>
       <Badge v-if="deployment.status === 'deployed'" type="success"
         >{{ camelCaseToSpacedCapitalized(deployment.status) }}
@@ -187,7 +190,7 @@ onCancelDeploymentError((err) => {
         }}
       </p>
       <p v-if="deployment.upstreamType === 'image'">{{ deployment.dockerImage }}</p>
-      <p v-if="deployment.upstreamType === 'sourceCode'">Source-code uploaded manually</p>
+      <p v-if="deployment.upstreamType === 'sourceCode'">{{ $t('applicationDetails.sourceCodeUploaded') }}</p>
     </div>
     <div class="mt-2 flex items-center gap-2 text-gray-800" v-if="deployment.upstreamType === 'git'">
       <svg
@@ -213,7 +216,7 @@ onCancelDeploymentError((err) => {
         class="nowrap max-w-[40vw] overflow-hidden text-ellipsis">
         {{ deployment.commitMessage }}
       </p>
-      <p v-if="!(deployment.commitHash && deployment.commitMessage)" class="italic">not available</p>
+      <p v-if="!(deployment.commitHash && deployment.commitMessage)" class="italic">{{ $t('applicationDetails.notAvailable') }}</p>
     </div>
     <div class="mt-2 flex items-center gap-2 font-normal text-gray-800">
       <font-awesome-icon icon="fa-solid fa-calendar-days" />
@@ -221,29 +224,29 @@ onCancelDeploymentError((err) => {
     </div>
     <div class="mb-2 mt-2 flex items-center gap-2 font-normal text-gray-800" v-if="buildArgs.length !== 0">
       <font-awesome-icon icon="fa-solid fa-hammer" />
-      <p><span class="font-medium">Build arguments :</span> <span v-html="buildArgs"></span></p>
+      <p><span class="font-medium">{{ $t('applicationDetails.buildArguments') }}</span> <span v-html="buildArgs"></span></p>
     </div>
     <div
       v-if="deployment.status === 'pending'"
       class="mt-2 flex flex-row items-center justify-between rounded-md bg-red-100 px-3 py-2">
       <div>
-        <p class="inline-flex items-center gap-2 text-lg font-medium">Cancel Deployment</p>
+        <p class="inline-flex items-center gap-2 text-lg font-medium">{{ $t('applicationDetails.cancelDeployment') }}</p>
         <p class="text-sm text-secondary-700">
-          If you are feeling deployment has been stuck for a long time, you can cancel the deployment.
+          {{ $t('applicationDetails.cancelDeploymentHint') }}
         </p>
       </div>
       <FilledButton type="danger" @click="cancelDeployment" :loading="cancelDeploymentLoading"
-        >Request Cancellation
+        >{{ $t('applicationDetails.requestCancellation') }}
       </FilledButton>
     </div>
 
     <hr class="mb-2 mt-2" />
     <p class="inline-flex items-center gap-2 text-base font-medium">
-      Deployment Logs
+      {{ $t('applicationDetails.deploymentLogs') }}
       <StatusPulse v-if="isTerminalLoading" type="success" />
     </p>
     <p class="text-sm text-secondary-700">
-      If you feel that deployment log is not automatically updating, please refresh the page.
+      {{ $t('applicationDetails.deploymentLogsHint') }}
     </p>
   </section>
   <div id="terminal" class="mt-3 w-full overflow-hidden rounded-md bg-black p-2"></div>

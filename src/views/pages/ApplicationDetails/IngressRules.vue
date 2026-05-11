@@ -29,8 +29,8 @@ const refetchIngressRules = () => {
   <IngressRuleList ref="ingressRuleListRef" :application-id="router.currentRoute.value.params.id" />
   <!-- More actions  -->
   <div class="mt-4 flex items-center justify-center gap-3 text-sm">
-    Expose your application to the world
-    <FilledButton slim type="primary" :click="openNewIngressRuleModal">Add Ingress Rule</FilledButton>
+    {{ $t('applicationDetails.exposeApplication') }}
+    <FilledButton slim type="primary" :click="openNewIngressRuleModal">{{ $t('applicationDetails.addIngressRule') }}</FilledButton>
   </div>
 </template>
 

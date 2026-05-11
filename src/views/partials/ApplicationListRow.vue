@@ -47,19 +47,19 @@ const viewApplicationDetails = () => {
     <TableRow align="center" flex>
       <div v-if="application.isSleeping" class="flex flex-row items-center text-sm text-gray-700">
         <font-awesome-icon icon="fa-solid fa-bed" class="me-1 text-blue-600" />
-        Sleeping
+        {{ $t('partials.sleeping') }}
       </div>
       <div
         v-else-if="application.realtimeInfo.HealthStatus === 'healthy'"
         class="flex flex-row items-center text-sm text-gray-700">
         <font-awesome-icon icon="fa-solid fa-heart-circle-check" class="me-1 text-success-500" />
-        Healthy
+        {{ $t('partials.healthy') }}
       </div>
       <div
         v-else-if="application.realtimeInfo.HealthStatus === 'unhealthy'"
         class="flex flex-row items-center text-sm text-gray-700">
         <font-awesome-icon icon="fa-solid fa-heart-circle-exclamation" class="me-1 text-danger-500" />
-        Unhealthy
+        {{ $t('partials.unhealthy') }}
       </div>
       <div v-else class="text-sm text-gray-700">----</div>
     </TableRow>
@@ -68,7 +68,7 @@ const viewApplicationDetails = () => {
       <div v-if="application.realtimeInfo.DeploymentMode === 'replicated'" class="text-sm text-gray-700">
         {{ application.realtimeInfo.RunningReplicas }} / {{ application.realtimeInfo.DesiredReplicas }}
       </div>
-      <div v-else-if="application.realtimeInfo.DeploymentMode === 'global'" class="text-sm text-gray-700">Global</div>
+      <div v-else-if="application.realtimeInfo.DeploymentMode === 'global'" class="text-sm text-gray-700">{{ $t('partials.global') }}</div>
     </TableRow>
     <TableRow v-else align="center">
       <div class="text-sm text-gray-700">----</div>
@@ -130,7 +130,7 @@ const viewApplicationDetails = () => {
       <span class="text-sm text-gray-700"> {{ createdAtFormatted }} </span>
     </TableRow>
     <TableRow align="right" flex>
-      <FilledButton :click="viewApplicationDetails" slim type="primary">View Details</FilledButton>
+      <FilledButton :click="viewApplicationDetails" slim type="primary">{{ $t('partials.viewDetails') }}</FilledButton>
     </TableRow>
   </tr>
 </template>

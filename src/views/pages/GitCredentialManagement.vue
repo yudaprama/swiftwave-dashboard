@@ -10,6 +10,9 @@ import { useMutation, useQuery } from '@vue/apollo-composable'
 import GitCredentialListRow from '@/views/partials/GitCredentialListRow.vue'
 import TableMessage from '@/views/components/Table/TableMessage.vue'
 import CreateGitCredentialModal from '@/views/partials/CreateGitCredentialModal.vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 // Create Git Credential
 const createGitCredentialModalRef = ref(null)
@@ -39,13 +42,13 @@ onGitCredentialDeleteError((err) => {
 
 onGitCredentialDeleteSuccess(() => {
   refetchGitCredentialList()
-  toast.success('Git Credential deleted successfully')
+  toast.success(t('gitCreds.deleteSuccess'))
 })
 
 const deleteGitCredentialWithConfirmation = (gitCredential) => {
   if (
     confirm(
-      `Are you sure you want to delete Git Credential ${gitCredential.name}?\nExisting deployments using this Git Credential can't use this credential anymore.`
+      t('gitCreds.deleteConfirm', { name: gitCredential.name })
     )
   ) {
     deleteGitCredential({ id: gitCredential.id })
@@ -86,19 +89,19 @@ onGitCredentialListError((err) => {
     <CreateGitCredentialModal ref="createGitCredentialModalRef" :callback-on-create="refetchGitCredentialList" />
     <!-- Top Page bar   -->
     <PageBar>
-      <template v-slot:title>Git Credentials</template>
-      <template v-slot:subtitle> Manage Git Credentials and usage in deployments</template>
+      <template v-slot:title>{{ $t('gitCreds.title') }}</template>
+      <template v-slot:subtitle>{{ $t('gitCreds.subtitle') }}</template>
       <template v-slot:buttons>
         <FilledButton :click="openCreateGitCredentialModal" type="primary">
           <font-awesome-icon icon="fa-solid fa-plus" class="mr-2" />
-          Add New
+          {{ $t('common.addNew') }}
         </FilledButton>
         <FilledButton type="ghost" :click="refetchGitCredentialList">
           <font-awesome-icon
             icon="fa-solid fa-arrows-rotate"
             :class="{
               'animate-spin ': isGitCredentialListLoading
-            }" />&nbsp;&nbsp; Refresh List
+            }" />&nbsp;&nbsp; {{ $t('common.refreshList') }}
         </FilledButton>
       </template>
     </PageBar>
@@ -106,16 +109,16 @@ onGitCredentialListError((err) => {
     <!-- Table -->
     <Table class="mt-8">
       <template v-slot:header>
-        <TableHeader align="left">Identifier Name</TableHeader>
-        <TableHeader align="center">Type</TableHeader>
-        <TableHeader align="center">Show Details</TableHeader>
-        <TableHeader align="center">Edit Details</TableHeader>
-        <TableHeader align="right">Actions</TableHeader>
+        <TableHeader align="left">{{ $t('gitCreds.identifierName') }}</TableHeader>
+        <TableHeader align="center">{{ $t('gitCreds.type') }}</TableHeader>
+        <TableHeader align="center">{{ $t('gitCreds.showDetails') }}</TableHeader>
+        <TableHeader align="center">{{ $t('gitCreds.editDetails') }}</TableHeader>
+        <TableHeader align="right">{{ $t('common.actions') }}</TableHeader>
       </template>
       <template v-if="gitCredentials.length === 0" v-slot:message>
         <TableMessage>
-          No Git Credentials found.<br />
-          Click on the Add New button to create a new Git Credential.
+          {{ $t('gitCreds.noCredentials') }}<br />
+          {{ $t('gitCreds.clickAdd') }}
         </TableMessage>
       </template>
       <template v-slot:body>

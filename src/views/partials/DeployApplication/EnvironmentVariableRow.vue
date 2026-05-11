@@ -2,6 +2,9 @@
 import FilledButton from '@/views/components/FilledButton.vue'
 import TableRow from '@/views/components/Table/TableRow.vue'
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 defineProps({
   variableKey: {
@@ -39,7 +42,7 @@ const valueHidden = ref(true)
       <input
         :key="`name-${variableKey}`"
         class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
-        placeholder="Environment Variable Name"
+        :placeholder="t('partials.envVarName')"
         type="text"
         v-bind:value="variableName"
         @input="(event) => onVariableNameChange(variableKey, event.target.value)" />
@@ -49,7 +52,7 @@ const valueHidden = ref(true)
         <input
           :key="`value-${variableKey}`"
           class="block w-full rounded-md border-gray-300 pe-14 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
-          placeholder="Environment Variable Value"
+          :placeholder="t('partials.envVarValue')"
           :type="valueHidden ? 'password' : 'text'"
           v-bind:value="variableValue"
           @input="(event) => onVariableValueChange(variableKey, event.target.value)" />
@@ -71,7 +74,7 @@ const valueHidden = ref(true)
         class="w-full"
         type="danger">
         <font-awesome-icon class="mr-2" icon="fa-solid fa-trash" />
-        Delete
+        {{ t('common.delete') }}
       </FilledButton>
     </TableRow>
   </tr>

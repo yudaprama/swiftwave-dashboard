@@ -10,9 +10,12 @@ import gql from 'graphql-tag'
 import { toast } from 'vue-sonner'
 import { useRouter } from 'vue-router'
 import ModalDialog from '@/views/components/ModalDialog.vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const router = useRouter()
-const sectionNames = ['Application Name', 'Select Source', 'Application Source', 'Deploy Configuration']
+const sectionNames = [t('deploy.applicationNameTab'), t('deploy.selectSourceTab'), t('deploy.applicationSourceTab'), t('deploy.deployConfigurationTab')]
 const isApplicationDeployedSuccessfulModalOpen = ref(false)
 const selectedTabIndex = ref(0)
 const changeTab = (index) => {
@@ -114,7 +117,7 @@ const {
 
 onDeployApplicationMutationDone((result) => {
   if (result.data.createApplication.latestDeployment === null) {
-    toast.warning('Application is not deployed yet, please wait for a while and refresh the page')
+    toast.warning(t('deploy.notDeployedYet'))
     return
   }
   isApplicationDeployedSuccessfulModalOpen.value = true
@@ -223,7 +226,7 @@ const finalizeApplicationAdditionalSettingsAndDeploy = (additionalSettings) => {
 
 const onClickTab = (index) => {
   if (index < selectedTabIndex.value) {
-    alert('If you want to change the previous configuration, you need to refresh the page and start over')
+    alert(t('deploy.changePrevConfigAlert'))
   }
 }
 </script>
@@ -231,11 +234,11 @@ const onClickTab = (index) => {
 <template>
   <ModalDialog :is-open="isApplicationDeployedSuccessfulModalOpen" non-cancelable>
     <template v-slot:header>
-      <span>🚀 Application Deployment in Progress</span>
+      <span>🚀 {{ $t('deploy.deploymentInProgress') }}</span>
     </template>
     <template v-slot:body>
-      <p class="mb-4">Application deployment has been started. Your application will be live shortly.</p>
-      <p class="italic">Redirecting to Deployment Page in few seconds</p>
+      <p class="mb-4">{{ $t('deploy.deploymentStarted') }}</p>
+      <p class="italic">{{ $t('deploy.redirectingToDeployment') }}</p>
     </template>
   </ModalDialog>
   <div class="flex h-full w-full max-w-7xl flex-col items-center sm:px-0">

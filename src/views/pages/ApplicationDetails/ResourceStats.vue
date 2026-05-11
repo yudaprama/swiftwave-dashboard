@@ -8,7 +8,9 @@ import { humanizeMemoryMB, humanizeNetworkSpeed } from '@/vendor/utils.js'
 import AreaChartTimeSeries from '@/views/components/AreaChartTimeSeries.vue'
 import FilledButton from '@/views/components/FilledButton.vue'
 import PageBar from '@/views/components/PageBar.vue'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const router = useRouter()
 const applicationId = router.currentRoute.value.params.id
 const statsTimeframe = ref('last_1_hour')
@@ -98,30 +100,30 @@ onMounted(() => {
     <div class="flex h-full w-full flex-col">
       <!-- Top Page bar   -->
       <PageBar>
-        <template v-slot:title>Application Analytics</template>
-        <template v-slot:subtitle>Monitor the resource analytics of your application</template>
+        <template v-slot:title>{{ $t('applicationDetails.applicationAnalytics') }}</template>
+        <template v-slot:subtitle>{{ $t('applicationDetails.monitorResourceAnalytics') }}</template>
         <template v-slot:buttons>
           <select
             class="block rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
             v-model="statsTimeframe"
             @change="loadResourceAnalytics">
-            <option value="last_1_hour">Last 1 hour</option>
-            <option value="last_3_hours">Last 3 hours</option>
-            <option value="last_6_hours">Last 6 hours</option>
-            <option value="last_12_hours">Last 12 hours</option>
-            <option value="last_24_hours">Last 24 hours</option>
-            <option value="last_7_days">Last 7 days</option>
-            <option value="last_30_days">Last 30 days</option>
+            <option value="last_1_hour">{{ $t('applicationDetails.last1Hour') }}</option>
+            <option value="last_3_hours">{{ $t('applicationDetails.last3Hours') }}</option>
+            <option value="last_6_hours">{{ $t('applicationDetails.last6Hours') }}</option>
+            <option value="last_12_hours">{{ $t('applicationDetails.last12Hours') }}</option>
+            <option value="last_24_hours">{{ $t('applicationDetails.last24Hours') }}</option>
+            <option value="last_7_days">{{ $t('applicationDetails.last7Days') }}</option>
+            <option value="last_30_days">{{ $t('applicationDetails.last30Days') }}</option>
           </select>
           <FilledButton type="primary" :click="loadResourceAnalytics" :loading="isResourceAnalyticsLoading">
-            Refresh Stats
+            {{ $t('applicationDetails.refreshStats') }}
           </FilledButton>
         </template>
       </PageBar>
       <div class="mt-5 flex w-full flex-col gap-5 overflow-x-clip">
         <!--  Cpu usage series  -->
         <AreaChartTimeSeries
-          title="CPU Usage"
+          :title="$t('applicationDetails.cpuUsageChart')"
           :series="cpuUsageSeries"
           :y-axis-formatter="
             (val) => {
@@ -130,10 +132,10 @@ onMounted(() => {
           "
           :y-axis-minimum-max="100" />
         <!--  Memory usage series  -->
-        <AreaChartTimeSeries title="Memory Usage" :series="memoryUsageSeries" :y-axis-formatter="humanizeMemoryMB" />
+        <AreaChartTimeSeries :title="$t('applicationDetails.memoryUsage')" :series="memoryUsageSeries" :y-axis-formatter="humanizeMemoryMB" />
         <!--  Network usage series  -->
         <AreaChartTimeSeries
-          title="Network Usage"
+          :title="$t('applicationDetails.networkUsage')"
           :series="networkUsageSeries"
           :y-axis-formatter="humanizeNetworkSpeed" />
       </div>

@@ -8,6 +8,9 @@ import FilledButton from '@/views/components/FilledButton.vue'
 import moment from 'moment'
 import axios from 'axios'
 import { getHttpBaseUrl } from '@/vendor/utils.js'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const systemLogsContent = ref('')
 const logFileName = ref('')
@@ -70,7 +73,7 @@ async function loadServerLogsContent() {
     if (e.response) {
       toast.error(e.response.data.message || 'Unexpected error')
     } else {
-      toast.error('Failed to send request')
+      toast.error(t('systemLogs.requestFail'))
     }
   }
 }
@@ -83,15 +86,15 @@ function selectSystemLog(log) {
 
 <template>
   <PageBar>
-    <template v-slot:title>System Logs</template>
-    <template v-slot:subtitle>It contains all the system logs and error logs</template>
+    <template v-slot:title>{{ $t('systemLogs.title') }}</template>
+    <template v-slot:subtitle>{{ $t('systemLogs.subtitle') }}</template>
     <template v-slot:buttons>
       <FilledButton type="ghost" :click="refetchSystemLogs">
         <font-awesome-icon
           icon="fa-solid fa-arrows-rotate"
           :class="{
             'animate-spin ': systemLogsLoading
-          }" />&nbsp;&nbsp;Refresh List
+          }" />&nbsp;&nbsp;{{ $t('common.refreshList') }}
       </FilledButton>
     </template>
   </PageBar>
@@ -114,8 +117,8 @@ function selectSystemLog(log) {
       </div>
     </div>
     <div v-else class="max-h-[80vh] w-[400px]">
-      <i v-if="systemLogsLoading">Loading logs. Please wait...</i>
-      <i v-else>No logs found. Check later or <b>refresh list</b></i>
+      <i v-if="systemLogsLoading">{{ $t('systemLogs.loadingWait') }}</i>
+      <i v-else>{{ $t('systemLogs.noLogs') }}</i>
     </div>
     <!--  Server log result  -->
     <div
@@ -125,16 +128,16 @@ function selectSystemLog(log) {
           icon="fa-solid fa-arrows-rotate"
           :class="{
             'animate-spin ': systemLogsContentLoading
-          }" />&nbsp;&nbsp;Refresh Logs
+          }" />&nbsp;&nbsp;{{ $t('systemLogs.refreshLogs') }}
       </FilledButton>
       <div v-if="logFileName === ''">
-        <i>Select a record from left side to view content</i>
+        <i>{{ $t('systemLogs.selectRecord') }}</i>
       </div>
       <div v-else-if="systemLogsContent.length === 0">
-        <i>No Logs found.</i>
+        <i>{{ $t('systemLogs.noLogsContent') }}</i>
       </div>
       <div v-else-if="systemLogsContentLoading">
-        <i>Loading logs. Please wait...</i>
+        <i>{{ $t('systemLogs.loadingWait') }}</i>
       </div>
       <div v-else class="scrollbox h-full overflow-y-auto scroll-smooth" ref="systemLogsContentRef">
         {{ systemLogsContent }}

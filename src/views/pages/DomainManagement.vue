@@ -5,6 +5,7 @@ import { useLazyQuery, useMutation, useQuery } from '@vue/apollo-composable';
 import gql from 'graphql-tag';
 import { computed, ref } from 'vue';
 import { toast } from 'vue-sonner'
+import { useI18n } from 'vue-i18n'
 import TableMessage from '@/views/components/Table/TableMessage.vue';
 import Table from '@/views/components/Table/Table.vue';
 import TableHeader from '@/views/components/Table/TableHeader.vue';
@@ -14,6 +15,8 @@ import Disclosure from '@/views/components/Disclosure.vue';
 import moment from 'moment';
 import CreateDomainModal from '@/views/partials/CreateDomainModal.vue';
 import DomainIssueSSLModal from '../partials/DomainIssueSSLModal.vue';
+
+const { t } = useI18n()
 
 const isDetailsModalOpen = ref(false);
 const openDetailsModal = () => {
@@ -49,7 +52,7 @@ const {
 const domains = computed(() => domainListResult.value?.domains ?? []);
 
 onDomainListError(() => {
-    toast.error('Failed to fetch domains');
+    toast.error(t('domains.fetchFail'));
 });
 
 // Delete domain
@@ -64,13 +67,13 @@ const {
 `);
 
 const deleteDomainWithConfirmation = async (domain) => {
-    if (confirm('Are you sure you want to delete this domain?')) {
+    if (confirm(t('domains.deleteConfirm'))) {
         deleteDomain({ id: domain.id });
     }
 };
 
 onDomainDeleteDone(() => {
-    toast.success('Domain deleted successfully');
+    toast.success(t('domains.deleteSuccess'));
     refetchDomainList();
 });
 
@@ -185,22 +188,22 @@ const openIssueSSLModal = computed(() => issueSSLModal.value?.openModal ?? (() =
         <DomainIssueSSLModal :callback-on-pop="refetchDomainList" ref="issueSSLModal" />
         <!-- Modal for show ssl details domain -->
         <ModalDialog :close-modal="closeDetailsModal" :is-open="isDetailsModalOpen">
-            <template v-slot:header>SSL details of the Domain</template>
+            <template v-slot:header>{{ $t('domains.sslDetailsTitle') }}</template>
             <template v-slot:body>
                 <div>
-                    <p class="mt-0.5"><b>SSL Status :</b> {{ (viewSslDetailsResult?.sslStatus ?? '').toUpperCase() }}
+                    <p class="mt-0.5"><b>{{ $t('domains.sslStatus') }}</b> {{ (viewSslDetailsResult?.sslStatus ?? '').toUpperCase() }}
                     </p>
-                    <p class="mt-0.5"><b>SSL Issued By :</b> {{ viewSslDetailsResult.sslIssuer }}</p>
-                    <p class="mt-0.5"><b>SSL Issued At :</b> {{ sslDetailsIssuedAt }}</p>
+                    <p class="mt-0.5"><b>{{ $t('domains.sslIssuedBy') }}</b> {{ viewSslDetailsResult.sslIssuer }}</p>
+                    <p class="mt-0.5"><b>{{ $t('domains.sslIssuedAt') }}</b> {{ sslDetailsIssuedAt }}</p>
                     <Disclosure class="mt-4">
-                        <template v-slot:title>SSL Full Chain Details</template>
+                        <template v-slot:title>{{ $t('domains.sslFullChain') }}</template>
                         <template v-slot:body>
                             <textarea class="mt-2 w-full rounded-lg border-gray-200 align-top shadow-sm sm:text-sm"
                                 readonly rows="5" v-bind:value="viewSslDetailsResult.sslFullChain"></textarea>
                         </template>
                     </Disclosure>
                     <Disclosure class="mt-3">
-                        <template v-slot:title>SSL Private Key Details</template>
+                        <template v-slot:title>{{ $t('domains.sslPrivateKey') }}</template>
                         <template v-slot:body>
                             <textarea class="mt-2 w-full rounded-lg border-gray-200 align-top shadow-sm sm:text-sm"
                                 readonly rows="5" v-bind:value="viewSslDetailsResult.sslPrivateKey"></textarea>
@@ -212,17 +215,17 @@ const openIssueSSLModal = computed(() => issueSSLModal.value?.openModal ?? (() =
 
         <!-- Top Page bar   -->
         <PageBar>
-            <template v-slot:title>Manage Domains</template>
-            <template v-slot:subtitle>Manage Registered Domains and SSL Certificates</template>
+            <template v-slot:title>{{ $t('domains.title') }}</template>
+            <template v-slot:subtitle>{{ $t('domains.subtitle') }}</template>
             <template v-slot:buttons>
                 <FilledButton :click="openNewDomainModal" type="primary">
                     <font-awesome-icon icon="fa-solid fa-plus" class="mr-2" />
-                    Register New
+                    {{ $t('domains.registerNew') }}
                 </FilledButton>
                 <FilledButton type="ghost" :click="refetchDomainList">
                     <font-awesome-icon icon="fa-solid fa-arrows-rotate" :class="{
                         'animate-spin ': isDomainListLoading
-                    }" />&nbsp;&nbsp; Refresh List
+                    }" />&nbsp;&nbsp; {{ $t('common.refreshList') }}
                 </FilledButton>
             </template>
         </PageBar>
@@ -230,19 +233,19 @@ const openIssueSSLModal = computed(() => issueSSLModal.value?.openModal ?? (() =
         <!-- Table -->
         <Table class="mt-8">
             <template v-slot:header>
-                <TableHeader align="left">Domain Name</TableHeader>
-                <TableHeader align="center">SSL Status</TableHeader>
-                <TableHeader align="center">SSL Details</TableHeader>
-                <TableHeader align="center">SSL Issuer</TableHeader>
-                <TableHeader align="center">Issue SSL</TableHeader>
-                <TableHeader align="center">SSL Auto-renew</TableHeader>
-                <TableHeader align="center">Verify DNS</TableHeader>
-                <TableHeader align="right">Actions</TableHeader>
+                <TableHeader align="left">{{ $t('domains.domainName') }}</TableHeader>
+                <TableHeader align="center">{{ $t('domains.sslStatusCol') }}</TableHeader>
+                <TableHeader align="center">{{ $t('domains.sslDetailsCol') }}</TableHeader>
+                <TableHeader align="center">{{ $t('domains.sslIssuerCol') }}</TableHeader>
+                <TableHeader align="center">{{ $t('domains.issueSsl') }}</TableHeader>
+                <TableHeader align="center">{{ $t('domains.sslAutoRenew') }}</TableHeader>
+                <TableHeader align="center">{{ $t('domains.verifyDns') }}</TableHeader>
+                <TableHeader align="right">{{ $t('common.actions') }}</TableHeader>
             </template>
             <template v-slot:message>
                 <TableMessage v-if="domains.length === 0">
-                    No domains found.<br />
-                    Click on the "Register New" button to register a new domain.
+                    {{ $t('domains.noDomains') }}<br />
+                    {{ $t('domains.clickRegister') }}
                 </TableMessage>
             </template>
             <template v-slot:body>

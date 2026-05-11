@@ -8,6 +8,9 @@ import { useMutation } from '@vue/apollo-composable'
 import gql from 'graphql-tag'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { toast } from 'vue-sonner'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const editor = ref()
 const editorInstance = shallowRef()
@@ -170,38 +173,38 @@ const openUrlInNewPage = (url) => {
 <template>
   <p class="text-xl font-semibold">
     <font-awesome-icon icon="fa-solid fa-cubes-stacked" class="mr-2 text-primary-600" />
-    Deploy Stack
+    {{ $t('deploy.deployStack') }}
   </p>
   <section class="mx-auto mt-8 flex h-full w-full max-w-7xl space-x-8">
     <div class="h-full w-1/2">
       <!--  Stack Name  -->
       <div>
-        <label class="block text-sm font-medium text-gray-700">Stack Name<span class="text-red-600"> *</span></label>
+        <label class="block text-sm font-medium text-gray-700">{{ $t('deploy.stackName') }}<span class="text-red-600"> *</span></label>
         <div class="mt-1">
           <input
             autocomplete="off"
             v-model="stateRef.stackName"
             class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
-            placeholder="Enter stack name"
+            :placeholder="$t('deploy.enterStackName')"
             type="text" />
         </div>
       </div>
       <!--   Stack Config (Yaml)   -->
       <div class="mt-3 h-[80%]">
         <label class="block text-sm font-medium text-gray-700"
-          >Stack Config (YAML)<span class="text-red-600"> *</span></label
+          >{{ $t('deploy.stackConfigYaml') }}<span class="text-red-600"> *</span></label
         >
         <div ref="editor" class="mt-1 h-full w-full overflow-hidden rounded-md border-2 border-primary-300" />
       </div>
     </div>
     <div class="w-1/2 pt-4">
-      <p class="select-none text-base font-semibold">⚙️ Actions</p>
+      <p class="select-none text-base font-semibold">{{ '\u2699\uFE0F' }} {{ $t('deploy.actions') }}</p>
       <FilledButton
         class="mt-4 w-full"
         type="primary"
         :click="cleanupStackConfigHelper"
         :loading="isCleanupAndVerifyStackConfigLoading"
-        >Cleanup & Verify Stack Config
+        >{{ $t('deploy.cleanupVerifyStack') }}
       </FilledButton>
       <!--   Verification Status   -->
       <div class="mt-2 p-3" v-if="stateRef.verificationStatus !== -1">
@@ -213,7 +216,7 @@ const openUrlInNewPage = (url) => {
           v-else-if="stateRef.verificationStatus === 0"
           icon="fa-solid fa-circle-xmark"
           class="mr-1 text-xl text-danger-500" />
-        {{ stateRef.verificationStatus === 1 ? 'Verified' : 'Verification Failed' }}
+        {{ stateRef.verificationStatus === 1 ? $t('deploy.verified') : $t('deploy.verificationFailed') }}
       </div>
       <!--    Verification Result  -->
       <div
@@ -234,11 +237,11 @@ const openUrlInNewPage = (url) => {
         :loading="deployStackLoading"
         :click="deployStackHelper">
         <font-awesome-icon icon="fa-solid fa-hammer" class="mr-2" />
-        Deploy Stack
+        {{ $t('deploy.deployStack') }}
       </FilledButton>
       <!--  Modal to show result    -->
       <ModalDialog :is-open="isModalOpen" non-cancelable>
-        <template v-slot:header>🎉 Deployed Successfully</template>
+        <template v-slot:header>{{ '\u{1F389}' }} {{ $t('deploy.deployedSuccessfully') }}</template>
         <template v-slot:body>
           <div class="flex flex-col space-y-3 pt-3">
             <div
@@ -267,17 +270,17 @@ const openUrlInNewPage = (url) => {
                       }).href
                     )
                 ">
-                View
+                {{ $t('deploy.view') }}
               </FilledButton>
             </div>
             <div v-if="stateRef.deployedApplicationsResult.length === 0" class="text-center text-gray-500">
-              No applications deployed
+              {{ $t('deploy.noApplicationsDeployed') }}
             </div>
           </div>
         </template>
         <template v-slot:footer>
           <FilledButton type="warning" class="w-full" :click="() => $router.replace('/applications')"
-            >Go to Applications List
+            >{{ $t('deploy.goToApplicationsList') }}
           </FilledButton>
         </template>
       </ModalDialog>

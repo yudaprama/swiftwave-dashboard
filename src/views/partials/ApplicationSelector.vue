@@ -2,6 +2,7 @@
 import { useQuery } from '@vue/apollo-composable'
 import gql from 'graphql-tag'
 import { computed, ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 
 const props = defineProps({
   selector: {
@@ -27,6 +28,7 @@ const props = defineProps({
   }
 })
 
+const { t } = useI18n()
 const selectedApplication = ref('')
 const { result: applicationsResult, refetch: refetchApplications } = useQuery(
   gql`
@@ -56,7 +58,7 @@ watch(selectedApplication, () => {
 })
 
 const createApplication = () => {
-  alert("You can create application from 'Deploy Application', 'Deploy Stack' or 'App Store' options of sidebar")
+  alert(t('partials.createAppAlert'))
 }
 </script>
 
@@ -68,14 +70,14 @@ const createApplication = () => {
     <select
       class="lock w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
       v-model="selectedApplication">
-      <option value="" disabled selected>Select Application</option>
+      <option value="" disabled selected>{{ $t('partials.selectApplication') }}</option>
       <option v-for="application in applications" :key="application.id" :value="getValue(application)">
         {{ application.name }}
       </option>
     </select>
     <p class="ml-1 mt-2 flex items-center text-sm" v-if="showCreateLink">
-      Need to create Application ?
-      <a class="ml-1.5 cursor-pointer font-bold text-primary-600" @click="createApplication">Click here</a>
+      {{ $t('partials.needToCreateApplication') }}
+      <a class="ml-1.5 cursor-pointer font-bold text-primary-600" @click="createApplication">{{ $t('partials.clickHere') }}</a>
     </p>
   </div>
 </template>

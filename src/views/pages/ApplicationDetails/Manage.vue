@@ -5,7 +5,9 @@ import { useMutation } from '@vue/apollo-composable'
 import gql from 'graphql-tag'
 import { toast } from 'vue-sonner'
 import { getHttpBaseUrl } from '@/vendor/utils.js'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const router = useRouter()
 
 // Restart Application
@@ -30,9 +32,9 @@ const {
 
 restartApplicationDone((result) => {
   if (result.data.restartApplication) {
-    toast.success('Application restarted successfully !')
+    toast.success(t('applicationDetails.restartSuccess'))
   } else {
-    toast.error('Something went wrong !')
+    toast.error(t('applicationDetails.somethingWentWrong'))
   }
 })
 
@@ -41,7 +43,7 @@ restartApplicationError((error) => {
 })
 
 const restartApplicationWithConfirmation = () => {
-  const confirmation = confirm('Are you sure that you want to restart this application ?')
+  const confirmation = confirm(t('applicationDetails.restartConfirm'))
   if (confirmation) {
     restartApplication()
   }
@@ -69,9 +71,9 @@ const {
 
 rebuildApplicationDone((result) => {
   if (result.data.rebuildApplication) {
-    toast.success('Application rebuild request sent successfully !')
+    toast.success(t('applicationDetails.rebuildSuccess'))
   } else {
-    toast.error('Something went wrong !')
+    toast.error(t('applicationDetails.somethingWentWrong'))
   }
   router.push({
     name: 'Application Details Deployments',
@@ -86,7 +88,7 @@ rebuildApplicationError((error) => {
 })
 
 const rebuildApplicationWithConfirmation = () => {
-  const confirmation = confirm('Are you sure that you want to rebuild this application ?')
+  const confirmation = confirm(t('applicationDetails.rebuildConfirm'))
   if (confirmation) {
     rebuildApplication()
   }
@@ -104,35 +106,35 @@ const openWebConsole = () => {
   <div class="flex flex-col items-start">
     <div class="flex w-full flex-row items-center justify-between rounded-md p-2">
       <div>
-        <p class="inline-flex items-center gap-2 text-lg font-medium">SSH in Application</p>
-        <p class="text-sm text-secondary-700">You can access the shell of the container running this application.</p>
+        <p class="inline-flex items-center gap-2 text-lg font-medium">{{ $t('applicationDetails.sshInApplication') }}</p>
+        <p class="text-sm text-secondary-700">{{ $t('applicationDetails.sshInApplicationHint') }}</p>
       </div>
       <FilledButton type="primary" @click="openWebConsole">
         <font-awesome-icon icon="fa-solid fa-terminal" class="mr-2" />
-        Open Console
+        {{ $t('applicationDetails.openConsole') }}
       </FilledButton>
     </div>
     <div class="flex w-full flex-row items-center justify-between rounded-md p-2">
       <div>
-        <p class="inline-flex items-center gap-2 text-lg font-medium">Restart Application</p>
+        <p class="inline-flex items-center gap-2 text-lg font-medium">{{ $t('applicationDetails.restartApplication') }}</p>
         <p class="text-sm text-secondary-700">
-          This will restart latest deployment of this app. <b>No configuration will be updated</b>
+          {{ $t('applicationDetails.restartApplicationHint') }}
         </p>
       </div>
       <FilledButton type="primary" @click="restartApplicationWithConfirmation" :loading="restartApplicationLoading">
         <font-awesome-icon icon="fa-solid fa-rotate-right" class="mr-2" />
-        Click to Restart
+        {{ $t('applicationDetails.clickToRestart') }}
       </FilledButton>
     </div>
 
     <div class="flex w-full flex-row items-center justify-between rounded-md p-2">
       <div>
-        <p class="inline-flex items-center gap-2 text-lg font-medium">Redeploy Application</p>
-        <p class="text-sm text-secondary-700">This will trigger a new deployment with the latest source code.</p>
+        <p class="inline-flex items-center gap-2 text-lg font-medium">{{ $t('applicationDetails.redeployApplication') }}</p>
+        <p class="text-sm text-secondary-700">{{ $t('applicationDetails.redeployApplicationHint') }}</p>
       </div>
       <FilledButton type="primary" @click="rebuildApplicationWithConfirmation" :loading="rebuildApplicationLoading">
         <font-awesome-icon icon="fa-solid fa-hammer" class="mr-2" />
-        Click to Redeploy
+        {{ $t('applicationDetails.clickToRedeploy') }}
       </FilledButton>
     </div>
   </div>

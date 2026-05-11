@@ -9,6 +9,7 @@ import { useMutation } from '@vue/apollo-composable'
 import gql from 'graphql-tag'
 import { toast } from 'vue-sonner'
 import ModalDialog from '@/views/components/ModalDialog.vue'
+import LanguageSwitcher from '@/views/components/LanguageSwitcher.vue'
 
 const authStore = useAuthStore()
 const router = useRouter()
@@ -117,26 +118,26 @@ const startCountDown = () => {
           <template #icon>
             <font-awesome-icon icon="fa-solid fa-hammer" />
           </template>
-          <template #title> Deploy Application</template>
+          <template #title> {{ $t('sidebar.deployApplication') }}</template>
           <template #content>
             <div class="space-y-2">
               <RouterLink
                 class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-50 hover:text-gray-700"
                 to="/deploy/app-store">
                 <font-awesome-icon icon="fa-solid fa-store" />
-                <span class="mx-2 text-sm font-medium">App Store</span>
+                <span class="mx-2 text-sm font-medium">{{ $t('sidebar.appStore') }}</span>
               </RouterLink>
               <RouterLink
                 class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-50 hover:text-gray-700"
                 to="/deploy/application">
                 <font-awesome-icon icon="fa-solid fa-hammer" />
-                <span class="mx-2 text-sm font-medium">Deploy App</span>
+                <span class="mx-2 text-sm font-medium">{{ $t('sidebar.deployApp') }}</span>
               </RouterLink>
               <RouterLink
                 class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-50 hover:text-gray-700"
                 to="/deploy/stack">
                 <font-awesome-icon icon="fa-solid fa-cubes-stacked" />
-                <span class="mx-2 text-sm font-medium">Deploy Stack</span>
+                <span class="mx-2 text-sm font-medium">{{ $t('sidebar.deployStack') }}</span>
               </RouterLink>
             </div>
           </template>
@@ -146,20 +147,20 @@ const startCountDown = () => {
           <template #icon>
             <font-awesome-icon icon="fa-solid fa-box" />
           </template>
-          <template #title> Applications & Volumes</template>
+          <template #title> {{ $t('sidebar.applicationsVolumes') }}</template>
           <template #content>
             <div class="space-y-2">
               <RouterLink
                 class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
                 to="/applications">
                 <font-awesome-icon icon="fa-solid fa-box" />
-                <span class="mx-2 text-sm font-medium">Applications</span>
+                <span class="mx-2 text-sm font-medium">{{ $t('sidebar.applications') }}</span>
               </RouterLink>
               <RouterLink
                 class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
                 to="/persistent-volumes">
                 <font-awesome-icon icon="fa-solid fa-hard-drive" />
-                <span class="mx-2 text-sm font-medium">Persistent Volumes</span>
+                <span class="mx-2 text-sm font-medium">{{ $t('sidebar.persistentVolumes') }}</span>
               </RouterLink>
             </div>
           </template>
@@ -169,26 +170,26 @@ const startCountDown = () => {
           <template #icon>
             <font-awesome-icon icon="fa-solid fa-route" />
           </template>
-          <template #title>Manage Routing</template>
+          <template #title>{{ $t('sidebar.manageRouting') }}</template>
           <template #content>
             <div class="space-y-2">
               <RouterLink
                 class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
                 to="/domains">
                 <font-awesome-icon icon="fa-solid fa-link" />
-                <span class="mx-2 text-sm font-medium">Domains</span>
+                <span class="mx-2 text-sm font-medium">{{ $t('sidebar.domains') }}</span>
               </RouterLink>
               <RouterLink
                 class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
                 to="/ingress-rules">
                 <font-awesome-icon icon="fa-solid fa-network-wired" />
-                <span class="mx-2 text-sm font-medium">Ingress Rules</span>
+                <span class="mx-2 text-sm font-medium">{{ $t('sidebar.ingressRules') }}</span>
               </RouterLink>
               <RouterLink
                 class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
                 to="/redirect-rules">
                 <font-awesome-icon icon="fa-solid fa-location-arrow" />
-                <span class="mx-2 text-sm font-medium">Redirect Rules</span>
+                <span class="mx-2 text-sm font-medium">{{ $t('sidebar.redirectRules') }}</span>
               </RouterLink>
             </div>
           </template>
@@ -198,20 +199,20 @@ const startCountDown = () => {
           <template #icon>
             <font-awesome-icon icon="fa-solid fa-vault" />
           </template>
-          <template #title>Manage Credentials</template>
+          <template #title>{{ $t('sidebar.manageCredentials') }}</template>
           <template #content>
             <div class="space-y-2">
               <RouterLink
                 class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
                 to="/git-credentials">
                 <font-awesome-icon icon="fa-solid fa-code-branch" />
-                <span class="mx-2 text-sm font-medium">Git Credentials</span>
+                <span class="mx-2 text-sm font-medium">{{ $t('sidebar.gitCredentials') }}</span>
               </RouterLink>
               <RouterLink
                 class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
                 to="/image-registry-credentials">
                 <font-awesome-icon icon="fa-solid fa-cloud" />
-                <span class="mx-2 text-sm font-medium">Image Reg Credentials</span>
+                <span class="mx-2 text-sm font-medium">{{ $t('sidebar.imageRegCredentials') }}</span>
               </RouterLink>
             </div>
           </template>
@@ -221,14 +222,14 @@ const startCountDown = () => {
           <template #icon>
             <font-awesome-icon icon="fa-solid fa-shield-halved" />
           </template>
-          <template #title>Protect Application</template>
+          <template #title>{{ $t('sidebar.protectApplication') }}</template>
           <template #content>
             <div class="space-y-2">
               <RouterLink
                 class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
                 to="/app_auth/basic_authentication">
                 <font-awesome-icon icon="fa-solid fa-user-shield" />
-                <span class="mx-2 text-sm font-medium">Basic Authentication</span>
+                <span class="mx-2 text-sm font-medium">{{ $t('sidebar.basicAuthentication') }}</span>
               </RouterLink>
             </div>
           </template>
@@ -238,14 +239,14 @@ const startCountDown = () => {
           <template #icon>
             <font-awesome-icon icon="fa-solid fa-server" />
           </template>
-          <template #title>Manage Servers</template>
+          <template #title>{{ $t('sidebar.manageServers') }}</template>
           <template #content>
             <div class="space-y-2">
               <RouterLink
                 class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
                 to="/servers">
                 <font-awesome-icon icon="fa-solid fa-list-ul" />
-                <span class="mx-2 text-sm font-medium">Server list</span>
+                <span class="mx-2 text-sm font-medium">{{ $t('sidebar.serverList') }}</span>
               </RouterLink>
             </div>
           </template>
@@ -255,26 +256,26 @@ const startCountDown = () => {
           <template #icon>
             <font-awesome-icon icon="fa-solid fa-gear" />
           </template>
-          <template #title> Manage System</template>
+          <template #title> {{ $t('sidebar.manageSystem') }}</template>
           <template #content>
             <div class="space-y-2">
               <RouterLink
                 class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
                 to="/logs">
                 <font-awesome-icon icon="fa-solid fa-file-waveform" />
-                <span class="mx-2 text-sm font-medium">System Logs</span>
+                <span class="mx-2 text-sm font-medium">{{ $t('sidebar.systemLogs') }}</span>
               </RouterLink>
               <RouterLink
                 class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
                 to="/setup?update=1">
                 <font-awesome-icon icon="fa-solid fa-wrench" />
-                <span class="mx-2 text-sm font-medium">System Configuration</span>
+                <span class="mx-2 text-sm font-medium">{{ $t('sidebar.systemConfiguration') }}</span>
               </RouterLink>
               <div
                 @click="systemRestart"
                 class="flex transform cursor-pointer items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700">
                 <font-awesome-icon icon="fa-solid fa-power-off" />
-                <span class="mx-2 text-sm font-medium">System Restart</span>
+                <span class="mx-2 text-sm font-medium">{{ $t('sidebar.systemRestart') }}</span>
               </div>
             </div>
           </template>
@@ -284,35 +285,38 @@ const startCountDown = () => {
           <template #icon>
             <font-awesome-icon icon="fa-solid fa-user-tie" />
           </template>
-          <template #title> Administration</template>
+          <template #title> {{ $t('sidebar.administration') }}</template>
           <template #content>
             <div class="space-y-2">
               <RouterLink
                 class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
                 to="/users">
                 <font-awesome-icon icon="fa-solid fa-users" />
-                <span class="mx-2 text-sm font-medium">Manage Users</span>
+                <span class="mx-2 text-sm font-medium">{{ $t('sidebar.manageUsers') }}</span>
               </RouterLink>
               <div
                 class="flex transform cursor-pointer items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
                 @click="openChangePasswordModal">
                 <font-awesome-icon icon="fa-solid fa-key" />
-                <span class="mx-2 text-sm font-medium">Change Password</span>
+                <span class="mx-2 text-sm font-medium">{{ $t('sidebar.changePassword') }}</span>
               </div>
               <a
                 class="flex transform cursor-pointer items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
                 @click="logoutWithConfirmation">
                 <font-awesome-icon icon="fa-solid fa-right-from-bracket" />
-                <span class="mx-2 text-sm font-medium">Logout</span>
+                <span class="mx-2 text-sm font-medium">{{ $t('sidebar.logout') }}</span>
               </a>
             </div>
           </template>
         </SideBarOption>
       </nav>
     </div>
-    <div class="flex justify-between px-2 text-sm font-medium text-white">
-      <span>Auto-logout {{ authStore.sessionRelativeTimeoutStatus }}</span>
+    <div class="flex items-center justify-between px-2 text-sm font-medium text-white">
+      <LanguageSwitcher />
       <span> v{{ swVersion }}</span>
+    </div>
+    <div class="px-2 text-sm font-medium text-white">
+      <span>{{ $t('sidebar.autoLogout') }} {{ authStore.sessionRelativeTimeoutStatus }}</span>
     </div>
     <ChangePasswordModal :is-modal-open="isChangePasswordModalOpen" :close-modal="closeChangePasswordModal" />
     <Teleport to="body">

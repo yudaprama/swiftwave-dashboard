@@ -97,6 +97,7 @@ import {
 import { useAuthStore } from '@/store/auth.js'
 import VueApexCharts from 'vue3-apexcharts'
 
+import i18n from './i18n/index.js'
 import App from './App.vue'
 import router from './router'
 import './assets/css/base.css'
@@ -276,6 +277,7 @@ pinia.use(({ store }) => {
 })
 app.use(router)
 app.use(pinia)
+app.use(i18n)
 app.use(VueApexCharts)
 app.directive('debounce', vueDebounce({ lock: true }))
 app.mount('#app')

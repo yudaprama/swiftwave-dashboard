@@ -110,19 +110,19 @@ const openStackFileForInstall = (stack) => {
     <div class="navbar">
       <input
         class="block w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-primary-500 focus:ring-primary-500"
-        placeholder="Search Apps"
+        :placeholder="$t('appStore.searchApps')"
         v-model="searchText"
         @keydown.enter="searchApps"
         v-debounce:200ms="searchApps"
         type="text" />
-      <div class="w-full select-none rounded-md px-2 py-2 text-sm font-medium text-black">Choose Category</div>
+      <div class="w-full select-none rounded-md px-2 py-2 text-sm font-medium text-black">{{ $t('appStore.chooseCategory') }}</div>
       <div
         class="nav-element"
         @click="chooseCategory('')"
         :class="{
           'nav-active': selectedCategory === ''
         }">
-        All Apps
+        {{ $t('appStore.allApps') }}
       </div>
       <div
         v-for="category in categories"
@@ -140,11 +140,11 @@ const openStackFileForInstall = (stack) => {
       <!--    No app available -->
       <div v-if="appsShown.length === 0" class="flex h-full w-full flex-col items-center justify-center">
         <p class="text-5xl">🤔</p>
-        <p class="ml-4 mt-10 text-xl font-medium">No apps found</p>
+        <p class="ml-4 mt-10 text-xl font-medium">{{ $t('appStore.noAppsFound') }}</p>
         <p class="mt-3">
-          If you think the app should be here, Raise a request in
+          {{ $t('appStore.noAppsHint') }}
           <a href="https://github.com/swiftwave-org/app-store" target="_blank" class="font-semibold text-primary-600"
-            >Swiftwave App Store</a
+            >{{ $t('appStore.swiftwaveAppStore') }}</a
           >.
         </p>
       </div>
@@ -176,9 +176,9 @@ const openStackFileForInstall = (stack) => {
   </section>
   <!-- Modal to show options -->
   <ModalDialog :close-modal="closeModal" :is-open="isOptionsModalOpen">
-    <template v-slot:header>Install {{ selectedApp.title }}</template>
+    <template v-slot:header>{{ $t('appStore.install') }} {{ selectedApp.title }}</template>
     <template v-slot:body>
-      <p>Choose the preferred version -</p>
+      <p>{{ $t('appStore.chooseVersion') }}</p>
       <div class="mt-6 flex flex-col gap-2">
         <OutlinedButton
           :click="() => openStackFileForInstall(stack)"

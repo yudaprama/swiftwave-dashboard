@@ -5,7 +5,9 @@ import gql from 'graphql-tag'
 import { computed } from 'vue'
 import { toast } from 'vue-sonner'
 import FilledButton from '@/views/components/FilledButton.vue'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const router = useRouter()
 const applicationId = router.currentRoute.value.params.id
 
@@ -43,7 +45,7 @@ const webhookTriggerLink = computed(() => {
 
 const copyToClipboard = (text) => {
   navigator.clipboard.writeText(text)
-  toast.success('Webhook link copied to clipboard !')
+  toast.success(t('applicationDetails.copyWebhookLink'))
 }
 
 // Regenerate Webhook Token
@@ -70,18 +72,16 @@ regenerateWebhookTokenError((error) => {
 
 regenerateWebhookTokenDone((result) => {
   if (result.data.regenerateWebhookToken) {
-    toast.success('Webhook token regenerated successfully !')
+    toast.success(t('applicationDetails.regenerateWebhookSuccess'))
     refetchApplicationDetails()
   } else {
-    toast.error('Something went wrong !')
+    toast.error(t('applicationDetails.somethingWentWrong'))
   }
 })
 
 const regenerateWebhookTokenWithConfirmation = () => {
   if (
-    confirm(
-      'Are you sure you want to regenerate the webhook token ?\n\nThis will invalidate the previous token and you will have to update the webhook link in your git/docker repository.'
-    )
+    confirm(t('applicationDetails.regenerateWebhookConfirm'))
   ) {
     regenerateWebhookToken({
       id: applicationId
@@ -93,13 +93,13 @@ const regenerateWebhookTokenWithConfirmation = () => {
 <template>
   <!--  NOTE -->
   <div class="mb-8 rounded-md border-l-4 border-yellow-500 bg-yellow-100 p-3 text-yellow-700" role="alert">
-    <p class="font-bold">NOTE:</p>
-    <p>Webhook CI is only available for applications deployed using git/docker</p>
+    <p class="font-bold">{{ $t('applicationDetails.webhookNote') }}</p>
+    <p>{{ $t('applicationDetails.webhookNoteMessage') }}</p>
   </div>
 
-  <p class="inline-flex items-center gap-2 text-lg font-medium">Webhook Based CI</p>
+  <p class="inline-flex items-center gap-2 text-lg font-medium">{{ $t('applicationDetails.webhookBasedCI') }}</p>
   <p class="text-sm text-secondary-700">
-    You can configure your git/docker repository to trigger a new deployment on every push.
+    {{ $t('applicationDetails.webhookCIHint') }}
   </p>
 
   <!--  Link with a copy button -->
@@ -109,26 +109,26 @@ const regenerateWebhookTokenWithConfirmation = () => {
       <button
         class="absolute bottom-1 right-1 top-1 rounded-md bg-secondary-200 px-3 text-sm font-bold hover:bg-secondary-300"
         @click="copyToClipboard(webhookTriggerLink)">
-        Copy
+        {{ $t('applicationDetails.copyLabel') }}
         <font-awesome-icon icon="fa-solid fa-copy" />
       </button>
     </div>
     <p class="mt-2 text-sm text-secondary-700">
-      Copy the above link and paste it in your git/docker repository's webhook configuration.
+      {{ $t('applicationDetails.copyWebhookHint') }}
     </p>
   </div>
 
   <!-- Regenerate Webhook tolen -->
   <div class="mt-6 flex w-full flex-row items-center justify-between rounded-md">
     <div>
-      <p class="inline-flex items-center gap-2 text-lg font-medium">Regenerate Webhook Token</p>
-      <p class="text-sm text-secondary-700">Regenerate the webhook token if you think it is compromised.</p>
+      <p class="inline-flex items-center gap-2 text-lg font-medium">{{ $t('applicationDetails.regenerateWebhookTokenTitle') }}</p>
+      <p class="text-sm text-secondary-700">{{ $t('applicationDetails.regenerateWebhookTokenHint') }}</p>
     </div>
     <FilledButton
       type="primary"
       :loading="regenerateWebhookTokenLoading"
       @click="regenerateWebhookTokenWithConfirmation">
-      Regenerate Token
+      {{ $t('applicationDetails.regenerateToken') }}
     </FilledButton>
   </div>
 </template>

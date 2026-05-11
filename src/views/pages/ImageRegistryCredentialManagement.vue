@@ -10,6 +10,9 @@ import { useMutation, useQuery } from '@vue/apollo-composable'
 import TableMessage from '@/views/components/Table/TableMessage.vue'
 import ImageRegistryCredentialListRow from '@/views/partials/ImageRegistryCredentialListRow.vue'
 import CreateImageRegistryCredentialModal from '@/views/partials/CreateImageRegistryCredentialModal.vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 // Create Image Registry Credential
 const createImageRegistryCredentialModalRef = ref(null)
@@ -41,13 +44,13 @@ onImageRegistryCredentialDeleteError((err) => {
 
 onImageRegistryCredentialDeleteSuccess(() => {
   refetchImageRegistryCredentialList()
-  toast.success('Image Registry Credential deleted successfully')
+  toast.success(t('registryCreds.deleteSuccess'))
 })
 
 const deleteImageRegistryCredentialWithConfirmation = (imageRegistryCredential) => {
   if (
     confirm(
-      `Are you sure you want to delete Image Registry Credential ?\nExisting deployments using this Image Registry Credential can't use this credential anymore.`
+      t('registryCreds.deleteConfirm')
     )
   ) {
     deleteImageRegistryCredential({ id: imageRegistryCredential.id })
@@ -92,19 +95,19 @@ onImageRegistryCredentialListError((err) => {
 
     <!-- Top Page bar   -->
     <PageBar>
-      <template v-slot:title>Image Registry Credentials</template>
-      <template v-slot:subtitle> Manage Image Registry Credentials and usage in deployments</template>
+      <template v-slot:title>{{ $t('registryCreds.title') }}</template>
+      <template v-slot:subtitle>{{ $t('registryCreds.subtitle') }}</template>
       <template v-slot:buttons>
         <FilledButton :click="openCreateImageRegistryCredentialModal" type="primary">
           <font-awesome-icon icon="fa-solid fa-plus" class="mr-2" />
-          Add New
+          {{ $t('common.addNew') }}
         </FilledButton>
         <FilledButton type="ghost" :click="refetchImageRegistryCredentialList">
           <font-awesome-icon
             icon="fa-solid fa-arrows-rotate"
             :class="{
               'animate-spin ': isImageRegistryCredentialListLoading
-            }" />&nbsp;&nbsp; Refresh List
+            }" />&nbsp;&nbsp; {{ $t('common.refreshList') }}
         </FilledButton>
       </template>
     </PageBar>
@@ -112,16 +115,16 @@ onImageRegistryCredentialListError((err) => {
     <!-- Table -->
     <Table class="mt-8">
       <template v-slot:header>
-        <TableHeader align="left">URL</TableHeader>
-        <TableHeader align="center">Username</TableHeader>
-        <TableHeader align="center">Password</TableHeader>
-        <TableHeader align="center">Edit Details</TableHeader>
-        <TableHeader align="right">Actions</TableHeader>
+        <TableHeader align="left">{{ $t('registryCreds.url') }}</TableHeader>
+        <TableHeader align="center">{{ $t('common.username') }}</TableHeader>
+        <TableHeader align="center">{{ $t('common.password') }}</TableHeader>
+        <TableHeader align="center">{{ $t('registryCreds.editDetails') }}</TableHeader>
+        <TableHeader align="right">{{ $t('common.actions') }}</TableHeader>
       </template>
       <template v-if="imageRegistryCredentials.length === 0" v-slot:message>
         <TableMessage>
-          No Image Registry Credentials found.<br />
-          Click on the Add New button to create a new Image Registry Credential.
+          {{ $t('registryCreds.noCredentials') }}<br />
+          {{ $t('registryCreds.clickAdd') }}
         </TableMessage>
       </template>
       <template v-slot:body>

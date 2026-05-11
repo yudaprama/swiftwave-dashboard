@@ -50,30 +50,30 @@ const login = async () => {
         </div>
       </div>
       <!--    Heading  -->
-      <p class="mt-32 font-comfortaa text-5xl"><span class="text-primary-600">Simple Lightweight</span>&nbsp;PaaS</p>
-      <p class="mt-6 font-comfortaa text-5xl">for self-hosting</p>
+      <p class="mt-32 font-comfortaa text-5xl"><span class="text-primary-600">{{ $t('login.heading1') }}</span>&nbsp;{{ $t('login.heading2') }}</p>
+      <p class="mt-6 font-comfortaa text-5xl">{{ $t('login.heading3') }}</p>
       <!--   Button panel   -->
       <div class="absolute bottom-0 left-0 right-0 flex flex-row flex-wrap items-center justify-center gap-3 pb-6">
         <!--        <p class="w-full text-center">Hemlo bro</p>-->
         <a class="action-btn" target="_blank" href="https://github.com/swiftwave-org/swiftwave">
           <font-awesome-icon icon="fa-brands fa-github" class="icon" />
-          Github
+          {{ $t('login.github') }}
         </a>
         <a class="action-btn" target="_blank" href="https://github.com/swiftwave-org/swiftwave/issues/new/choose">
           <font-awesome-icon icon="fa-soild fa-bug" class="icon" />
-          Report Bug
+          {{ $t('login.reportBug') }}
         </a>
         <a class="action-btn" target="_blank" href="https://slack.swiftwave.org/">
           <font-awesome-icon icon="fa-solid fa-people-group" class="icon" />
-          Join our community
+          {{ $t('login.joinCommunity') }}
         </a>
         <a class="action-btn" target="_blank" href="mailto:support@swiftwave.org">
           <font-awesome-icon icon="fa-solid fa-envelope" class="icon" />
-          Reach out to team
+          {{ $t('login.reachTeam') }}
         </a>
         <a class="action-btn" target="_blank" href="https://swiftwave.org/docs/support_us/">
           <font-awesome-icon icon="fa-solid fa-handshake-angle" class="icon" />
-          Support <b>Swiftwave</b>
+          {{ $t('login.support') }} <b>{{ $t('login.swiftwave') }}</b>
         </a>
       </div>
     </div>
@@ -105,7 +105,7 @@ const login = async () => {
         <!--   Login Form   -->
         <form class="space-y-4" @keydown.enter.prevent="login">
           <div>
-            <label class="block text-sm font-medium leading-6 text-gray-900" for="username">Username</label>
+            <label class="block text-sm font-medium leading-6 text-gray-900" for="username">{{ $t('login.usernameLabel') }}</label>
             <div class="mt-1">
               <input
                 id="username"
@@ -113,26 +113,26 @@ const login = async () => {
                 autocomplete="username"
                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 name="username"
-                placeholder="Enter username"
+                :placeholder="$t('login.enterUsername')"
                 required
                 type="text" />
             </div>
           </div>
           <div>
-            <label class="block text-sm font-medium leading-6 text-gray-900" for="password">Password</label>
+            <label class="block text-sm font-medium leading-6 text-gray-900" for="password">{{ $t('login.passwordLabel') }}</label>
             <div class="mt-1">
               <input
                 id="password"
                 v-model="password"
                 autocomplete="current-password"
                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                placeholder="Enter password"
+                :placeholder="$t('login.enterPassword')"
                 required
                 type="password" />
             </div>
           </div>
           <div v-if="authenticationStatus.totp_required">
-            <label class="block text-sm font-medium leading-6 text-gray-900" for="2fa_code">Provide 2FA Code</label>
+            <label class="block text-sm font-medium leading-6 text-gray-900" for="2fa_code">{{ $t('login.provide2fa') }}</label>
             <div class="mt-2">
               <v-otp-input
                 :num-inputs="6"
@@ -144,7 +144,7 @@ const login = async () => {
             </div>
           </div>
           <div class="py-2">
-            <FilledButton :click="login" class="w-full"> Sign in</FilledButton>
+            <FilledButton :click="login" class="w-full"> {{ $t('login.signIn') }}</FilledButton>
           </div>
         </form>
       </div>

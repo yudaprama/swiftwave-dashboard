@@ -5,6 +5,7 @@ import { ref } from 'vue'
 import { useMutation } from '@vue/apollo-composable'
 import gql from 'graphql-tag'
 import { toast } from 'vue-sonner'
+import { useI18n } from 'vue-i18n'
 import { preventSpaceInput } from '@/vendor/utils.js'
 import { useRouter } from 'vue-router'
 
@@ -19,6 +20,7 @@ const props = defineProps({
   }
 })
 
+const { t } = useI18n()
 const router = useRouter()
 const isModalOpen = ref(false)
 const ipChanged = ref(false)
@@ -86,23 +88,23 @@ defineExpose({
   <teleport to="body">
     <ModalDialog :is-open="ipChanged" non-cancelable>
       <template v-slot:header>
-        <span>🚀 Server SSH Port Changed</span>
+        <span>{{ $t('partials.serverSshPortChanged') }}</span>
       </template>
       <template v-slot:body>
-        <p class="mb-2">SSH Port changed successfully! Swiftwave needs to restart.</p>
+        <p class="mb-2">{{ $t('partials.sshPortChangedSuccess') }}</p>
         <p>
-          Redirecting to Maintenance Page in <b>{{ timeCount }}</b> seconds
+          {{ $t('partials.redirectingMaintenance') }} <b>{{ timeCount }}</b> {{ $t('partials.seconds') }}
         </p>
       </template>
     </ModalDialog>
     <ModalDialog :close-modal="closeModal" :is-open="isModalOpen">
-      <template v-slot:header>Change Server SSH Port</template>
+      <template v-slot:header>{{ $t('servers.changeSshPortTitle') }}</template>
       <template v-slot:body>
-        Note: Changing the server SSH Port address will restart the swiftwave service automatically.
+        {{ $t('partials.changeServerSshPortNote') }}
         <form @submit.prevent="">
           <!--  IP Field   -->
           <div class="mt-4">
-            <label class="block text-sm font-medium text-gray-700" for="ssh_port"> SSH Port </label>
+            <label class="block text-sm font-medium text-gray-700" for="ssh_port"> {{ $t('partials.sshPort') }} </label>
             <div class="mt-1">
               <input
                 id="ssh_port"
@@ -121,7 +123,7 @@ defineExpose({
           :loading="isRequestRunning"
           type="primary"
           :disabled="newServerSSHPort === serverSshPort || newServerSSHPort === ''"
-          >Change Server SSH Port
+          >{{ $t('servers.changeSshPortTitle') }}
         </FilledButton>
       </template>
     </ModalDialog>

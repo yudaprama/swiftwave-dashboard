@@ -13,6 +13,9 @@ import TextButton from '@/views/components/TextButton.vue'
 import ModalDialog from '@/views/components/ModalDialog.vue'
 import Badge from '@/views/components/Badge.vue'
 import CreateDomainModal from '@/views/partials/CreateDomainModal.vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const isModalOpen = ref(false)
 const openModal = () => {
@@ -95,7 +98,7 @@ const {
 )
 
 const deleteRedirectRulesWithConfirmation = (redirect_rules) => {
-  if (confirm('Are you sure you want to delete this redirect rule?')) {
+  if (confirm(t('redirectRules.deleteConfirm'))) {
     deleteRedirectRule({
       id: redirect_rules.id
     })
@@ -103,7 +106,7 @@ const deleteRedirectRulesWithConfirmation = (redirect_rules) => {
 }
 
 onRedirectDeleteSuccess(() => {
-  toast.success('Redirect Rule deleted successfully')
+  toast.success(t('redirectRules.deleteSuccess'))
   refetchRedirectRules()
 })
 
@@ -168,13 +171,13 @@ const openRedirectRuleRegistrationModal = () => {
   <section class="mx-auto w-full max-w-7xl">
     <!-- Modal for create redirect rules -->
     <ModalDialog :close-modal="closeModal" :is-open="isModalOpen">
-      <template v-slot:header>Create Redirect Rule</template>
+      <template v-slot:header>{{ $t('redirectRules.createTitle') }}</template>
       <template v-slot:body>
-        Enter the details of the new redirect rule.
+        {{ $t('redirectRules.createHint') }}
         <form @submit.prevent="createRedirectRule">
           <!-- Domains -->
           <div class="mt-4">
-            <label class="block text-sm font-medium text-gray-700" for="domain">Select Domain and Protocol</label>
+            <label class="block text-sm font-medium text-gray-700" for="domain">{{ $t('redirectRules.selectDomainProtocol') }}</label>
             <div class="mt-2 flex space-x-2">
               <select
                 class="block w-4/12 rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
@@ -186,21 +189,21 @@ const openRedirectRuleRegistrationModal = () => {
                 id="domain"
                 v-model="newRedirectRuleDetails.domainId"
                 class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
-                <option value="0">Select a domain</option>
+                <option value="0">{{ $t('redirectRules.selectDomain') }}</option>
                 <option v-for="domain in domains" :key="domain.id" :value="domain.id">{{ domain.name }}</option>
               </select>
             </div>
             <p class="mt-2 flex items-center text-sm">
-              Need to create a domain?
+              {{ $t('redirectRules.needDomain') }}
               <a @click="openNewDomainModal" class="ml-1.5 cursor-pointer font-bold text-primary-600"
-                >Register New Domain</a
+                >{{ $t('redirectRules.registerNewDomain') }}</a
               >
             </p>
           </div>
 
           <!--  Redirected URL   -->
           <div class="mt-4">
-            <label class="block text-sm font-medium text-gray-700" for="name">Redirected URL</label>
+            <label class="block text-sm font-medium text-gray-700" for="name">{{ $t('redirectRules.redirectedUrl') }}</label>
             <div class="mt-1">
               <input
                 id="name"
@@ -208,7 +211,7 @@ const openRedirectRuleRegistrationModal = () => {
                 autocomplete="off"
                 class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
                 name="name"
-                placeholder="Name of redirected URL"
+                :placeholder="$t('redirectRules.redirectedUrlPlaceholder')"
                 type="text" />
             </div>
           </div>
@@ -216,26 +219,26 @@ const openRedirectRuleRegistrationModal = () => {
       </template>
       <template v-slot:footer>
         <FilledButton :click="createRedirectRule" :loading="isRedirectRuleCreating" type="primary"
-          >Register
+          >{{ $t('redirectRules.register') }}
         </FilledButton>
       </template>
     </ModalDialog>
 
     <!-- Top Page bar   -->
     <PageBar>
-      <template v-slot:title>Redirect Rules</template>
-      <template v-slot:subtitle>Manage Redirect Rules</template>
+      <template v-slot:title>{{ $t('redirectRules.title') }}</template>
+      <template v-slot:subtitle>{{ $t('redirectRules.subtitle') }}</template>
       <template v-slot:buttons>
         <FilledButton :click="openModal" type="primary">
           <font-awesome-icon icon="fa-solid fa-plus" class="mr-2" />
-          Add New
+          {{ $t('common.addNew') }}
         </FilledButton>
         <FilledButton type="ghost" :click="refetchRedirectRules">
           <font-awesome-icon
             icon="fa-solid fa-arrows-rotate"
             :class="{
               'animate-spin ': isRedirectRulesLoading
-            }" />&nbsp;&nbsp; Refresh List
+            }" />&nbsp;&nbsp; {{ $t('common.refreshList') }}
         </FilledButton>
       </template>
     </PageBar>
@@ -244,14 +247,14 @@ const openRedirectRuleRegistrationModal = () => {
     <Table class="mt-8">
       <template v-slot:header>
         <TableHeader align="left">ID</TableHeader>
-        <TableHeader align="center">Status</TableHeader>
-        <TableHeader align="center">Rule</TableHeader>
-        <TableHeader align="right">Actions</TableHeader>
+        <TableHeader align="center">{{ $t('common.status') }}</TableHeader>
+        <TableHeader align="center">{{ $t('redirectRules.rule') }}</TableHeader>
+        <TableHeader align="right">{{ $t('common.actions') }}</TableHeader>
       </template>
       <template v-slot:message>
         <TableMessage v-if="redirectRules.length === 0">
-          No Redirect Rules found.<br />
-          Click on the "Add New" button to create a new redirect rule.
+          {{ $t('redirectRules.noRules') }}<br />
+          {{ $t('redirectRules.clickAdd') }}
         </TableMessage>
       </template>
       <template v-slot:body>
@@ -260,10 +263,10 @@ const openRedirectRuleRegistrationModal = () => {
             <div class="text-sm font-medium text-gray-900">{{ redirectRule.id }}</div>
           </TableRow>
           <TableRow align="center">
-            <Badge v-if="redirectRule.status === 'pending'" type="warning">Pending</Badge>
-            <Badge v-else-if="redirectRule.status === 'applied'" type="success">Applied</Badge>
-            <Badge v-else-if="redirectRule.status === 'failed'" type="danger">Failed</Badge>
-            <Badge v-else-if="redirectRule.status === 'deleting'" type="danger">Deleting</Badge>
+            <Badge v-if="redirectRule.status === 'pending'" type="warning">{{ $t('redirectRules.pending') }}</Badge>
+            <Badge v-else-if="redirectRule.status === 'applied'" type="success">{{ $t('redirectRules.applied') }}</Badge>
+            <Badge v-else-if="redirectRule.status === 'failed'" type="danger">{{ $t('redirectRules.failed') }}</Badge>
+            <Badge v-else-if="redirectRule.status === 'deleting'" type="danger">{{ $t('redirectRules.deleting') }}</Badge>
           </TableRow>
           <TableRow align="center">
             <div class="text-sm text-gray-900">
@@ -274,7 +277,7 @@ const openRedirectRuleRegistrationModal = () => {
           </TableRow>
           <TableRow align="right">
             <TextButton :click="() => deleteRedirectRulesWithConfirmation(redirectRule)" type="danger"
-              >Delete
+              >{{ $t('common.delete') }}
             </TextButton>
           </TableRow>
         </tr>

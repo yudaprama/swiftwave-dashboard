@@ -3,6 +3,9 @@ import ModalDialog from '@/views/components/ModalDialog.vue'
 import DockerfileEditorOnly from '@/views/partials/DeployApplication/DockerfileEditorOnly.vue'
 import FilledButton from '@/views/components/FilledButton.vue'
 import { ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const props = defineProps({
   code: {
@@ -56,9 +59,9 @@ watch(
 <template>
   <ModalDialog :is-open="isOpen" :non-cancelable="true" full-screen width="xl">
     <template v-slot:header>
-      <p class="mb-2">Dockerfile Editor</p>
+      <p class="mb-2">{{ t('partials.dockerfileEditor') }}</p>
       <p class="mb-8 mr-8 text-sm font-normal text-gray-600">
-        Edit the Dockerfile for your application. This will be used to build your application image.
+        {{ t('partials.dockerfileEditorHint') }}
       </p>
     </template>
     <template v-slot:body>
@@ -66,13 +69,13 @@ watch(
     </template>
     <template v-slot:footer>
       <div class="flex justify-end">
-        <FilledButton class="ml-3" type="secondary" @click.prevent="cancel">Cancel</FilledButton>
+        <FilledButton class="ml-3" type="secondary" @click.prevent="cancel">{{ t('common.cancel') }}</FilledButton>
         <FilledButton
           :loading="dockerConfigurationGenerating"
           class="ml-3"
           type="primary"
           @click.prevent="generateDockerConfiguration">
-          Submit
+          {{ t('common.submit') }}
         </FilledButton>
       </div>
     </template>

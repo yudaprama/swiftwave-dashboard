@@ -93,7 +93,7 @@ onMounted(() => {
     <select
       class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
       v-model="selectedPersistentVolume">
-      <option value="" disabled selected>Select Persistent Volume</option>
+      <option value="" disabled selected>{{ $t('partials.selectPersistentVolume') }}</option>
       <option v-for="pv in persistentVolumes" :key="pv.id" :value="getValue(pv)">
         {{ pv.name }}
       </option>

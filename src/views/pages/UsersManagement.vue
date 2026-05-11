@@ -7,6 +7,9 @@ import FilledButton from '@/views/components/FilledButton.vue'
 import PageBar from '@/views/components/PageBar.vue'
 import { toast } from 'vue-sonner'
 import VueQrcode from 'vue-qrcode'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 import Table from '@/views/components/Table/Table.vue'
 import TableHeader from '@/views/components/Table/TableHeader.vue'
@@ -57,7 +60,7 @@ onUserCreateSuccess(() => {
   refetchUserList()
   newUser.username = ''
   newUser.password = ''
-  toast.success('User created successfully')
+  toast.success(t('users.createSuccess'))
 })
 
 onUserCreateFail((err) => {
@@ -76,14 +79,14 @@ const {
 `)
 
 const deleteUserWithConfirmation = (user) => {
-  if (confirm(`Are you sure you want to delete user ${user.username}?`)) {
+  if (confirm(t('users.deleteConfirm', { username: user.username }))) {
     deleteUser({ id: user.id })
   }
 }
 
 onUserDeleteSuccess(() => {
   refetchUserList()
-  toast.success('User deleted successfully')
+  toast.success(t('users.deleteSuccess'))
 })
 
 onUserDeleteFail((err) => {
@@ -158,7 +161,7 @@ onRequestEnableTotpError((err) => {
 })
 
 const requestEnableTotpWithConfirmation = () => {
-  if (confirm(`Are you sure you want to enable TOTP 2FA for ?`)) {
+  if (confirm(t('users.enableTotpConfirm'))) {
     resetTotpRequest()
     requestEnableTotp()
   }
@@ -182,7 +185,7 @@ const enableTotp = () => {
 onEnableTotpSuccess(() => {
   closeTotpModal()
   resetTotpRequest()
-  toast.success('TOTP 2FA enabled successfully')
+  toast.success(t('users.enableTotpSuccess'))
   refetchUserList()
 })
 
@@ -203,17 +206,17 @@ const {
 `)
 
 const disableTotpWithConfirmation = () => {
-  if (confirm(`Are you sure you want to disable TOTP 2FA for current user ?`)) {
+  if (confirm(t('users.disableTotpConfirm'))) {
     disableTotpRaw()
   }
 }
 
 onDisableTotpSuccess((response) => {
   if (response.data.disableTotp) {
-    toast.success('TOTP 2FA disabled successfully')
+    toast.success(t('users.disableTotpSuccess'))
     refetchUserList()
   } else {
-    toast.error('Failed to disable TOTP 2FA')
+    toast.error(t('users.disableTotpFail'))
   }
 })
 
@@ -225,17 +228,17 @@ onDisableTotpError((err) => {
 <template>
   <!-- Modal for totp -->
   <ModalDialog :close-modal="closeTotpModal" :is-open="totpModalOpen">
-    <template v-slot:header>TOTP 2FA</template>
+    <template v-slot:header>{{ $t('users.totp2fa') }}</template>
     <template v-slot:body>
       <div class="mt-6 flex flex-col items-center">
-        <p class="font-medium">Scan the QR code with Authenticator app.</p>
+        <p class="font-medium">{{ $t('users.scanQr') }}</p>
         <VueQrcode class="my-4" :value="enableTotpRequest.totpProvisioningUri" />
-        <p class="font-medium">Or Paste the secret code in authenticator app.</p>
+        <p class="font-medium">{{ $t('users.orPasteSecret') }}</p>
         <Code :show-copy-button="false">{{ enableTotpRequest.totpSecret }}</Code>
       </div>
       <Divider />
       <div class="flex w-full flex-col items-center gap-4">
-        <p class="font-medium">Enter TOTP from app</p>
+        <p class="font-medium">{{ $t('users.enterTotp') }}</p>
         <v-otp-input
           :num-inputs="6"
           input-classes="otp-input"
@@ -251,7 +254,7 @@ onDisableTotpError((err) => {
         :disabled="enableTotpRequest.filledTotp.length !== 6"
         type="primary"
         class="w-full">
-        Verify & Enable TOTP 2FA
+        {{ $t('users.verifyEnable') }}
       </FilledButton>
     </template>
   </ModalDialog>
@@ -259,13 +262,13 @@ onDisableTotpError((err) => {
   <section class="mx-auto w-full max-w-7xl">
     <!-- Modal for new user -->
     <ModalDialog :close-modal="closeModal" :is-open="isModalOpen">
-      <template v-slot:header>Create new user</template>
+      <template v-slot:header>{{ $t('users.createTitle') }}</template>
       <template v-slot:body>
-        Enter the username and password for the new user.
+        {{ $t('users.createHint') }}
         <form @submit.prevent="createUser">
           <!-- Username Field -->
           <div class="mt-4">
-            <label class="block text-sm font-medium text-gray-700" for="username"> Username </label>
+            <label class="block text-sm font-medium text-gray-700" for="username"> {{ $t('common.username') }} </label>
             <div class="mt-1">
               <input
                 id="username"
@@ -274,13 +277,13 @@ onDisableTotpError((err) => {
                 autocomplete="off"
                 class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
                 name="username"
-                placeholder="Username"
+                :placeholder="$t('common.username')"
                 type="text" />
             </div>
           </div>
           <!-- Password Field -->
           <div class="mt-4">
-            <label class="block text-sm font-medium text-gray-700" for="password"> Password </label>
+            <label class="block text-sm font-medium text-gray-700" for="password"> {{ $t('common.password') }} </label>
             <div class="mt-1">
               <input
                 id="password"
@@ -288,35 +291,34 @@ onDisableTotpError((err) => {
                 autocomplete="new-password"
                 class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
                 name="password"
-                placeholder="Password"
+                :placeholder="$t('common.password')"
                 type="password" />
             </div>
           </div>
         </form>
       </template>
       <template v-slot:footer>
-        <FilledButton :click="createUser" :loading="isUserCreating" type="primary">Create</FilledButton>
+        <FilledButton :click="createUser" :loading="isUserCreating" type="primary">{{ $t('common.create') }}</FilledButton>
       </template>
     </ModalDialog>
 
     <!-- Top Page bar   -->
     <PageBar>
-      <template v-slot:title>Users</template>
+      <template v-slot:title>{{ $t('users.title') }}</template>
       <template v-slot:subtitle>
-        Registered users can access the SwiftWave dashboard, allowing them to perform all actions and access all
-        features
+        {{ $t('users.subtitle') }}
       </template>
       <template v-slot:buttons>
         <FilledButton :click="openModal" type="primary">
           <font-awesome-icon icon="fa-solid fa-plus" class="mr-2" />
-          Create User
+          {{ $t('users.createUser') }}
         </FilledButton>
         <FilledButton type="ghost" :click="refetchUserList">
           <font-awesome-icon
             icon="fa-solid fa-arrows-rotate"
             :class="{
               'animate-spin ': isUserListLoading
-            }" />&nbsp;&nbsp; Refresh List
+            }" />&nbsp;&nbsp; {{ $t('common.refreshList') }}
         </FilledButton>
       </template>
     </PageBar>
@@ -324,17 +326,17 @@ onDisableTotpError((err) => {
     <!-- Tables -->
     <Table class="mt-8">
       <template v-slot:header>
-        <TableHeader align="left">Username</TableHeader>
-        <TableHeader align="center">Status</TableHeader>
-        <TableHeader align="center">Role</TableHeader>
-        <TableHeader align="center">2FA</TableHeader>
-        <TableHeader align="right">Actions</TableHeader>
+        <TableHeader align="left">{{ $t('common.username') }}</TableHeader>
+        <TableHeader align="center">{{ $t('common.status') }}</TableHeader>
+        <TableHeader align="center">{{ $t('users.role') }}</TableHeader>
+        <TableHeader align="center">{{ $t('users.twofa') }}</TableHeader>
+        <TableHeader align="right">{{ $t('common.actions') }}</TableHeader>
       </template>
       <template v-slot:message>
-        <TableMessage v-if="!users"> Loading users...</TableMessage>
+        <TableMessage v-if="!users"> {{ $t('users.loadingUsers') }}</TableMessage>
         <TableMessage v-else-if="users.length === 0">
-          No users found.<br />
-          Click on the "Create User" button to create a new user.
+          {{ $t('users.noUsers') }}<br />
+          {{ $t('users.clickCreate') }}
         </TableMessage>
       </template>
       <template v-slot:body>

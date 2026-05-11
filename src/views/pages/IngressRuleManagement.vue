@@ -20,19 +20,19 @@ const refetchIngressRuleList = computed(() => ingressRuleListRef.value?.refetchI
     <CreateIngressRuleModal :callback-on-create="refetchIngressRuleList" ref="newIngressRuleModalRef" />
     <!-- Top Page bar   -->
     <PageBar>
-      <template v-slot:title>Ingress Rules</template>
-      <template v-slot:subtitle>Manage Ingress Rules</template>
+      <template v-slot:title>{{ $t('ingress.title') }}</template>
+      <template v-slot:subtitle>{{ $t('ingress.subtitle') }}</template>
       <template v-slot:buttons>
         <FilledButton :click="openNewIngressRuleModal" type="primary">
           <font-awesome-icon icon="fa-solid fa-plus" class="mr-2" />
-          Add New
+          {{ $t('common.addNew') }}
         </FilledButton>
         <FilledButton type="ghost" :click="refetchIngressRuleList">
           <font-awesome-icon
             icon="fa-solid fa-arrows-rotate"
             :class="{
               'animate-spin ': ingressRuleListRef?.isIngressRulesLoading ?? false
-            }" />&nbsp;&nbsp; Refresh List
+            }" />&nbsp;&nbsp; {{ $t('common.refreshList') }}
         </FilledButton>
       </template>
     </PageBar>

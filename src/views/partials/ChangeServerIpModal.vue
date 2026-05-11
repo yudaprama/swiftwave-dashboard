@@ -5,6 +5,7 @@ import { ref } from 'vue'
 import { useMutation } from '@vue/apollo-composable'
 import gql from 'graphql-tag'
 import { toast } from 'vue-sonner'
+import { useI18n } from 'vue-i18n'
 import { preventSpaceInput } from '@/vendor/utils.js'
 import { useRouter } from 'vue-router'
 
@@ -19,6 +20,7 @@ const props = defineProps({
   }
 })
 
+const { t } = useI18n()
 const router = useRouter()
 const isModalOpen = ref(false)
 const ipChanged = ref(false)
@@ -86,23 +88,23 @@ defineExpose({
   <teleport to="body">
     <ModalDialog :is-open="ipChanged" non-cancelable>
       <template v-slot:header>
-        <span>🚀 Server IP Changed</span>
+        <span>{{ $t('partials.serverIpChanged') }}</span>
       </template>
       <template v-slot:body>
-        <p class="mb-2">IP changed successfully! Swiftwave needs to restart.</p>
+        <p class="mb-2">{{ $t('partials.ipChangedSuccess') }}</p>
         <p>
-          Redirecting to Maintenance Page in <b>{{ timeCount }}</b> seconds
+          {{ $t('partials.redirectingMaintenance') }} <b>{{ timeCount }}</b> {{ $t('partials.seconds') }}
         </p>
       </template>
     </ModalDialog>
     <ModalDialog :close-modal="closeModal" :is-open="isModalOpen">
-      <template v-slot:header>Change Server IP</template>
+      <template v-slot:header>{{ $t('servers.changeIpTitle') }}</template>
       <template v-slot:body>
-        Note: Changing the server IP address will restart the swiftwave service automatically.
+        {{ $t('partials.changeServerIpNote') }}
         <form @submit.prevent="">
           <!--  IP Field   -->
           <div class="mt-4">
-            <label class="block text-sm font-medium text-gray-700" for="ip"> IP Address </label>
+            <label class="block text-sm font-medium text-gray-700" for="ip"> {{ $t('partials.ipAddress') }} </label>
             <div class="mt-1">
               <input
                 id="ip"
@@ -121,7 +123,7 @@ defineExpose({
           :loading="isRequestRunning"
           type="primary"
           :disabled="newServerIp === serverIp || newServerIp === ''"
-          >Change Server IP
+          >{{ $t('servers.changeIpTitle') }}
         </FilledButton>
       </template>
     </ModalDialog>

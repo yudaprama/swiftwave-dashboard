@@ -13,6 +13,9 @@ import { isNaN } from 'lodash'
 import UptimeChart from '@/views/components/UptimeChart.vue'
 import UpdateApplicationGroupModal from '@/views/partials/UpdateApplicationGroupModal.vue'
 import { camelCaseToSpacedCapitalized } from '@/vendor/utils.js'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 // Get the application ID from the URL
 const router = useRouter()
@@ -111,7 +114,7 @@ const {
 )
 
 onSleepApplicationDone(() => {
-  toast.success('Application will be paused in a few seconds')
+  toast.success(t('applicationDetails.pauseSuccess'))
   refetchApplicationDetails()
 })
 
@@ -137,7 +140,7 @@ const {
 )
 
 onWakeApplicationDone(() => {
-  toast.success('Application will be resumed in a few seconds')
+  toast.success(t('applicationDetails.resumeSuccess'))
   refetchApplicationDetails()
 })
 
@@ -166,9 +169,9 @@ const {
 
 restartApplicationDone((result) => {
   if (result.data.restartApplication) {
-    toast.success('Application restarted successfully !')
+    toast.success(t('applicationDetails.restartSuccess'))
   } else {
-    toast.error('Something went wrong !')
+    toast.error(t('applicationDetails.somethingWentWrong'))
   }
 })
 
@@ -177,7 +180,7 @@ restartApplicationError((error) => {
 })
 
 const restartApplicationWithConfirmation = () => {
-  const confirmation = confirm('Are you sure that you want to restart this application ?')
+  const confirmation = confirm(t('applicationDetails.restartConfirm'))
   if (confirmation) {
     restartApplication()
   }
@@ -204,9 +207,9 @@ const {
 
 rebuildApplicationDone((result) => {
   if (result.data.rebuildApplication) {
-    toast.success('Application rebuild request sent successfully !')
+    toast.success(t('applicationDetails.rebuildSuccess'))
   } else {
-    toast.error('Something went wrong !')
+    toast.error(t('applicationDetails.somethingWentWrong'))
   }
   router.push({
     name: 'Application Details Deployments',
@@ -221,7 +224,7 @@ rebuildApplicationError((error) => {
 })
 
 const rebuildApplicationWithConfirmation = () => {
-  const confirmation = confirm('Are you sure that you want to rebuild this application ?')
+  const confirmation = confirm(t('applicationDetails.rebuildConfirm'))
   if (confirmation) {
     rebuildApplication()
   }
@@ -244,7 +247,7 @@ const openApplicationGroupUpdateModal = () => {
 
   <!-- Main -->
   <div v-if="applicationDetailsLoading">
-    <p>Loading...</p>
+    <p>{{ $t('common.loading') }}</p>
   </div>
   <section v-else class="mx-auto w-full max-w-7xl">
     <!--  First line  -->
@@ -256,7 +259,7 @@ const openApplicationGroupUpdateModal = () => {
             @click="openApplicationGroupUpdateModal"
             class="flex cursor-pointer items-center justify-center rounded-full bg-secondary-600 px-3 py-1 text-sm font-medium text-white hover:bg-secondary-700">
             <span v-if="applicationDetails.applicationGroup">{{ applicationDetails.applicationGroup.name }}</span>
-            <span v-else>no project</span>
+            <span v-else>{{ $t('applicationDetails.noProject') }}</span>
             &nbsp;&nbsp;
             <font-awesome-icon icon="fa-solid fa-caret-down" />
           </div>
@@ -290,26 +293,26 @@ const openApplicationGroupUpdateModal = () => {
       <div class="text-center font-medium text-gray-800">
         <p v-if="applicationDetails.isSleeping" class="w-full pe-[5vw] text-center text-sm text-blue-600">
           <font-awesome-icon icon="fa-solid fa-bed" />
-          Sleeping
+          {{ $t('applicationDetails.sleeping') }}
         </p>
         <div v-else-if="realtimeInfo.InfoFound" class="flex flex-row items-center gap-5 px-3 text-center">
           <div
             v-if="applicationDetails.realtimeInfo.HealthStatus === 'healthy'"
             class="flex flex-row items-center text-sm text-gray-700">
             <font-awesome-icon icon="fa-solid fa-heart-circle-check" class="me-1 text-success-500" />
-            Healthy
+            {{ $t('applicationDetails.healthy') }}
           </div>
           <div
             v-else-if="applicationDetails.realtimeInfo.HealthStatus === 'unhealthy'"
             class="flex flex-row items-center text-sm text-gray-700">
             <font-awesome-icon icon="fa-solid fa-heart-circle-exclamation" class="me-1 text-danger-500" />
-            Unhealthy
+            {{ $t('applicationDetails.unhealthy') }}
           </div>
           <div
             v-else-if="applicationDetails.realtimeInfo.HealthStatus === 'unknown'"
             class="flex flex-row items-center text-sm text-gray-700">
             <font-awesome-icon icon="fa-solid fa-heart-circle-xmark" class="me-1 text-warning-600" />
-            Unknown
+            {{ $t('applicationDetails.unknown') }}
           </div>
           <UptimeChart
             hide-hover
@@ -319,11 +322,11 @@ const openApplicationGroupUpdateModal = () => {
             :percentage="realtimeReplicaCountPercentage"
             :label="`(${realtimeInfo.RunningReplicas ?? 0} / ${applicationDetails.replicas})`" />
           <p v-else-if="deploymentMode === 'global'" class="w-full text-center text-sm text-secondary-700">
-            {{ realtimeInfo.RunningReplicas ?? 0 }} Instance{{ realtimeInfo.RunningReplicas > 1 ? 's' : '' }} running
+            {{ $t('applicationDetails.instanceRunning', { count: realtimeInfo.RunningReplicas ?? 0 }) }}
           </p>
-          <p v-else class="text-warning-600">Not Available</p>
+          <p v-else class="text-warning-600">{{ $t('applicationDetails.notAvailable') }}</p>
         </div>
-        <p v-else class="text-sm text-warning-600">Sorry, Health info not available currently</p>
+        <p v-else class="text-sm text-warning-600">{{ $t('applicationDetails.healthInfoNotAvailable') }}</p>
       </div>
     </div>
     <!--  Second line  -->
@@ -378,7 +381,7 @@ const openApplicationGroupUpdateModal = () => {
               <polyline points="17 8 12 3 7 8" />
               <line x1="12" x2="12" y1="3" y2="15" />
             </svg>
-            Source-code uploaded manually
+            {{ $t('applicationDetails.sourceCodeUploaded') }}
           </p>
         </div>
         <div class="flex items-center gap-2 text-gray-800">
