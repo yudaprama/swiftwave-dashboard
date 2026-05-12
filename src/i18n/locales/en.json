@@ -1432,5 +1432,27 @@
     "deploymentModeLabel": "Deployment Mode",
     "fetchingInstructions": "Fetching Instructions...",
     "noProject": "No Project"
+  },
+  "deploymentConfig": {
+    "reservedMemory": "Reserved Memory (MB)",
+    "memoryLimitHint": "If you want to set limit, set at-least {mb} of memory.",
+    "unlimitedMemoryHint": "If you want to provide unlimited memory, set the value to 0",
+    "customHealthcheckTitle": "Custom Healthcheck Configuration [{status}] (Click to expand)",
+    "customHealthcheck": "Custom Healthcheck",
+    "enabled": "Enabled",
+    "disabled": "Disabled",
+    "healthcheckTestCommand": "Healthcheck Test Command",
+    "checkInterval": "Check Interval (Seconds)",
+    "checkTimeout": "Check Timeout (Seconds)",
+    "startPeriod": "Start Period (Seconds)",
+    "startInterval": "Start Interval (Seconds)",
+    "retries": "Retries",
+    "dockerProxyTitle": "Docker Proxy Configuration [{status}] (Click to expand)",
+    "dockerProxyWarning1": "Don't enable it if your application doesn't need access to the Docker socket.",
+    "dockerProxyWarning2": "The security of the server may be compromised if this feature is not used properly.",
+    "dockerProxyStatus": "Docker Proxy Status",
+    "usageGuide": "Usage Guide",
+    "usageStep1": "1. Use {placeholder} as value of environment variable. While deploying app, swiftwave will inject the docker proxy host.",
+    "usageStep2": "2. Use this hostname for configuring remote docker host in your application"
   }
 }

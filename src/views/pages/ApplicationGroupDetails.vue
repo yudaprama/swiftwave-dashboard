@@ -5,6 +5,8 @@ import { useRouter } from 'vue-router'
 import { toast } from 'vue-sonner'
 import gql from 'graphql-tag'
 import { computed, reactive, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import Table from '@/views/components/Table/Table.vue'
 import TableHeader from '@/views/components/Table/TableHeader.vue'
@@ -150,7 +152,7 @@ const {
 )
 
 onErrorGroupApplicationDetails(() => {
-  toast.error('Failed to fetch application group details')
+  toast.error(t('groups.fetchError'))
 })
 
 onResultGroupApplicationDetails(() => {
@@ -437,7 +439,7 @@ const applyChanges = async () => {
     }
   }
   isApplyingChanges.value = false
-  toast.success('Changes applied successfully')
+  toast.success(t('groups.changesApplied'))
   refetchGroupApplicationDetails()
 }
 </script>
@@ -445,7 +447,7 @@ const applyChanges = async () => {
 <template>
   <!-- Main -->
   <div v-if="applicationGroupDetailsLoading">
-    <p>Loading...</p>
+    <p>{{ t('common.loading') }}</p>
   </div>
   <section v-else class="mx-auto w-full max-w-7xl">
     <!--  Modals  -->
@@ -478,15 +480,15 @@ const applyChanges = async () => {
         <div class="flex flex-row items-center gap-5 px-3 text-center">
           <div class="flex flex-row items-center text-sm text-gray-700">
             <font-awesome-icon icon="fa-solid fa-boxes-stacked" class="me-1 text-info-500" />
-            {{ totalServiceCount }}&nbsp;Services
+            {{ totalServiceCount }}&nbsp;{{ t('groups.services', totalServiceCount) }}
           </div>
           <div class="flex flex-row items-center text-sm text-gray-700">
             <font-awesome-icon icon="fa-solid fa-heart-circle-check" class="me-1 text-success-500" />
-            {{ healthyServiceCount }}&nbsp;Healthy
+            {{ healthyServiceCount }}&nbsp;{{ t('groups.healthyCount', healthyServiceCount) }}
           </div>
           <div class="flex flex-row items-center text-sm text-gray-700">
             <font-awesome-icon icon="fa-solid fa-heart-circle-exclamation" class="me-1 text-danger-500" />
-            {{ unhealthyServiceCount }}&nbsp;Unhealthy
+            {{ unhealthyServiceCount }}&nbsp;{{ t('groups.unhealthyCount', unhealthyServiceCount) }}
           </div>
         </div>
       </div>
@@ -514,7 +516,7 @@ const applyChanges = async () => {
                 target="_blank"
                 class="has-popover rounded-full bg-primary-500 px-2 py-1 text-secondary-100">
                 <font-awesome-icon icon="fa-solid fa-link" class="mr-0.5 text-xs" />
-                Link {{ index + 1 }}
+                {{ t('groups.link', index + 1) }}
                 <div class="popover">
                   {{
                     ingressRule.protocol +
@@ -530,12 +532,9 @@ const applyChanges = async () => {
           <div v-else class="has-popover flex cursor-pointer gap-2">
             <div class="deployment-head">
               <font-awesome-icon icon="fa-solid fa-globe" />
-              <p class="text-warning-600">Not Exposed</p>
+              <p class="text-warning-600">{{ t('groups.notExposed') }}</p>
             </div>
-            <div class="popover w-60">
-              No Ingress Rules available. Please open the <b>application details</b> page and create ingress rule to
-              expose your application to the internet.
-            </div>
+            <div class="popover w-60" v-html="t('groups.noIngressRulesPopover')"></div>
           </div>
         </div>
       </div>
@@ -544,17 +543,17 @@ const applyChanges = async () => {
         <div class="divider"></div>
         <div class="button" @click="rebuildApplications">
           <font-awesome-icon icon="fa-solid fa-hammer" class="mr-1" />
-          Rebuild & Deploy
+          {{ t('groups.rebuildDeploy') }}
         </div>
         <div class="divider"></div>
         <div class="button" @click="restartApplications">
           <font-awesome-icon icon="fa-solid fa-rotate-right" class="mr-1" />
-          Restart All
+          {{ t('groups.restartAll') }}
         </div>
         <div class="divider"></div>
         <div class="button text-danger-500" @click="deleteApplications">
           <font-awesome-icon icon="fa-solid fa-trash" class="mr-1" />
-          Delete All
+          {{ t('groups.deleteAll') }}
         </div>
       </div>
     </div>
@@ -568,25 +567,25 @@ const applyChanges = async () => {
             'router-link-exact-active': pageName === 'deployed-apps'
           }"
           @click="pageName = 'deployed-apps'">
-          Deployed Apps
+          {{ t('groups.deployedApps') }}
         </div>
         <div
           class="nav-element"
           :class="{ 'router-link-exact-active': pageName === 'persistent-volumes' }"
           @click="pageName = 'persistent-volumes'">
-          Persistent Volume
+          {{ t('groups.persistentVolume') }}
         </div>
         <div
           class="nav-element"
           :class="{ 'router-link-exact-active': pageName === 'environment-variables' }"
           @click="pageName = 'environment-variables'">
-          Environment Variables
+          {{ t('groups.environmentVariables') }}
         </div>
         <div
           class="nav-element"
           :class="{ 'router-link-exact-active': pageName === 'static-app-configs' }"
           @click="pageName = 'static-app-config'">
-          Static App Config
+          {{ t('groups.staticAppConfig') }}
         </div>
       </div>
 
@@ -595,17 +594,17 @@ const applyChanges = async () => {
         <div class="w-full" v-if="pageName === 'deployed-apps'">
           <Table>
             <template v-slot:header>
-              <TableHeader align="left">Application Name</TableHeader>
-              <TableHeader align="center">Health Status</TableHeader>
-              <TableHeader align="center">Replicas</TableHeader>
-              <TableHeader align="center">Deploy Status</TableHeader>
-              <TableHeader align="center">Last Deployment</TableHeader>
-              <TableHeader align="right">View Details</TableHeader>
+              <TableHeader align="left">{{ t('groups.applicationName') }}</TableHeader>
+              <TableHeader align="center">{{ t('groups.healthStatus') }}</TableHeader>
+              <TableHeader align="center">{{ t('groups.replicas') }}</TableHeader>
+              <TableHeader align="center">{{ t('groups.deployStatus') }}</TableHeader>
+              <TableHeader align="center">{{ t('groups.lastDeployment') }}</TableHeader>
+              <TableHeader align="right">{{ t('groups.viewDetails') }}</TableHeader>
             </template>
             <template v-slot:message>
               <TableMessage v-if="applications.length === 0">
-                No applications found, in this project.<br />
-                You can attach your app to new project by in application details page.
+                {{ t('groups.noAppsInProject') }}<br />
+                {{ t('groups.attachAppHint') }}
               </TableMessage>
             </template>
             <template v-slot:body>
@@ -620,7 +619,7 @@ const applyChanges = async () => {
         <div v-else-if="pageName === 'persistent-volumes'" class="flex w-full flex-col gap-3">
           <div class="flex flex-row flex-wrap gap-2">
             <div class="w-min cursor-pointer rounded-md px-2 py-2 text-sm font-medium text-secondary-700">
-              Applications
+              {{ t('groups.applications') }}
             </div>
             <div
               v-for="application in applications"
@@ -652,7 +651,7 @@ const applyChanges = async () => {
         <div v-else-if="pageName === 'environment-variables'" class="flex w-full flex-col gap-3">
           <div class="flex flex-row flex-wrap gap-2">
             <div class="w-min cursor-pointer rounded-md px-2 py-2 text-sm font-medium text-secondary-700">
-              Applications
+              {{ t('groups.applications') }}
             </div>
             <div
               v-for="application in applications"
@@ -681,7 +680,7 @@ const applyChanges = async () => {
         <div v-else-if="pageName === 'static-app-config'" class="flex w-full flex-col gap-3">
           <div class="flex flex-row flex-wrap gap-2">
             <div class="w-min cursor-pointer rounded-md px-2 py-2 text-sm font-medium text-secondary-700">
-              Applications
+              {{ t('groups.applications') }}
             </div>
             <div
               v-for="application in applications"
@@ -712,9 +711,9 @@ const applyChanges = async () => {
         <div
           v-if="isAnyAppInfoChanged"
           class="mt-4 flex flex-row items-center justify-end gap-2 rounded-md border border-gray-300 p-2">
-          <span class="mr-4 font-medium">You have updated some of the configuration</span>
-          <FilledButton type="primary" :click="applyChanges" :loading="isApplyingChanges"> Apply Changes</FilledButton>
-          <FilledButton type="secondary" :click="refetchGroupApplicationDetails"> Cancel</FilledButton>
+          <span class="mr-4 font-medium">{{ t('groups.configUpdated') }}</span>
+          <FilledButton type="primary" :click="applyChanges" :loading="isApplyingChanges">{{ t('groups.applyChanges') }}</FilledButton>
+          <FilledButton type="secondary" :click="refetchGroupApplicationDetails">{{ t('common.cancel') }}</FilledButton>
         </div>
       </div>
     </div>

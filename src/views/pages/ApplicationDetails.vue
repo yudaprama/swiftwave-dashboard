@@ -404,7 +404,7 @@ const openApplicationGroupUpdateModal = () => {
                 target="_blank"
                 class="has-popover rounded-full bg-primary-500 px-2 py-1 text-secondary-100">
                 <font-awesome-icon icon="fa-solid fa-link" class="mr-0.5 text-xs" />
-                Link {{ index + 1 }}
+                {{ $t('applicationDetails.link', index + 1) }}
                 <div class="popover">
                   {{
                     ingressRule.protocol +
@@ -420,7 +420,7 @@ const openApplicationGroupUpdateModal = () => {
           <div v-else class="has-popover flex gap-2">
             <div class="deployment-head">
               <font-awesome-icon icon="fa-solid fa-globe" />
-              <p class="text-warning-600">Not Exposed</p>
+              <p class="text-warning-600">{{ $t('applicationDetails.notExposed') }}</p>
               <RouterLink
                 :to="{
                   name: 'Application Details Ingress Rules',
@@ -430,10 +430,7 @@ const openApplicationGroupUpdateModal = () => {
                 <font-awesome-icon icon="fa-solid fa-plus" />
               </RouterLink>
             </div>
-            <div class="popover w-60">
-              No Ingress Rules available. Click the <b>plus</b> button to add ingress rules if you want to expose the
-              application to the internet.
-            </div>
+            <div class="popover w-60" v-html="$t('applicationDetails.noIngressRulesPopover')"></div>
           </div>
         </div>
       </div>
@@ -441,22 +438,22 @@ const openApplicationGroupUpdateModal = () => {
       <div class="quick-actions">
         <div class="button" v-if="applicationDetails.isSleeping" @click="wakeApplication">
           <font-awesome-icon icon="fa-solid fa-play" class="mr-1" />
-          Resume
+          {{ $t('applicationDetails.resume') }}
         </div>
         <div class="divider" v-if="applicationDetails.isSleeping"></div>
         <div class="button" v-if="!applicationDetails.isSleeping" @click="sleepApplication">
           <font-awesome-icon icon="fa-solid fa-pause" class="mr-1" />
-          Pause
+          {{ $t('applicationDetails.pause') }}
         </div>
         <div class="divider" v-if="!applicationDetails.isSleeping"></div>
         <div class="button" @click="rebuildApplicationWithConfirmation">
           <font-awesome-icon icon="fa-solid fa-hammer" class="mr-1" />
-          Rebuild
+          {{ $t('applicationDetails.rebuild') }}
         </div>
         <div class="divider"></div>
         <div class="button" @click="restartApplicationWithConfirmation">
           <font-awesome-icon icon="fa-solid fa-rotate-right" class="mr-1" />
-          Restart
+          {{ $t('applicationDetails.restart') }}
         </div>
       </div>
     </div>
@@ -471,18 +468,18 @@ const openApplicationGroupUpdateModal = () => {
         <div
           v-if="applicationUpdater.isConfigurationUpdated"
           class="mt-4 flex flex-row items-center justify-end gap-2 rounded-md border border-gray-300 p-2">
-          <span class="mr-4 font-medium">You have updated some of the configuration</span>
+          <span class="mr-4 font-medium">{{ $t('applicationDetails.configUpdated') }}</span>
           <FilledButton
             :click="applicationUpdater.applyConfigurationChanges"
             :loading="applicationUpdater.isDeployRequestSubmitting"
             type="primary">
-            Apply Changes
+            {{ $t('applicationDetails.applyChanges') }}
           </FilledButton>
           <FilledButton
             :click="applicationUpdater.cancelConfigurationChanges"
             :disabled="applicationUpdater.isDeployRequestSubmitting"
             type="secondary">
-            Cancel
+            {{ $t('common.cancel') }}
           </FilledButton>
         </div>
       </div>
