@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import UnderMaintenancePage from '@/views/pages/UnderMaintenance.vue'
-import SetupSwiftwavePage from '@/views/pages/SetupSwiftwave.vue'
 import LoginView from '@/views/pages/LoginView.vue'
 import DeployApplicationPage from '@/views/pages/DeployApplication.vue'
 import DeployStackPage from '@/views/pages/DeployStack.vue'
@@ -28,7 +27,7 @@ import ImageRegistryCredentialManagementPage from '@/views/pages/ImageRegistryCr
 import DomainManagementPage from '@/views/pages/DomainManagement.vue'
 import RedirectRuleManagementPage from '@/views/pages/RedirectRuleManagement.vue'
 import IngressRuleManagementPage from '@/views/pages/IngressRuleManagement.vue'
-import DownloadPVBackupPage from '@/views/pages/DownloadPVBackup.vue'
+
 import ServerManagementPage from '@/views/pages/ServerManagement.vue'
 import ServerLogsPage from '@/views/pages/ServerLogs.vue'
 import ServerAnalyticsPage from '@/views/pages/ServerAnalytics.vue'
@@ -39,11 +38,6 @@ import ApplicationGroupDetailsPage from '@/views/pages/ApplicationGroupDetails.v
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
-    {
-      path: '/setup',
-      name: 'Setup',
-      component: SetupSwiftwavePage
-    },
     {
       path: '/maintenance',
       name: 'Maintenance',
@@ -210,11 +204,6 @@ const router = createRouter({
       path: '/ingress-rules',
       name: 'Ingress Rules',
       component: IngressRuleManagementPage
-    },
-    {
-      path: '/pv-backup-download/:backup_id',
-      name: 'Download Persistent Volume Backup',
-      component: DownloadPVBackupPage
     },
     {
       path: '/servers',
