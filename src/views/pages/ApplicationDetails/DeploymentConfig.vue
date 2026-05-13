@@ -33,7 +33,7 @@ const openConfigureDeploymentPreferredServers = () => {
       <p class="font-medium">{{ $t('applicationDetails.replicated') }}</p>
       <input
         v-if="applicationUpdater.deploymentConfigurationDetails.deploymentMode === 'replicated'"
-        class="block h-8 w-16 rounded-full border-gray-300 shadow-sm [appearance:textfield] focus:border-primary-500 focus:ring-primary-500 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+        class="block h-8 w-16 rounded-full border-gray-300 shadow-xs [appearance:textfield] focus:border-primary-500 focus:ring-primary-500 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
         name="no_of_replicase"
         :placeholder="$t('applicationDetails.noOfReplicas')"
         type="number"
@@ -53,7 +53,7 @@ const openConfigureDeploymentPreferredServers = () => {
     <div class="mt-1">
       <label class="block cursor-pointer text-sm font-medium text-gray-700">{{ $t('applicationDetails.clickToSelectServer') }}</label>
       <input
-        class="mt-1 block w-full cursor-pointer rounded-md border-gray-300 text-sm shadow-sm focus:border-primary-500 focus:ring-primary-500"
+        class="mt-1 block w-full cursor-pointer rounded-md border-gray-300 text-sm shadow-xs focus:border-primary-500 focus:ring-primary-500"
         :placeholder="$t('applicationDetails.clickToAddServers')"
         type="text"
         @click="openConfigureDeploymentPreferredServers"
@@ -66,7 +66,7 @@ const openConfigureDeploymentPreferredServers = () => {
     <p class="font-medium text-black">{{ $t('applicationDetails.containerHostname') }}</p>
     <div class="mt-1">
       <input
-        class="mt-1 block w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-primary-500 focus:ring-primary-500"
+        class="mt-1 block w-full rounded-md border-gray-300 text-sm shadow-xs focus:border-primary-500 focus:ring-primary-500"
         :placeholder="$t('applicationDetails.provideContainerHostname')"
         type="text"
         v-model="applicationUpdater.deploymentConfigurationDetails.hostname"
@@ -86,7 +86,7 @@ const openConfigureDeploymentPreferredServers = () => {
           <div class="mt-1">
             <input
               autocomplete="off"
-              class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+              class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
               type="number"
               @change="(e) => applicationUpdater.onMemoryLimitChanged(parseInt(e.target.value) || 0)"
               v-model="applicationUpdater.deploymentConfigurationDetails.resourceLimit.memoryMb" />
@@ -99,7 +99,7 @@ const openConfigureDeploymentPreferredServers = () => {
           <div class="mt-1">
             <input
               autocomplete="off"
-              class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+              class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
               type="number"
               @change="(e) => applicationUpdater.onMemoryReservedChanged(parseInt(e.target.value) || 0)"
               v-model="applicationUpdater.deploymentConfigurationDetails.reservedResource.memoryMb" />
@@ -163,7 +163,7 @@ const openConfigureDeploymentPreferredServers = () => {
         <div class="mt-1">
           <input
             autocomplete="off"
-            class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+            class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
             type="text"
             @input="
               (e) =>
@@ -184,7 +184,7 @@ const openConfigureDeploymentPreferredServers = () => {
           <div class="mt-1">
             <input
               autocomplete="off"
-              class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+              class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
               type="number"
               @change="
                 (e) =>
@@ -201,7 +201,7 @@ const openConfigureDeploymentPreferredServers = () => {
           <div class="mt-1">
             <input
               autocomplete="off"
-              class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+              class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
               type="number"
               @change="
                 (e) =>
@@ -218,7 +218,7 @@ const openConfigureDeploymentPreferredServers = () => {
           <div class="mt-1">
             <input
               autocomplete="off"
-              class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+              class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
               type="number"
               @change="
                 (e) =>
@@ -235,7 +235,7 @@ const openConfigureDeploymentPreferredServers = () => {
           <div class="mt-1">
             <input
               autocomplete="off"
-              class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+              class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
               type="number"
               @change="
                 (e) =>
@@ -250,7 +250,7 @@ const openConfigureDeploymentPreferredServers = () => {
           <div class="mt-1">
             <input
               autocomplete="off"
-              class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+              class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
               type="number"
               @change="
                 (e) =>
@@ -569,6 +569,7 @@ const openConfigureDeploymentPreferredServers = () => {
 </template>
 
 <style scoped>
+@reference "../../../assets/css/base.css";
 .multi-select {
   @apply flex h-fit w-min overflow-hidden rounded-md border border-secondary-400;
 

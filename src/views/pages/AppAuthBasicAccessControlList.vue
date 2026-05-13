@@ -431,7 +431,7 @@ onChangePasswordDone((res) => {
                 id="name"
                 v-model="newACLName"
                 autocomplete="off"
-                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
                 placeholder="i.e. My Family Group"
                 type="text" />
             </div>
@@ -482,7 +482,7 @@ onChangePasswordDone((res) => {
                 v-model="addUserInfo.username"
                 @keydown="preventSpaceInput"
                 autocomplete="off"
-                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
                 placeholder="Enter Username"
                 type="text" />
             </div>
@@ -496,7 +496,7 @@ onChangePasswordDone((res) => {
                 v-model="addUserInfo.password"
                 @keydown="preventSpaceInput"
                 autocomplete="off"
-                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
                 placeholder="Enter Password"
                 type="password" />
             </div>
@@ -510,7 +510,7 @@ onChangePasswordDone((res) => {
                 v-model="addUserInfo.confirmPassword"
                 @keydown="preventSpaceInput"
                 autocomplete="off"
-                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
                 placeholder="Confirm Password"
                 type="password" />
             </div>
@@ -557,7 +557,7 @@ onChangePasswordDone((res) => {
                 v-model="changePasswordInfo.password"
                 @keydown="preventSpaceInput"
                 autocomplete="off"
-                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
                 placeholder="Enter Password"
                 type="password" />
             </div>
@@ -571,7 +571,7 @@ onChangePasswordDone((res) => {
                 v-model="changePasswordInfo.confirmPassword"
                 @keydown="preventSpaceInput"
                 autocomplete="off"
-                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
                 placeholder="Confirm Password"
                 type="password" />
             </div>

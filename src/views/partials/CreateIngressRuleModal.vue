@@ -181,7 +181,7 @@ defineExpose({
             <div class="mt-2 flex space-x-2">
               <select
                 v-model="newIngressRuleDetails.protocol"
-                class="block w-4/12 rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                class="block w-4/12 rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
                 @change="onChangeProtocol">
                 <option value="http">HTTP</option>
                 <option value="https">HTTPS</option>
@@ -191,7 +191,7 @@ defineExpose({
               <select
                 v-show="newIngressRuleDetails.protocol === 'http' || newIngressRuleDetails.protocol === 'https'"
                 v-model="newIngressRuleDetails.domainId"
-                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
+                class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
                 <option value="0">Select a domain</option>
                 <option v-for="domain in domains" :key="domain.id" :value="domain.id">{{ domain.name }}</option>
               </select>
@@ -204,7 +204,7 @@ defineExpose({
                 v-model="newIngressRuleDetails.port"
                 :readonly="newIngressRuleDetails.protocol === 'https'"
                 autocomplete="off"
-                class="block w-3/12 rounded-md border-gray-300 shadow-sm read-only:bg-gray-100 focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                class="block w-3/12 rounded-md border-gray-300 shadow-xs read-only:bg-gray-100 focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
                 placeholder="Port"
                 type="number" />
             </div>
@@ -232,7 +232,7 @@ defineExpose({
               <select
                 v-model="newIngressRuleDetails.applicationId"
                 :disabled="isSpecificApplicationChosen"
-                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
                 :class="{
                   'cursor-not-allowed': isSpecificApplicationChosen
                 }">
@@ -243,7 +243,7 @@ defineExpose({
               </select>
               <input
                 v-model="newIngressRuleDetails.targetPort"
-                class="block w-3/12 rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                class="block w-3/12 rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
                 placeholder="Port"
                 type="number" />
             </div>
@@ -259,10 +259,10 @@ defineExpose({
             <div class="mt-1 flex space-x-2">
               <input
                 v-model="newIngressRuleDetails.externalService"
-                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm" />
+                class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm" />
               <input
                 v-model="newIngressRuleDetails.targetPort"
-                class="block w-3/12 rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                class="block w-3/12 rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
                 placeholder="Port"
                 type="number" />
             </div>

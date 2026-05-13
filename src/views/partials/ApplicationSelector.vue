@@ -68,7 +68,7 @@ const createApplication = () => {
       'w-full': fullWidth
     }">
     <select
-      class="lock w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+      class="lock w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
       v-model="selectedApplication">
       <option value="" disabled selected>{{ $t('partials.selectApplication') }}</option>
       <option v-for="application in applications" :key="application.id" :value="getValue(application)">

@@ -38,6 +38,7 @@ defineProps({
 </template>
 
 <style scoped>
+@reference "../../assets/css/base.css";
 .multi-select {
   @apply flex h-fit w-min overflow-hidden rounded-md border border-secondary-400;
 

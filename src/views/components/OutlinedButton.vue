@@ -57,7 +57,7 @@ const isDisabled = computed(() => {
       'rounded-md': !rounded
     }"
     :disabled="isDisabled"
-    class="flex items-center justify-center border-2 px-3 font-semibold shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+    class="flex items-center justify-center border-2 px-3 font-semibold shadow-xs focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2"
     type="button"
     @click="click">
     <!--    spinner -->

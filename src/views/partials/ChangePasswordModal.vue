@@ -87,7 +87,7 @@ onPasswordChangeFail((error) => {
                 id="oldPassword"
                 v-model="passwordDetails.oldPassword"
                 autocomplete="off"
-                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
                 :placeholder="$t('partials.oldPasswordPlaceholder')"
                 type="password" />
             </div>
@@ -104,7 +104,7 @@ onPasswordChangeFail((error) => {
                 id="newPassword"
                 v-model="passwordDetails.newPassword"
                 autocomplete="off"
-                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
                 :placeholder="$t('partials.newPasswordPlaceholder')"
                 type="password" />
             </div>

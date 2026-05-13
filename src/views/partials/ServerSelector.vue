@@ -58,7 +58,7 @@ onMounted(() => {
       'w-full': props.fullWidth
     }">
     <select
-      class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+      class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
       v-model="selectedServerHostname">
       <option value="" disabled selected>{{ $t('partials.selectServer') }}</option>
       <option v-for="server in servers" :key="server.hostname" :value="server.hostname">

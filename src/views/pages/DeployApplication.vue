@@ -278,6 +278,7 @@ const onClickTab = (index) => {
 </template>
 
 <style scoped>
+@reference "../../assets/css/base.css";
 .tab-button {
   @apply w-full rounded-full px-3 py-2 text-sm font-medium leading-5 focus:outline-none;
 }
@@ -287,7 +288,7 @@ const onClickTab = (index) => {
 }
 
 .tab-button-unselected {
-  @apply text-gray-200 hover:bg-white/[0.1] hover:text-white;
+  @apply text-gray-200 hover:bg-white/10 hover:text-white;
 }
 
 .tab-panel {

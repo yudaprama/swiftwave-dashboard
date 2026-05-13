@@ -109,7 +109,7 @@ const openStackFileForInstall = (stack) => {
   <section v-else class="flex w-full flex-row items-start gap-2 overflow-hidden">
     <div class="navbar">
       <input
-        class="block w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-primary-500 focus:ring-primary-500"
+        class="block w-full rounded-md border-gray-300 text-sm shadow-xs focus:border-primary-500 focus:ring-primary-500"
         :placeholder="$t('appStore.searchApps')"
         v-model="searchText"
         @keydown.enter="searchApps"
@@ -155,7 +155,7 @@ const openStackFileForInstall = (stack) => {
           @click="() => chooseApp(app)"
           v-for="app in appsShown"
           :key="app.id"
-          class="flex h-[200px] cursor-pointer flex-col overflow-hidden rounded-xl border border-secondary-300 p-2 hover:border-primary-500 hover:shadow-sm">
+          class="flex h-[200px] cursor-pointer flex-col overflow-hidden rounded-xl border border-secondary-300 p-2 hover:border-primary-500 hover:shadow-xs">
           <!--    Header    -->
           <div class="flex flex-row gap-3 border-b pb-2">
             <div class="h-12 w-12 rounded-md p-1.5">
@@ -194,6 +194,7 @@ const openStackFileForInstall = (stack) => {
 </template>
 
 <style scoped>
+@reference "../../assets/css/base.css";
 .scrollbox::-webkit-scrollbar {
   width: 6px;
 }

@@ -30,7 +30,7 @@ defineProps({
 
 <template>
   <div class="w-full">
-    <p class="break-words text-sm font-medium">{{ title }}</p>
+    <p class="wrap-break-word text-sm font-medium">{{ title }}</p>
     <apexchart
       class="w-full"
       height="200"

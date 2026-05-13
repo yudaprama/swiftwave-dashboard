@@ -90,7 +90,7 @@ const login = async () => {
             'border-red-500 bg-red-50': !authenticationStatus.success,
             'border-green-500 bg-green-50': authenticationStatus.success
           }"
-          class="mb-5 rounded border-s-4 p-4"
+          class="mb-5 rounded-sm border-s-4 p-4"
           role="alert">
           <strong
             :class="{
@@ -111,7 +111,7 @@ const login = async () => {
                 id="username"
                 v-model="username"
                 autocomplete="username"
-                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-xs ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 name="username"
                 :placeholder="$t('login.enterUsername')"
                 required
@@ -125,7 +125,7 @@ const login = async () => {
                 id="password"
                 v-model="password"
                 autocomplete="current-password"
-                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-xs ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 :placeholder="$t('login.enterPassword')"
                 required
                 type="password" />
@@ -153,6 +153,7 @@ const login = async () => {
 </template>
 
 <style scoped>
+@reference "../../assets/css/base.css";
 @font-face {
   font-family: 'Comfortaa';
   src: url('@/assets/fonts/Comfortaa-Regular.ttf');
@@ -164,7 +165,7 @@ const login = async () => {
 }
 
 .action-btn {
-  @apply cursor-pointer rounded-lg border border-secondary-300 bg-white px-4 py-1 font-prompt text-base no-underline shadow-sm hover:bg-secondary-100 focus:outline-none;
+  @apply cursor-pointer rounded-lg border border-secondary-300 bg-white px-4 py-1 font-prompt text-base no-underline shadow-xs hover:bg-secondary-100 focus:outline-none;
 
   .icon {
     @apply mr-1 text-sm;

@@ -69,6 +69,7 @@ defineProps({
 </template>
 
 <style scoped>
+@reference "../../assets/css/base.css";
 .v-enter-active,
 .v-leave-active {
   transition: all 0.3s;

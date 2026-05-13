@@ -51,7 +51,7 @@ const noOfRedLines = computed(() => 10 - noOfGreenLines.value)
           class="rounded-lg bg-green-500"
           :class="{
             'h-6 w-1.5': !small,
-            'h-4 w-[0.25rem]': small
+            'h-4 w-1': small
           }"></div>
         <div
           v-for="i in noOfRedLines"
@@ -59,7 +59,7 @@ const noOfRedLines = computed(() => 10 - noOfGreenLines.value)
           class="rounded-lg bg-red-400"
           :class="{
             'h-6 w-1.5': !small,
-            'h-4 w-[0.25rem]': small
+            'h-4 w-1': small
           }"></div>
       </div>
       <p v-if="!hideLabel && labelPosition === 'bottom'" class="mt-0.5 text-sm text-secondary-600">{{ label }}</p>

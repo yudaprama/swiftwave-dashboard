@@ -198,14 +198,14 @@ const openIssueSSLModal = computed(() => issueSSLModal.value?.openModal ?? (() =
                     <Disclosure class="mt-4">
                         <template v-slot:title>{{ $t('domains.sslFullChain') }}</template>
                         <template v-slot:body>
-                            <textarea class="mt-2 w-full rounded-lg border-gray-200 align-top shadow-sm sm:text-sm"
+                            <textarea class="mt-2 w-full rounded-lg border-gray-200 align-top shadow-xs sm:text-sm"
                                 readonly rows="5" v-bind:value="viewSslDetailsResult.sslFullChain"></textarea>
                         </template>
                     </Disclosure>
                     <Disclosure class="mt-3">
                         <template v-slot:title>{{ $t('domains.sslPrivateKey') }}</template>
                         <template v-slot:body>
-                            <textarea class="mt-2 w-full rounded-lg border-gray-200 align-top shadow-sm sm:text-sm"
+                            <textarea class="mt-2 w-full rounded-lg border-gray-200 align-top shadow-xs sm:text-sm"
                                 readonly rows="5" v-bind:value="viewSslDetailsResult.sslPrivateKey"></textarea>
                         </template>
                     </Disclosure>

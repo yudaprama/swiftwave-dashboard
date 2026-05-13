@@ -47,11 +47,11 @@ const copyToClipboard = () => {
 
 <template>
   <div
-    class="relative my-2 break-words rounded-lg border-2 border-secondary-300 bg-secondary-100 p-3 transition-all"
+    class="relative my-2 wrap-break-word rounded-lg border-2 border-secondary-300 bg-secondary-100 p-3 transition-all"
     :class="{
       'ring-2 ring-primary-300': showCopyBorder
     }">
-    <div ref="textDivRef" class="select-text whitespace-pre-wrap break-words">
+    <div ref="textDivRef" class="select-text whitespace-pre-wrap wrap-break-word">
       <slot></slot>
     </div>
     <div

@@ -180,7 +180,7 @@ const openRedirectRuleRegistrationModal = () => {
             <label class="block text-sm font-medium text-gray-700" for="domain">{{ $t('redirectRules.selectDomainProtocol') }}</label>
             <div class="mt-2 flex space-x-2">
               <select
-                class="block w-4/12 rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                class="block w-4/12 rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
                 v-model="newRedirectRuleDetails.protocol">
                 <option value="http">HTTP</option>
                 <option value="https">HTTPS</option>
@@ -188,7 +188,7 @@ const openRedirectRuleRegistrationModal = () => {
               <select
                 id="domain"
                 v-model="newRedirectRuleDetails.domainId"
-                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
+                class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
                 <option value="0">{{ $t('redirectRules.selectDomain') }}</option>
                 <option v-for="domain in domains" :key="domain.id" :value="domain.id">{{ domain.name }}</option>
               </select>
@@ -209,7 +209,7 @@ const openRedirectRuleRegistrationModal = () => {
                 id="name"
                 v-model="newRedirectRuleDetails.redirectURL"
                 autocomplete="off"
-                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
                 name="name"
                 :placeholder="$t('redirectRules.redirectedUrlPlaceholder')"
                 type="text" />

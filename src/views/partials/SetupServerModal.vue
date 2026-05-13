@@ -382,7 +382,7 @@ onNetworkInterfacesOfServerResult((result) => {
               <label class="block text-sm font-medium text-gray-700" for="domain">Swarm Node Mode</label>
               <div class="mt-1 flex space-x-2">
                 <select
-                  class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                  class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
                   v-model="info.swarmMode">
                   <option value="manager">Manager</option>
                   <option value="worker">Worker</option>
@@ -401,7 +401,7 @@ onNetworkInterfacesOfServerResult((result) => {
               <div class="mt-1 flex flex-col">
                 <select
                   v-if="networkInterfacesOfServer.length > 1"
-                  class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                  class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
                   v-model="info.advertiseIP">
                   <option v-for="ip in networkInterfacesOfServer" :key="ip.ip" :value="ip.ip">
                     {{ ip.ip }} [{{ ip.name }}]
@@ -422,7 +422,7 @@ onNetworkInterfacesOfServerResult((result) => {
                 <input
                   id="dockerUnixPath"
                   v-model="info.dockerUnixPath"
-                  class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-xs ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   required
                   type="text" />
               </div>

@@ -24,8 +24,9 @@ defineProps({
 </template>
 
 <style scoped>
+@reference "../../assets/css/base.css";
 .loading-page {
-  @apply w-[100vw] h-[100vh] flex flex-col justify-center items-center absolute bg-white z-50
+  @apply w-screen h-screen flex flex-col justify-center items-center absolute bg-white z-50
 }
 
 @keyframes pulse {

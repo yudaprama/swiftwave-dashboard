@@ -112,7 +112,7 @@ defineExpose({
             <select
               id="selected_docker_config"
               v-model="choosenDockerConfig"
-              class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
+              class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
               <option selected value="">{{ t('partials.chooseFromList') }}</option>
               <option v-for="dockerConfig in availableDockerConfigs" :key="dockerConfig" :value="dockerConfig">
                 {{ dockerConfig }}

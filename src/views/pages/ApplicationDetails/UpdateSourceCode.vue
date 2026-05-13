@@ -413,7 +413,7 @@ const openChooseOtherDockerConfigurationModal = computed(
               id="git_credential"
               v-model="stateRef.gitCredentialID"
               @change="fetchGitBranches"
-              class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
+              class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
               <option selected value="0">{{ $t('applicationDetails.noCredential') }}</option>
               <option v-for="credential in gitCredentials" :key="credential.id" :value="credential.id">
                 {{ credential.name }} [{{ credential.type }}]
@@ -437,7 +437,7 @@ const openChooseOtherDockerConfigurationModal = computed(
               v-model="stateRef.gitRepoUrl"
               v-debounce:1000ms="fetchGitBranches"
               autocomplete="off"
-              class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+              class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
               name="name"
               :placeholder="$t('applicationDetails.enterGitRepoUrl')"
               type="text" />
@@ -456,7 +456,7 @@ const openChooseOtherDockerConfigurationModal = computed(
             <select
               id="git_credential"
               v-model="stateRef.gitBranch"
-              class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
+              class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
               <option selected disabled value="">{{ $t('applicationDetails.selectBranch') }}</option>
               <option v-for="branch in availableGitBranches" :key="branch" :value="branch">
                 {{ branch }}
@@ -473,7 +473,7 @@ const openChooseOtherDockerConfigurationModal = computed(
               id="name"
               v-model="stateRef.codePath"
               autocomplete="off"
-              class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+              class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
               name="name"
               :placeholder="$t('applicationDetails.codePathHint')"
               type="text" />
@@ -495,7 +495,7 @@ const openChooseOtherDockerConfigurationModal = computed(
           <div class="mx-auto max-w-md space-y-8">
             <input
               ref="sourceCodeCompressedFileFieldRef"
-              class="w-full cursor-pointer rounded-md bg-gray-100 text-sm text-black file:mr-4 file:cursor-pointer file:border-0 file:bg-gray-800 file:px-4 file:py-2 file:text-white file:hover:bg-gray-700 focus:outline-none"
+              class="w-full cursor-pointer rounded-md bg-gray-100 text-sm text-black file:mr-4 file:cursor-pointer file:border-0 file:bg-gray-800 file:px-4 file:py-2 file:text-white file:hover:bg-gray-700 focus:outline-hidden"
               directory
               multiple
               type="file"
@@ -524,7 +524,7 @@ const openChooseOtherDockerConfigurationModal = computed(
               id="docker_image"
               v-model="stateRef.dockerImage"
               autocomplete="off"
-              class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+              class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
               name="name"
               :placeholder="$t('applicationDetails.enterDockerImageUrl')"
               type="text" />
@@ -539,7 +539,7 @@ const openChooseOtherDockerConfigurationModal = computed(
             <select
               id="image_registry_credential"
               v-model="stateRef.imageRegistryCredentialID"
-              class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
+              class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
               <option selected value="0">{{ $t('applicationDetails.noCredential') }}</option>
               <option v-for="credential in imageRegistryCredentials" :key="credential.id" :value="credential.id">
                 {{ credential.username }} - {{ credential.url }}
@@ -595,7 +595,7 @@ const openChooseOtherDockerConfigurationModal = computed(
             id="docker_command"
             v-model="stateRef.command"
             autocomplete="off"
-            class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+            class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
             name="docker_command"
             :placeholder="$t('applicationDetails.enterDockerCommand')"
             type="text" />

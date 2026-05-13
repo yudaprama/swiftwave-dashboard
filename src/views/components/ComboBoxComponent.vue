@@ -74,7 +74,7 @@ watch(selectedOptionValue, (newValue) => {
 <template>
   <Combobox v-model="selectedOptionValue">
     <div
-      class="relative w-full overflow-hidden rounded-md border border-gray-400 shadow transition-all delay-75 hover:border-primary-500 focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
+      class="relative w-full overflow-hidden rounded-md border border-gray-400 shadow-sm transition-all delay-75 hover:border-primary-500 focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
       <ComboboxInput
         :display-value="(i) => getDisplayValue(i)"
         @change="query = $event.target.value"
@@ -86,7 +86,7 @@ watch(selectedOptionValue, (newValue) => {
     </div>
 
     <ComboboxOptions
-      class="scrollbox mt-1 max-h-40 overflow-y-auto overflow-x-hidden rounded-md border-2 border-secondary-200 shadow">
+      class="scrollbox mt-1 max-h-40 overflow-y-auto overflow-x-hidden rounded-md border-2 border-secondary-200 shadow-sm">
       <ComboboxOption
         v-for="op in filteredOptions"
         :key="valueFromOption(op)"

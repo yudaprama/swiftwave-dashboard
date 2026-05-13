@@ -18,7 +18,7 @@ defineProps({
   <Switch
     :class="enabled ? 'bg-primary-600' : 'bg-primary-500'"
     :enabled="enabled"
-    class="relative inline-flex h-[21px] w-[37px] shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75"
+    class="relative inline-flex h-[21px] w-[37px] shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-hidden focus-visible:ring-2 focus-visible:ring-white/75"
     @click="() => onChange(!enabled)">
     <span
       :class="enabled ? 'translate-x-4' : 'translate-x-0'"

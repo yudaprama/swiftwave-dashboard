@@ -68,7 +68,7 @@ defineExpose({
           <div class="mt-1">
             <input
               v-model="newConfigMountDetails.mountingPath"
-              class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+              class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
               :placeholder="t('partials.configMountPathPlaceholder')"
               type="text"
               @keydown="preventSpaceInput" />
@@ -83,7 +83,7 @@ defineExpose({
               <input
                 v-model="newConfigMountDetails.uid"
                 autocomplete="off"
-                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
                 :placeholder="t('partials.fileUID')"
                 type="number" />
             </div>
@@ -95,7 +95,7 @@ defineExpose({
               <input
                 v-model="newConfigMountDetails.gid"
                 autocomplete="off"
-                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
                 :placeholder="t('partials.mountGID')"
                 type="number" />
             </div>
@@ -107,7 +107,7 @@ defineExpose({
           <div class="mt-1">
             <textarea
               rows="20"
-              class="mt-2 w-full rounded-lg border-gray-300 align-top shadow-sm focus:border-primary-500 focus:ring-primary-500"
+              class="mt-2 w-full rounded-lg border-gray-300 align-top shadow-xs focus:border-primary-500 focus:ring-primary-500"
               v-model="newConfigMountDetails.content"></textarea>
           </div>
         </div>

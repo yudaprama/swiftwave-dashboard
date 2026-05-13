@@ -66,6 +66,7 @@ const setSourceType = (type) => {
 </template>
 
 <style scoped>
+@reference "../../../assets/css/base.css";
 .optionButton {
   @apply flex aspect-square h-fit cursor-pointer flex-col items-center justify-center rounded-md border-2 border-gray-400 p-8 hover:text-blue-700 hover:shadow-lg;
 }

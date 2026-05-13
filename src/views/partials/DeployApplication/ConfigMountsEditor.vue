@@ -79,7 +79,7 @@ const openCreateConfigMountModal = () => {
         <p v-if="selectedConfigId === null" class="italic">{{ t('partials.noConfigSelected') }}</p>
         <textarea
           rows="20"
-          class="mt-2 w-full rounded-lg border-gray-300 align-top shadow-sm focus:border-primary-500 focus:ring-primary-500"
+          class="mt-2 w-full rounded-lg border-gray-300 align-top shadow-xs focus:border-primary-500 focus:ring-primary-500"
           :value="configMountsMap[selectedConfigId].content"
           @input="(e) => onConfigContentChange(selectedConfigId, e.target.value)"></textarea>
       </div>

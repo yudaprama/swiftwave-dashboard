@@ -241,7 +241,7 @@ const showDetails = (volume) => {
           <div class="mx-auto max-w-md space-y-8">
             <input
               @change="(e) => (restoreFileFieldRef = e.target)"
-              class="w-full cursor-pointer rounded-md bg-gray-100 text-sm text-black file:mr-4 file:cursor-pointer file:border-0 file:bg-gray-800 file:px-4 file:py-2 file:text-white file:hover:bg-gray-700 focus:outline-none"
+              class="w-full cursor-pointer rounded-md bg-gray-100 text-sm text-black file:mr-4 file:cursor-pointer file:border-0 file:bg-gray-800 file:px-4 file:py-2 file:text-white file:hover:bg-gray-700 focus:outline-hidden"
               accept=".tar.gz"
               type="file" />
           </div>
@@ -274,7 +274,7 @@ const showDetails = (volume) => {
             <label class="block text-sm font-medium text-gray-700">{{ $t('pv.volumeName') }}</label>
             <div class="mt-1">
               <p
-                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
+                class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
                 {{ selectedVolumeDetails.name }}
               </p>
             </div>
@@ -292,7 +292,7 @@ const showDetails = (volume) => {
           <label class="block text-sm font-medium text-gray-700">{{ $t('pv.nfsConfig') }}</label>
           <div class="mt-1">
             <p
-              class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
+              class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
               {{ selectedVolumeDetails.nfsConfig.host }}:{{ selectedVolumeDetails.nfsConfig.path }}
             </p>
           </div>
@@ -301,7 +301,7 @@ const showDetails = (volume) => {
           <label class="block text-sm font-medium text-gray-700">{{ $t('pv.nfsVersion') }}</label>
           <div class="mt-1">
             <p
-              class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
+              class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
               {{ selectedVolumeDetails.nfsConfig.version }}
             </p>
           </div>
@@ -310,7 +310,7 @@ const showDetails = (volume) => {
           <label class="block text-sm font-medium text-gray-700">{{ $t('pv.cifsHost') }}</label>
           <div class="mt-1">
             <p
-              class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
+              class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
               {{ selectedVolumeDetails.cifsConfig.host }}
             </p>
           </div>
@@ -319,7 +319,7 @@ const showDetails = (volume) => {
           <label class="block text-sm font-medium text-gray-700">{{ $t('pv.cifsShare') }}</label>
           <div class="mt-1">
             <p
-              class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
+              class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
               {{ selectedVolumeDetails.cifsConfig.share }}
             </p>
           </div>
@@ -329,7 +329,7 @@ const showDetails = (volume) => {
             <label class="block text-sm font-medium text-gray-700">{{ $t('common.username') }}</label>
             <div class="mt-1">
               <p
-                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
+                class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
                 {{ selectedVolumeDetails.cifsConfig.username }}
               </p>
             </div>
@@ -346,7 +346,7 @@ const showDetails = (volume) => {
             <label class="block text-sm font-medium text-gray-700">{{ $t('pv.fileMode') }}</label>
             <div class="mt-1">
               <p
-                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
+                class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
                 {{ selectedVolumeDetails.cifsConfig.file_mode }}
               </p>
             </div>
@@ -355,7 +355,7 @@ const showDetails = (volume) => {
             <label class="block text-sm font-medium text-gray-700">{{ $t('pv.dirMode') }}</label>
             <div class="mt-1">
               <p
-                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
+                class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
                 {{ selectedVolumeDetails.cifsConfig.dir_mode }}
               </p>
             </div>
@@ -366,7 +366,7 @@ const showDetails = (volume) => {
             <label class="block text-sm font-medium text-gray-700">UID</label>
             <div class="mt-1">
               <p
-                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
+                class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
                 {{ selectedVolumeDetails.cifsConfig.uid }}
               </p>
             </div>
@@ -375,7 +375,7 @@ const showDetails = (volume) => {
             <label class="block text-sm font-medium text-gray-700">GID</label>
             <div class="mt-1">
               <p
-                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
+                class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
                 {{ selectedVolumeDetails.cifsConfig.gid }}
               </p>
             </div>

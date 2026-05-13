@@ -181,6 +181,7 @@ window.addEventListener('click', (e) => {
 </template>
 
 <style scoped>
+@reference "../../assets/css/base.css";
 .actions-menu {
   @apply absolute hidden rounded-md border border-gray-200 bg-white shadow-md;
 

@@ -122,7 +122,7 @@ defineExpose({
               id="name"
               v-model="newPersistentVolumeDetails.name"
               autocomplete="off"
-              class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+              class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
               name="name"
               placeholder="Name of persistent volume"
               type="text"
@@ -134,13 +134,13 @@ defineExpose({
           <label class="block text-sm font-medium text-gray-700">Type</label>
           <select
             v-model="newPersistentVolumeDetails.type"
-            class="mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
+            class="mt-2 block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
             <option value="local">Local</option>
             <option value="nfs">NFS</option>
             <option value="cifs">CIFS</option>
           </select>
           <div
-            class="mb-5 mt-3 rounded border-s-4 border-danger-200 bg-danger-50 p-4"
+            class="mb-5 mt-3 rounded-sm border-s-4 border-danger-200 bg-danger-50 p-4"
             v-if="newPersistentVolumeDetails.type === 'local' && noOfServers > 1">
             <p class="block text-justify text-sm text-gray-900">
               You have <b>{{ noOfServers }} servers</b> configured for cluster mode.
@@ -157,7 +157,7 @@ defineExpose({
             <input
               v-model="newPersistentVolumeDetails.nfsConfig.host"
               autocomplete="off"
-              class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+              class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
               placeholder="NFS Server Host"
               type="text" />
           </div>
@@ -173,7 +173,7 @@ defineExpose({
             <input
               v-model="newPersistentVolumeDetails.nfsConfig.path"
               autocomplete="off"
-              class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+              class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
               placeholder="NFS Share Path"
               type="text" />
           </div>
@@ -187,14 +187,14 @@ defineExpose({
           <label class="block text-sm font-medium text-gray-700">NFS Version</label>
           <select
             v-model="newPersistentVolumeDetails.nfsConfig.version"
-            class="mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
+            class="mt-2 block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
             <option value="4">NFS v4</option>
             <option value="3">NFS v3</option>
             <option value="2">NFS v2</option>
           </select>
           <!-- RCPBind Alert  -->
           <div
-            class="mb-5 mt-3 rounded border-s-4 border-danger-200 bg-danger-50 p-4"
+            class="mb-5 mt-3 rounded-sm border-s-4 border-danger-200 bg-danger-50 p-4"
             role="alert"
             v-if="
               newPersistentVolumeDetails.nfsConfig.version === '2' ||
@@ -226,7 +226,7 @@ defineExpose({
             <input
               v-model="newPersistentVolumeDetails.cifsConfig.host"
               autocomplete="off"
-              class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+              class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
               placeholder="CIFS Host"
               type="text" />
           </div>
@@ -242,7 +242,7 @@ defineExpose({
             <input
               v-model="newPersistentVolumeDetails.cifsConfig.share"
               autocomplete="off"
-              class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+              class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
               placeholder="CIFS Share"
               type="text" />
           </div>
@@ -259,7 +259,7 @@ defineExpose({
               <input
                 v-model="newPersistentVolumeDetails.cifsConfig.username"
                 autocomplete="off"
-                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
                 placeholder="CIFS Username"
                 type="text" />
             </div>
@@ -275,7 +275,7 @@ defineExpose({
               <input
                 v-model="newPersistentVolumeDetails.cifsConfig.password"
                 autocomplete="new-password"
-                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
                 placeholder="CIFS Password"
                 type="password" />
             </div>
@@ -290,7 +290,7 @@ defineExpose({
               <input
                 v-model="newPersistentVolumeDetails.cifsConfig.file_mode"
                 autocomplete="off"
-                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
                 placeholder="CIFS File Mode"
                 type="text" />
             </div>
@@ -302,7 +302,7 @@ defineExpose({
               <input
                 v-model="newPersistentVolumeDetails.cifsConfig.dir_mode"
                 autocomplete="off"
-                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
                 placeholder="CIFS Dir Mode"
                 type="text" />
             </div>
@@ -317,7 +317,7 @@ defineExpose({
               <input
                 v-model="newPersistentVolumeDetails.cifsConfig.uid"
                 autocomplete="off"
-                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
                 placeholder="CIFS UID"
                 type="number" />
             </div>
@@ -329,7 +329,7 @@ defineExpose({
               <input
                 v-model="newPersistentVolumeDetails.cifsConfig.gid"
                 autocomplete="off"
-                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
                 placeholder="CIFS GID"
                 type="number" />
             </div>

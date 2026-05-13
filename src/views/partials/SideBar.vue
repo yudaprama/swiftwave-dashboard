@@ -337,6 +337,7 @@ const startCountDown = () => {
 </template>
 
 <style scoped>
+@reference "../../assets/css/base.css";
 .router-link-exact-active {
   @apply bg-gray-100 text-gray-700;
 }

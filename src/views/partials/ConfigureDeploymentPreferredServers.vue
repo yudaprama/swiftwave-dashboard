@@ -77,7 +77,7 @@ defineExpose({
             <input
               type="checkbox"
               :checked="hostnames.includes(server.hostname)"
-              class="me-2 h-4 w-4 rounded border-gray-300 bg-gray-100 text-primary-500 focus:ring-1 focus:ring-primary-500" />
+              class="me-2 h-4 w-4 rounded-sm border-gray-300 bg-gray-100 text-primary-500 focus:ring-1 focus:ring-primary-500" />
             {{ server.hostname }}&nbsp;&nbsp;[{{ (server.swarmMode ?? '').toUpperCase() }}]&nbsp;&nbsp;<span
               v-if="server.scheduleDeployments === false">
               class="font-medium text-danger-500" >Deployment Disabled</span
@@ -85,7 +85,7 @@ defineExpose({
           </div>
         </div>
 
-        <div class="mb-5 mt-6 rounded border-s-4 border-danger-200 bg-warning-50 px-3 py-2" role="alert">
+        <div class="mb-5 mt-6 rounded-sm border-s-4 border-danger-200 bg-warning-50 px-3 py-2" role="alert">
           <p class="block text-justify text-sm text-black">
             If you have plan to enable <b>Docker Socket Proxy</b>, choose only one server.
           </p>

@@ -91,7 +91,7 @@ const enableProxy = () => {
         <div class="mt-1 space-x-2">
           <select
             v-model="proxyType"
-            class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
+            class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
             <option value="active">Active</option>
             <option value="backup">Backup</option>
           </select>

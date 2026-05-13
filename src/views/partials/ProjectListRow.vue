@@ -49,7 +49,7 @@ const viewApplicationGroupDetails = () => {
   <tr v-show="isVisible">
     <TableRow align="left">
       <div class="flex items-center gap-2 text-sm font-medium text-gray-900">
-        <img v-if="project.logo" :src="project.logo" class="h-4 w-4 rounded-sm" alt="logo" />
+        <img v-if="project.logo" :src="project.logo" class="h-4 w-4 rounded-xs" alt="logo" />
         {{ project.name }}
       </div>
     </TableRow>

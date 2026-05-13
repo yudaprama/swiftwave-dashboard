@@ -225,7 +225,7 @@ const fetchAllAnalytics = () => {
 </script>
 
 <template>
-  <section class="mx-auto max-h-[100vh] w-full max-w-7xl overflow-y-hidden">
+  <section class="mx-auto max-h-screen w-full max-w-7xl overflow-y-hidden">
     <div v-if="isServerInfoLoading" class="w-full font-medium italic">Fetching server info...</div>
     <div v-else class="flex h-full w-full flex-col">
       <!-- Top Page bar   -->
@@ -234,7 +234,7 @@ const fetchAllAnalytics = () => {
         <template v-slot:subtitle>Monitor the resource analytics of your server</template>
         <template v-slot:buttons>
           <select
-            class="block rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+            class="block rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
             v-model="statsTimeframe"
             @change="loadServerAnalytics">
             <option value="last_1_hour">Last 1 hour</option>

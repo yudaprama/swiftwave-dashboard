@@ -33,7 +33,7 @@ const isLoginPage = computed(() => router.currentRoute.value.name === 'Login')
   <div class="app">
     <SideBar class="w-80" />
     <div
-      class="scrollbox flex max-h-[100vh] w-full flex-col items-center overflow-y-auto"
+      class="scrollbox flex max-h-screen w-full flex-col items-center overflow-y-auto"
       :class="{
         'p-4': !isLoginPage
       }">
@@ -45,6 +45,7 @@ const isLoginPage = computed(() => router.currentRoute.value.name === 'Login')
 </template>
 
 <style>
+@reference "./assets/css/base.css";
 .app {
   display: flex;
   flex-direction: row;
@@ -70,14 +71,14 @@ const isLoginPage = computed(() => router.currentRoute.value.name === 'Login')
 }
 
 .xterm-viewport {
-  right: calc(-0.5rem - 9px) !important;
-  cursor: pointer !important;
-  overflow-y: auto !important;
+  right: calc(-0.5rem - 9px)!;
+  cursor: pointer!;
+  overflow-y: auto!;
 }
 
 .xterm-viewport::-webkit-scrollbar {
-  width: 9px !important;
-  height: 9px !important;
+  width: 9px!;
+  height: 9px!;
 }
 
 .xterm-viewport::-webkit-scrollbar-track {
@@ -89,35 +90,35 @@ const isLoginPage = computed(() => router.currentRoute.value.name === 'Login')
 }
 
 .bg-color-1 {
-  @apply bg-amber-300 !important;
+  @apply bg-amber-300!;
 }
 
 .border-color-1 {
-  @apply border-amber-400 !important;
+  @apply border-amber-400!;
 }
 
 .bg-color-2 {
-  @apply bg-green-300 !important;
+  @apply bg-green-300!;
 }
 
 .border-color-2 {
-  @apply border-green-400 !important;
+  @apply border-green-400!;
 }
 
 .bg-color-3 {
-  @apply bg-blue-300 !important;
+  @apply bg-blue-300!;
 }
 
 .border-color-3 {
-  @apply border-blue-400 !important;
+  @apply border-blue-400!;
 }
 
 .bg-color-4 {
-  @apply bg-gray-300 !important;
+  @apply bg-gray-300!;
 }
 
 .border-color-4 {
-  @apply border-gray-400 !important;
+  @apply border-gray-400!;
 }
 
 /* v-otp-input custom class */
@@ -126,7 +127,7 @@ const isLoginPage = computed(() => router.currentRoute.value.name === 'Login')
 }
 
 .otp-input {
-  @apply mx-1 h-10 w-10 !rounded-md !border !border-gray-300 !p-1 !text-center !text-base focus:!border-primary-500 focus:!ring-primary-500;
+  @apply mx-1 h-10 w-10 rounded-md! border! border-gray-300! p-1! text-center! text-base! focus:border-primary-500! focus:ring-primary-500!;
 }
 
 .otp-input::-webkit-inner-spin-button,

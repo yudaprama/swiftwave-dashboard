@@ -91,7 +91,7 @@
       {{ $t('common.actions') }}
     </RouterLink>
     <RouterLink
-      class="nav-element !text-red-500"
+      class="nav-element text-red-500!"
       :to="{
         name: 'Application Details Danger Zone',
         params: { id: $route.params.id }
@@ -102,6 +102,7 @@
 </template>
 
 <style scoped>
+@reference "../../assets/css/base.css";
 .navbar {
   @apply flex h-min select-none flex-col flex-wrap gap-1 rounded-lg border border-secondary-200 p-1.5;
 }

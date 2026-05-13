@@ -227,7 +227,7 @@ const openConfigureDeploymentPreferredServers = () => {
             <p class="font-medium">Replicated</p>
             <input
               v-if="stateRef.deploymentStrategy === 'replicated'"
-              class="block h-8 w-16 rounded-full border-gray-300 shadow-sm [appearance:textfield] focus:border-primary-500 focus:ring-primary-500 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+              class="block h-8 w-16 rounded-full border-gray-300 shadow-xs [appearance:textfield] focus:border-primary-500 focus:ring-primary-500 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
               name="no_of_replicase"
               placeholder="No of Replicas"
               type="number"
@@ -250,7 +250,7 @@ const openConfigureDeploymentPreferredServers = () => {
           <p class="font-medium text-black">Deployment Preferred Servers</p>
           <div class="mt-1">
             <input
-              class="mt-1 block w-full cursor-pointer rounded-md border-gray-300 text-sm shadow-sm focus:border-primary-500 focus:ring-primary-500"
+              class="mt-1 block w-full cursor-pointer rounded-md border-gray-300 text-sm shadow-xs focus:border-primary-500 focus:ring-primary-500"
               placeholder="Click to add servers"
               type="text"
               @click="openConfigureDeploymentPreferredServers"
@@ -273,7 +273,7 @@ const openConfigureDeploymentPreferredServers = () => {
           <p class="font-medium text-black">Container Hostname</p>
           <div class="mt-1">
             <input
-              class="mt-1 block w-full rounded-md border-gray-300 text-sm shadow-sm focus:border-primary-500 focus:ring-primary-500"
+              class="mt-1 block w-full rounded-md border-gray-300 text-sm shadow-xs focus:border-primary-500 focus:ring-primary-500"
               placeholder="Provide container hostname"
               type="text"
               v-model="stateRef.hostname"
@@ -308,7 +308,7 @@ const openConfigureDeploymentPreferredServers = () => {
             <div class="mt-1">
               <input
                 autocomplete="off"
-                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
                 type="text"
                 @input="(e) => (stateRef.customHealthCheck.test_command = e.target.value) || true"
                 :value="stateRef.customHealthCheck.test_command" />
@@ -322,7 +322,7 @@ const openConfigureDeploymentPreferredServers = () => {
               <div class="mt-1">
                 <input
                   autocomplete="off"
-                  class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                  class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
                   type="number"
                   @change="(e) => (stateRef.customHealthCheck.interval_seconds = parseInt(e.target.value) || 0)"
                   :value="stateRef.customHealthCheck.interval_seconds" />
@@ -335,7 +335,7 @@ const openConfigureDeploymentPreferredServers = () => {
               <div class="mt-1">
                 <input
                   autocomplete="off"
-                  class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                  class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
                   type="number"
                   @change="(e) => (stateRef.customHealthCheck.timeout_seconds = parseInt(e.target.value) || 0)"
                   :value="stateRef.customHealthCheck.timeout_seconds" />
@@ -348,7 +348,7 @@ const openConfigureDeploymentPreferredServers = () => {
               <div class="mt-1">
                 <input
                   autocomplete="off"
-                  class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                  class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
                   type="number"
                   @change="(e) => (stateRef.customHealthCheck.start_period_seconds = parseInt(e.target.value) || 0)"
                   :value="stateRef.customHealthCheck.start_period_seconds" />
@@ -361,7 +361,7 @@ const openConfigureDeploymentPreferredServers = () => {
               <div class="mt-1">
                 <input
                   autocomplete="off"
-                  class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                  class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
                   type="number"
                   @change="(e) => (stateRef.customHealthCheck.start_interval_seconds = parseInt(e.target.value) || 0)"
                   :value="stateRef.customHealthCheck.start_interval_seconds" />
@@ -372,7 +372,7 @@ const openConfigureDeploymentPreferredServers = () => {
               <div class="mt-1">
                 <input
                   autocomplete="off"
-                  class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                  class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
                   type="number"
                   @change="(e) => (stateRef.customHealthCheck.retries = parseInt(e.target.value) || 0)"
                   :value="stateRef.customHealthCheck.retries" />
@@ -576,6 +576,7 @@ const openConfigureDeploymentPreferredServers = () => {
 </template>
 
 <style scoped>
+@reference "../../../assets/css/base.css";
 .multi-select {
   @apply flex h-fit w-min overflow-hidden rounded-md border border-secondary-400;
 

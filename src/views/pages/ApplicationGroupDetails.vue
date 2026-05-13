@@ -469,7 +469,7 @@ const applyChanges = async () => {
             <img
               v-if="applicationGroupDetails.logo"
               :src="applicationGroupDetails.logo"
-              class="h-4 w-4 rounded-sm"
+              class="h-4 w-4 rounded-xs"
               alt="logo" />
             {{ applicationGroupDetails.name }}
           </div>
@@ -501,7 +501,7 @@ const applyChanges = async () => {
             v-if="ingressRules.length > 0"
             class="deployment-head max-w-[40vw]"
             :class="{
-              '!pr-0.5': ingressRules.length > 0
+              'pr-0.5!': ingressRules.length > 0
             }">
             <font-awesome-icon icon="fa-solid fa-globe" />
             <span v-for="(ingressRule, index) in ingressRules" :key="index">
@@ -721,6 +721,7 @@ const applyChanges = async () => {
 </template>
 
 <style scoped>
+@reference "../../assets/css/base.css";
 .deployment-head {
   @apply relative flex items-center justify-center gap-2.5  rounded-full border border-secondary-300 px-2 py-1 text-sm font-normal;
 }
@@ -733,7 +734,7 @@ const applyChanges = async () => {
   }
 
   .divider {
-    @apply h-auto w-[1px] bg-secondary-300;
+    @apply h-auto w-px bg-secondary-300;
   }
 }
 

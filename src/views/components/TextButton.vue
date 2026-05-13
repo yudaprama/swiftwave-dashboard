@@ -39,7 +39,7 @@ const onClick = () => {
       'text-success-600': type === 'success',
       'text-danger-600': type === 'danger',
       'text-warning-600': type === 'warning',
-      '!cursor-not-allowed !text-gray-400': disabled
+      'cursor-not-allowed! text-gray-400!': disabled
     }"
     class="cursor-pointer"
     @click.prevent="onClick">

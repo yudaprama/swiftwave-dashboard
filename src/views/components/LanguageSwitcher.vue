@@ -29,7 +29,7 @@ const closeDropdown = () => {
   <div class="relative" v-click-outside="closeDropdown">
     <button
       @click="toggleDropdown"
-      class="flex items-center gap-1 rounded px-2 py-1 text-xs font-medium text-white transition-colors hover:bg-primary-700">
+      class="flex items-center gap-1 rounded-sm px-2 py-1 text-xs font-medium text-white transition-colors hover:bg-primary-700">
       <font-awesome-icon icon="fa-solid fa-globe" class="text-sm" />
       <span>{{ languages.find(l => l.code === locale)?.label || 'English' }}</span>
       <font-awesome-icon :icon="isOpen ? 'fa-solid fa-angle-up' : 'fa-solid fa-angle-down'" class="text-xs" />

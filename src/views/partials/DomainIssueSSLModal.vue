@@ -141,7 +141,7 @@ defineExpose({
                         </label>
                         <div class="mt-1">
                             <select v-model="details.mode"
-                                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
+                                class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
                                 <option value="letsencrypt">
                                     Auto Issue SSL via Let's Encrypt
                                 </option>
@@ -158,7 +158,7 @@ defineExpose({
                         </label>
                         <div class="mt-2">
                             <textarea id="ssh_private_key" v-model="details.sslPrivateKey"
-                                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                                class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
                                 placeholder="-----BEGIN RSA PRIVATE KEY-----
                                 
 ....
@@ -174,7 +174,7 @@ defineExpose({
                         </label>
                         <div class="mt-2">
                             <textarea id="ssh_private_key" v-model="details.sslFullChain"
-                                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                                class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
                                 placeholder="-----BEGIN CERTIFICATE-----
 
 ....

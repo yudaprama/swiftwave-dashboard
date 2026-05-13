@@ -104,7 +104,7 @@ onMounted(() => {
         <template v-slot:subtitle>{{ $t('applicationDetails.monitorResourceAnalytics') }}</template>
         <template v-slot:buttons>
           <select
-            class="block rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+            class="block rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
             v-model="statsTimeframe"
             @change="loadResourceAnalytics">
             <option value="last_1_hour">{{ $t('applicationDetails.last1Hour') }}</option>

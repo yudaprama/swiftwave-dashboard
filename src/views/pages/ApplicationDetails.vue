@@ -389,7 +389,7 @@ const openApplicationGroupUpdateModal = () => {
             v-if="isIngressRulesAvailable"
             class="deployment-head max-w-[40vw]"
             :class="{
-              '!pr-0.5': applicationDetails.ingressRules.length > 0
+              'pr-0.5!': applicationDetails.ingressRules.length > 0
             }">
             <font-awesome-icon icon="fa-solid fa-globe" />
             <span v-for="(ingressRule, index) in applicationDetails.ingressRules" :key="index">
@@ -488,6 +488,7 @@ const openApplicationGroupUpdateModal = () => {
 </template>
 
 <style scoped>
+@reference "../../assets/css/base.css";
 .deployment-head {
   @apply relative flex items-center justify-center gap-2.5  rounded-full border border-secondary-300 px-2 py-1 text-sm font-normal;
 }
@@ -500,7 +501,7 @@ const openApplicationGroupUpdateModal = () => {
   }
 
   .divider {
-    @apply h-auto w-[1px] bg-secondary-300;
+    @apply h-auto w-px bg-secondary-300;
   }
 }
 </style>

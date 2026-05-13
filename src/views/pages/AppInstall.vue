@@ -537,7 +537,7 @@ const noOfBlankFields = computed(() => {
             <div class="mt-1">
               <input
                 v-model="formStateRef.STACK_NAME"
-                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
                 type="text"
                 @keydown="preventSpaceInput"
                 :placeholder="$t('deploy.anythingYouLike')" />
@@ -570,13 +570,13 @@ const noOfBlankFields = computed(() => {
                 :key="key"
                 v-if="stackDetails.docs.variables[key].type === 'text'"
                 v-model="formStateRef[key]"
-                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
                 type="text" />
               <select
                 :key="key"
                 v-if="stackDetails.docs.variables[key].type === 'options'"
                 v-model="formStateRef[key]"
-                class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
+                class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
                 <option v-for="op in stackDetails.docs.variables[key].options" :key="op.value" :value="op.value">
                   {{ op.title }}
                 </option>
@@ -667,7 +667,7 @@ const noOfBlankFields = computed(() => {
                     <div class="mt-2 flex flex-row items-center gap-2">
                       <!--   Choose protocol   -->
                       <select
-                        class="block w-5/12 rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                        class="block w-5/12 rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
                         v-model="config.info.protocol"
                         @change="() => onChangeProtocol(serviceName, ingressRuleName)">
                         <option :value="protocol" v-for="protocol in config.info.availableProtocols">
@@ -678,7 +678,7 @@ const noOfBlankFields = computed(() => {
                       <select
                         v-if="config.info.protocol === 'http' || config.info.protocol === 'https'"
                         v-model="config.info.domainId"
-                        class="block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
+                        class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
                         <option value="0">{{ $t('deploy.selectDomain') }}</option>
                         <option :value="domain.id" v-for="domain in domainList">
                           {{ domain.name }}
@@ -688,7 +688,7 @@ const noOfBlankFields = computed(() => {
                       <!--   Port -->
                       <input
                         v-model="config.info.port"
-                        class="block w-5/12 rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                        class="block w-5/12 rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
                         :placeholder="$t('deploy.port')"
                         type="number"
                         :readonly="!config.info.allowPortSelection" />
