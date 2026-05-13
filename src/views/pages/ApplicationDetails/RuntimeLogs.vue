@@ -1,13 +1,13 @@
 <script setup>
-import 'xterm/css/xterm.css'
+import '@xterm/xterm/css/xterm.css'
 
 import { computed, onMounted, ref, watch } from 'vue'
 import { toast } from 'vue-sonner'
-import { Terminal } from 'xterm'
+import { Terminal } from '@xterm/xterm'
 import { useRouter } from 'vue-router'
 import { useSubscription } from '@vue/apollo-composable'
 import gql from 'graphql-tag'
-import { FitAddon } from 'xterm-addon-fit'
+import { FitAddon } from '@xterm/addon-fit'
 import StatusPulse from '@/views/components/StatusPulse.vue'
 import PageBar from '@/views/components/PageBar.vue'
 import { useI18n } from 'vue-i18n'

@@ -1,5 +1,5 @@
 <script setup>
-import 'xterm/css/xterm.css'
+import '@xterm/xterm/css/xterm.css'
 
 import { useMutation, useQuery, useSubscription } from '@vue/apollo-composable'
 import gql from 'graphql-tag'
@@ -7,8 +7,8 @@ import { useRouter } from 'vue-router'
 import { computed, onMounted, ref, watch } from 'vue'
 import Badge from '@/views/components/Badge.vue'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { Terminal } from 'xterm'
-import { FitAddon } from 'xterm-addon-fit'
+import { Terminal } from '@xterm/xterm'
+import { FitAddon } from '@xterm/addon-fit'
 import { toast } from 'vue-sonner'
 import StatusPulse from '@/views/components/StatusPulse.vue'
 import FilledButton from '@/views/components/FilledButton.vue'
