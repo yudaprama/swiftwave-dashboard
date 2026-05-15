@@ -10,7 +10,10 @@ export const useAuthStore = defineStore('auth_details', () => {
   const AccessToken = ref('')
   const IsLoggingInProgress = ref(false)
   const currentUsername = ref('')
+  const currentRole = ref('')
   let currentTime = ref(Date.now())
+
+  const isAdmin = computed(() => currentRole.value === 'admin')
 
   function FetchBearerToken() {
     if (IsLoggedIn.value) {
@@ -24,6 +27,14 @@ export const useAuthStore = defineStore('auth_details', () => {
     localStorage.setItem('token', token)
     IsLoggedIn.value = true
     IsLoggingInProgress.value = true
+    // Extract role from JWT
+    try {
+      const decoded = jwtDecode(token)
+      currentRole.value = decoded.role ?? ''
+      currentUsername.value = decoded.username ?? ''
+    } catch (e) {
+      currentRole.value = ''
+    }
     setTimeout(() => {
       IsLoggingInProgress.value = false
     }, 1000)
@@ -129,6 +140,7 @@ export const useAuthStore = defineStore('auth_details', () => {
         if (token) {
           const decoded = jwtDecode(token)
           currentUsername.value = decoded.username ?? ''
+          currentRole.value = decoded.role ?? ''
           const exp = moment(new Date(decoded.exp * 1000))
           return moment.duration(exp.diff(currentTime.value)).humanize(true)
         }
@@ -170,6 +182,8 @@ export const useAuthStore = defineStore('auth_details', () => {
     StartAuthChecker,
     sessionRelativeTimeoutStatus,
     fetchSWVersion,
-    currentUsername
+    currentUsername,
+    currentRole,
+    isAdmin
   }
 })

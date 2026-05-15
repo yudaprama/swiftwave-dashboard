@@ -283,6 +283,7 @@ app.directive('debounce', vueDebounce({ lock: true }))
 app.mount('#app')
 
 // Protect routes
+const adminOnlyRoutes = ['Servers', 'System Logs', 'Users']
 router.beforeEach(async (to) => {
   const authStore = useAuthStore()
   if ((to.name === 'Setup' && parseInt(to.query?.update ?? 0) === 0) || to.name === 'Maintenance') {
@@ -292,6 +293,10 @@ router.beforeEach(async (to) => {
     return { name: 'Login', query: { redirect: to.path } }
   }
   if (authStore.IsLoggedIn && to.name === 'Login') {
+    return { name: 'Applications' }
+  }
+  // Block admin-only pages for non-admin users
+  if (adminOnlyRoutes.includes(to.name) && !authStore.isAdmin) {
     return { name: 'Applications' }
   }
 })

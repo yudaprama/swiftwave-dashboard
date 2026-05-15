@@ -235,7 +235,7 @@ const startCountDown = () => {
           </template>
         </SideBarOption>
 
-        <SideBarOption :active-urls="['Servers']">
+        <SideBarOption v-if="authStore.isAdmin" :active-urls="['Servers']">
           <template #icon>
             <font-awesome-icon icon="fa-solid fa-server" />
           </template>
@@ -252,7 +252,7 @@ const startCountDown = () => {
           </template>
         </SideBarOption>
 
-        <SideBarOption :active-urls="['System Logs']">
+        <SideBarOption v-if="authStore.isAdmin" :active-urls="['System Logs']">
           <template #icon>
             <font-awesome-icon icon="fa-solid fa-gear" />
           </template>
@@ -281,7 +281,7 @@ const startCountDown = () => {
           </template>
         </SideBarOption>
 
-        <SideBarOption :active-urls="['Users']">
+        <SideBarOption v-if="authStore.isAdmin" :active-urls="['Users']">
           <template #icon>
             <font-awesome-icon icon="fa-solid fa-user-tie" />
           </template>
