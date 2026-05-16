@@ -81,6 +81,37 @@ export const useAuthStore = defineStore('auth_details', () => {
     }
   }
 
+  async function Register(username, password) {
+    const HTTP_BASE_URL = getHttpBaseUrl()
+
+    try {
+      const res = await axios.request({
+        method: 'post',
+        url: `${HTTP_BASE_URL}/auth/register`,
+        headers: { 'Content-Type': 'application/json' },
+        data: { username, password }
+      })
+      const resData = res.data
+      SetCredential(resData.token)
+      return {
+        success: true,
+        message: 'Account created successfully!'
+      }
+    } catch (e) {
+      if (e.response) {
+        return {
+          success: false,
+          message: e.response.data.message || 'Registration failed'
+        }
+      } else {
+        return {
+          success: false,
+          message: 'Failed to send request'
+        }
+      }
+    }
+  }
+
   function Logout() {
     // logout
     IsLoggedIn.value = false
@@ -177,6 +208,7 @@ export const useAuthStore = defineStore('auth_details', () => {
     IsLoggingInProgress,
     FetchBearerToken,
     Login,
+    Register,
     Logout,
     SetCredential,
     StartAuthChecker,

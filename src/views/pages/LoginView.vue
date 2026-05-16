@@ -146,6 +146,10 @@ const login = async () => {
           <div class="py-2">
             <FilledButton :click="login" class="w-full"> {{ $t('login.signIn') }}</FilledButton>
           </div>
+          <p class="text-center text-sm text-gray-500">
+            Don't have an account?
+            <RouterLink to="/register" class="font-semibold text-primary-600 hover:text-primary-500">Create one</RouterLink>
+          </p>
         </form>
       </div>
     </div>

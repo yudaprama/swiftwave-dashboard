@@ -252,6 +252,35 @@ const startCountDown = () => {
           </template>
         </SideBarOption>
 
+        <SideBarOption v-if="!authStore.isAdmin" :active-urls="['Plans', 'Billing', 'Usage']">
+          <template #icon>
+            <font-awesome-icon icon="fa-solid fa-credit-card" />
+          </template>
+          <template #title> Billing </template>
+          <template #content>
+            <div class="space-y-2">
+              <RouterLink
+                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
+                to="/plans">
+                <font-awesome-icon icon="fa-solid fa-tags" />
+                <span class="mx-2 text-sm font-medium">Plans</span>
+              </RouterLink>
+              <RouterLink
+                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
+                to="/billing">
+                <font-awesome-icon icon="fa-solid fa-file-invoice-dollar" />
+                <span class="mx-2 text-sm font-medium">Billing</span>
+              </RouterLink>
+              <RouterLink
+                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
+                to="/usage">
+                <font-awesome-icon icon="fa-solid fa-chart-bar" />
+                <span class="mx-2 text-sm font-medium">Usage</span>
+              </RouterLink>
+            </div>
+          </template>
+        </SideBarOption>
+
         <SideBarOption v-if="authStore.isAdmin" :active-urls="['System Logs']">
           <template #icon>
             <font-awesome-icon icon="fa-solid fa-gear" />
@@ -288,6 +317,12 @@ const startCountDown = () => {
           <template #title> {{ $t('sidebar.administration') }}</template>
           <template #content>
             <div class="space-y-2">
+              <RouterLink
+                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
+                to="/plans">
+                <font-awesome-icon icon="fa-solid fa-tags" />
+                <span class="mx-2 text-sm font-medium">Plans</span>
+              </RouterLink>
               <RouterLink
                 class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
                 to="/users">

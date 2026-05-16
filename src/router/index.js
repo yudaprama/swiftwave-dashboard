@@ -27,6 +27,10 @@ import ImageRegistryCredentialManagementPage from '@/views/pages/ImageRegistryCr
 import DomainManagementPage from '@/views/pages/DomainManagement.vue'
 import RedirectRuleManagementPage from '@/views/pages/RedirectRuleManagement.vue'
 import IngressRuleManagementPage from '@/views/pages/IngressRuleManagement.vue'
+import RegisterView from '@/views/pages/RegisterView.vue'
+import PlanSelectionPage from '@/views/pages/PlanSelection.vue'
+import BillingManagementPage from '@/views/pages/BillingManagement.vue'
+import UsageOverviewPage from '@/views/pages/UsageOverview.vue'
 
 import ServerManagementPage from '@/views/pages/ServerManagement.vue'
 import ServerLogsPage from '@/views/pages/ServerLogs.vue'
@@ -47,6 +51,11 @@ const router = createRouter({
       path: '/login',
       name: 'Login',
       component: LoginView
+    },
+    {
+      path: '/register',
+      name: 'Register',
+      component: RegisterView
     },
     {
       path: '',
@@ -224,6 +233,21 @@ const router = createRouter({
       path: '/logs',
       name: 'System Logs',
       component: SystemLogsPage
+    },
+    {
+      path: '/plans',
+      name: 'Plans',
+      component: PlanSelectionPage
+    },
+    {
+      path: '/billing',
+      name: 'Billing',
+      component: BillingManagementPage
+    },
+    {
+      path: '/usage',
+      name: 'Usage',
+      component: UsageOverviewPage
     }
   ]
 })
