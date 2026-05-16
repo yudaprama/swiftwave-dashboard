@@ -1,69 +1,20 @@
 <script setup>
-import { reactive, ref } from 'vue'
+import { computed, reactive } from 'vue'
 import { useAuthStore } from '@/store/auth.js'
 import router from '@/router/index.js'
 import FilledButton from '@/views/components/FilledButton.vue'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import axios from 'axios'
-import { getHttpBaseUrl } from '@/vendor/utils.js'
 
-const email = ref('')
-const password = ref('')
-const totp = ref('')
 const authenticationStatus = reactive({
-  visible: false,
-  success: false,
-  message: '',
-  totp_required: false,
-  email_verification_required: false
-})
-const resendEmail = ref('')
-const resendStatus = reactive({
   visible: false,
   success: false,
   message: ''
 })
 const authStore = useAuthStore()
+const redirectPath = computed(() => router.currentRoute.value.query.redirect || '/applications')
 
-const login = async () => {
-  let res = await authStore.Login(email.value, password.value, totp.value)
-  if (res.totp_required) {
-    authenticationStatus.totp_required = res.totp_required
-  } else if (res.email_verification_required) {
-    authenticationStatus.email_verification_required = true
-    authenticationStatus.success = false
-    authenticationStatus.message = res.message
-    authenticationStatus.visible = true
-    resendEmail.value = email.value
-  } else {
-    authenticationStatus.success = res.success
-    authenticationStatus.message = res.message
-    authenticationStatus.visible = true
-    authenticationStatus.totp_required = authenticationStatus.totp_required || res.totp_required
-    if (res.success) {
-      // check if `redirect` is in the query
-      if (router.currentRoute.value.query.redirect) {
-        await router.push(router.currentRoute.value.query.redirect)
-        return
-      }
-      window.open(router.resolve({ name: 'Applications' }).href, '_self')
-    }
-  }
-}
-
-const resendVerification = async () => {
-  if (!resendEmail.value) return
-  const HTTP_BASE_URL = getHttpBaseUrl()
-  try {
-    await axios.post(`${HTTP_BASE_URL}/auth/resend-verification`, { email: resendEmail.value })
-    resendStatus.visible = true
-    resendStatus.success = true
-    resendStatus.message = 'Verification email sent! Please check your inbox.'
-  } catch (e) {
-    resendStatus.visible = true
-    resendStatus.success = false
-    resendStatus.message = e.response?.data?.message || 'Failed to resend verification email.'
-  }
+const login = () => {
+  authStore.LoginWithGitHub(redirectPath.value)
 }
 </script>
 
@@ -132,74 +83,15 @@ const resendVerification = async () => {
           >
         </div>
 
-        <!-- Email Verification Resend -->
-        <div v-if="authenticationStatus.email_verification_required" class="mb-5 rounded-sm border-s-4 border-blue-500 bg-blue-50 p-4">
-          <p class="mb-2 text-sm text-blue-800">Enter your email to resend the verification link:</p>
-          <div class="flex gap-2">
-            <input
-              v-model="resendEmail"
-              class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-xs ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              placeholder="your@email.com"
-              type="email" />
-            <button
-              @click="resendVerification"
-              class="whitespace-nowrap rounded-md bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700">
-              Resend
-            </button>
-          </div>
-          <div v-if="resendStatus.visible" class="mt-2">
-            <p :class="resendStatus.success ? 'text-green-700' : 'text-red-700'" class="text-sm">{{ resendStatus.message }}</p>
-          </div>
-        </div>
-
         <!--   Login Form   -->
         <form class="space-y-4" @keydown.enter.prevent="login">
-          <div>
-            <label class="block text-sm font-medium leading-6 text-gray-900" for="email">Email</label>
-            <div class="mt-1">
-              <input
-                id="email"
-                v-model="email"
-                autocomplete="email"
-                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-xs ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                name="email"
-                placeholder="Enter your email"
-                required
-                type="email" />
-            </div>
-          </div>
-          <div>
-            <label class="block text-sm font-medium leading-6 text-gray-900" for="password">{{ $t('login.passwordLabel') }}</label>
-            <div class="mt-1">
-              <input
-                id="password"
-                v-model="password"
-                autocomplete="current-password"
-                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-xs ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                :placeholder="$t('login.enterPassword')"
-                required
-                type="password" />
-            </div>
-          </div>
-          <div v-if="authenticationStatus.totp_required">
-            <label class="block text-sm font-medium leading-6 text-gray-900" for="2fa_code">{{ $t('login.provide2fa') }}</label>
-            <div class="mt-2">
-              <v-otp-input
-                :num-inputs="6"
-                input-classes="otp-input"
-                :style="{ justifyContent: 'space-between' }"
-                :placeholder="['*', '*', '*', '*', '*', '*']"
-                v-model:value="totp"
-                @on-change="(v) => (totp = v)" />
-            </div>
-          </div>
+          <p class="text-center text-sm text-gray-600">Sign in or create an account with your GitHub identity.</p>
           <div class="py-2">
-            <FilledButton :click="login" class="w-full"> {{ $t('login.signIn') }}</FilledButton>
+            <FilledButton :click="login" class="w-full">
+              <font-awesome-icon icon="fa-brands fa-github" class="mr-2" />
+              Continue with GitHub
+            </FilledButton>
           </div>
-          <p class="text-center text-sm text-gray-500">
-            Don't have an account?
-            <RouterLink to="/register" class="font-semibold text-primary-600 hover:text-primary-500">Create one</RouterLink>
-          </p>
         </form>
       </div>
     </div>

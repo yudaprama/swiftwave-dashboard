@@ -82,6 +82,12 @@ export const useAuthStore = defineStore('auth_details', () => {
     }
   }
 
+  function LoginWithGitHub(redirect = '') {
+    const HTTP_BASE_URL = getHttpBaseUrl()
+    const redirectPath = typeof redirect === 'string' && redirect.startsWith('/') ? redirect : window.location.pathname + window.location.search
+    window.location.href = `${HTTP_BASE_URL}/auth/github/login?redirect=${encodeURIComponent(redirectPath)}`
+  }
+
   async function Register(email, password) {
     const HTTP_BASE_URL = getHttpBaseUrl()
 
@@ -208,6 +214,7 @@ export const useAuthStore = defineStore('auth_details', () => {
     IsLoggingInProgress,
     FetchBearerToken,
     Login,
+    LoginWithGitHub,
     Register,
     Logout,
     SetCredential,

@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import UnderMaintenancePage from '@/views/pages/UnderMaintenance.vue'
 import LoginView from '@/views/pages/LoginView.vue'
+import AuthCallbackView from '@/views/pages/AuthCallbackView.vue'
 import DeployApplicationPage from '@/views/pages/DeployApplication.vue'
 import DeployStackPage from '@/views/pages/DeployStack.vue'
 import AppStorePage from '@/views/pages/AppStore.vue'
@@ -27,7 +28,6 @@ import ImageRegistryCredentialManagementPage from '@/views/pages/ImageRegistryCr
 import DomainManagementPage from '@/views/pages/DomainManagement.vue'
 import RedirectRuleManagementPage from '@/views/pages/RedirectRuleManagement.vue'
 import IngressRuleManagementPage from '@/views/pages/IngressRuleManagement.vue'
-import RegisterView from '@/views/pages/RegisterView.vue'
 import VerifyEmailView from '@/views/pages/VerifyEmailView.vue'
 import PlanSelectionPage from '@/views/pages/PlanSelection.vue'
 import BillingManagementPage from '@/views/pages/BillingManagement.vue'
@@ -54,9 +54,13 @@ const router = createRouter({
       component: LoginView
     },
     {
+      path: '/auth/callback',
+      name: 'Auth Callback',
+      component: AuthCallbackView
+    },
+    {
       path: '/register',
-      name: 'Register',
-      component: RegisterView
+      redirect: '/login'
     },
     {
       path: '/verify-email',
