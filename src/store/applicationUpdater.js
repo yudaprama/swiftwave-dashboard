@@ -12,9 +12,13 @@ export default function newApplicationUpdater(applicationId) {
     const isConfigurationUpdated = ref(false)
     const applyConfigurationChanges = () => {
       const appState = mergeChangesWithExistingApplicationDetails()
-      appState.gitCredentialID = parseInt(appState.gitCredentialID)
       appState.imageRegistryCredentialID = parseInt(appState.imageRegistryCredentialID)
-      appState.gitCredentialID = appState.gitCredentialID === 0 ? null : appState.gitCredentialID
+      appState.githubAppInstallationID =
+        !appState.githubAppInstallationID || appState.githubAppInstallationID === 0
+          ? null
+          : parseInt(appState.githubAppInstallationID)
+      appState.githubRepositoryID =
+        !appState.githubRepositoryID || appState.githubRepositoryID === 0 ? null : parseInt(appState.githubRepositoryID)
       appState.imageRegistryCredentialID =
         appState.imageRegistryCredentialID === 0 ? null : appState.imageRegistryCredentialID
       deployApplication({
@@ -92,8 +96,8 @@ export default function newApplicationUpdater(applicationId) {
               }
               gitProvider
               gitEndpoint
-              gitCredentialID
-              repositoryUrl
+              githubAppInstallationID
+              githubRepositoryID
               repositoryName
               repositoryOwner
               repositoryBranch
@@ -275,10 +279,10 @@ export default function newApplicationUpdater(applicationId) {
         applicationConfiguration.customHealthCheck.start_interval_seconds
       deploymentConfigurationDetails.customHealthCheck.retries = applicationConfiguration.customHealthCheck.retries
       sourceConfigurationRef.command = applicationConfiguration.command
-      sourceConfigurationRef.gitCredentialID = applicationConfiguration.latestDeployment.gitCredentialID
+      sourceConfigurationRef.githubAppInstallationID = applicationConfiguration.latestDeployment.githubAppInstallationID
+      sourceConfigurationRef.githubRepositoryID = applicationConfiguration.latestDeployment.githubRepositoryID
       sourceConfigurationRef.gitProvider = applicationConfiguration.latestDeployment.gitProvider
       sourceConfigurationRef.gitEndpoint = applicationConfiguration.latestDeployment.gitEndpoint
-      sourceConfigurationRef.repositoryUrl = applicationConfiguration.latestDeployment.repositoryUrl
       sourceConfigurationRef.repositoryName = applicationConfiguration.latestDeployment.repositoryName
       sourceConfigurationRef.repositoryOwner = applicationConfiguration.latestDeployment.repositoryOwner
       sourceConfigurationRef.repositoryBranch = applicationConfiguration.latestDeployment.repositoryBranch
@@ -385,10 +389,12 @@ export default function newApplicationUpdater(applicationId) {
 
     const sourceConfigurationRef = reactive({
       command: '',
-      gitCredentialID: 0,
+      githubAppInstallationID: 0,
+      githubRepositoryID: 0,
       gitProvider: '',
       gitEndpoint: '',
-      repositoryUrl: '',
+      repositoryOwner: '',
+      repositoryName: '',
       repositoryBranch: '',
       codePath: '',
       imageRegistryCredentialID: 0,
@@ -556,8 +562,10 @@ export default function newApplicationUpdater(applicationId) {
               }
               gitEndpoint
               gitProvider
-              gitCredentialID
-              repositoryUrl
+              githubAppInstallationID
+              githubRepositoryID
+              repositoryOwner
+              repositoryName
               repositoryBranch
               codePath
               imageRegistryCredentialID
@@ -805,13 +813,23 @@ export default function newApplicationUpdater(applicationId) {
 
       // check if any source configuration is changed
       if (
-        parseInt(sourceConfigurationRef.gitCredentialID) !== applicationExistingDetails.latestDeployment.gitCredentialID
+        parseInt(sourceConfigurationRef.githubAppInstallationID) !==
+        applicationExistingDetails.latestDeployment.githubAppInstallationID
+      ) {
+        return true
+      }
+      if (
+        parseInt(sourceConfigurationRef.githubRepositoryID) !==
+        applicationExistingDetails.latestDeployment.githubRepositoryID
       ) {
         return true
       }
       if (sourceConfigurationRef) {
         // check if source configuration is changed
-        if (sourceConfigurationRef.repositoryUrl !== applicationExistingDetails.latestDeployment.repositoryUrl) {
+        if (sourceConfigurationRef.repositoryOwner !== applicationExistingDetails.latestDeployment.repositoryOwner) {
+          return true
+        }
+        if (sourceConfigurationRef.repositoryName !== applicationExistingDetails.latestDeployment.repositoryName) {
           return true
         }
         if (sourceConfigurationRef.repositoryBranch !== applicationExistingDetails.latestDeployment.repositoryBranch) {
@@ -897,8 +915,10 @@ export default function newApplicationUpdater(applicationId) {
           }
         }),
         // update this part
-        gitCredentialID: sourceConfigurationRef.gitCredentialID,
-        repositoryUrl: sourceConfigurationRef.repositoryUrl,
+        githubAppInstallationID: sourceConfigurationRef.githubAppInstallationID,
+        githubRepositoryID: sourceConfigurationRef.githubRepositoryID,
+        repositoryOwner: sourceConfigurationRef.repositoryOwner,
+        repositoryName: sourceConfigurationRef.repositoryName,
         repositoryBranch: sourceConfigurationRef.repositoryBranch,
         codePath: sourceConfigurationRef.codePath,
         imageRegistryCredentialID: sourceConfigurationRef.imageRegistryCredentialID,
@@ -959,8 +979,10 @@ export default function newApplicationUpdater(applicationId) {
 
     const updateApplicationSource = (source) => {
       sourceConfigurationRef.command = source.command
-      sourceConfigurationRef.gitCredentialID = source.gitCredentialID
-      sourceConfigurationRef.repositoryUrl = source.gitRepoUrl
+      sourceConfigurationRef.githubAppInstallationID = source.githubAppInstallationID
+      sourceConfigurationRef.githubRepositoryID = source.githubRepositoryID
+      sourceConfigurationRef.repositoryOwner = source.repositoryOwner
+      sourceConfigurationRef.repositoryName = source.repositoryName
       sourceConfigurationRef.repositoryBranch = source.gitBranch
       sourceConfigurationRef.codePath = source.codePath
       sourceConfigurationRef.imageRegistryCredentialID = source.imageRegistryCredentialID

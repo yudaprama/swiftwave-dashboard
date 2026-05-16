@@ -35,8 +35,10 @@ const newApplicationState = reactive({
   environmentVariables: [],
   persistentVolumeBindings: [],
   configMounts: [],
-  gitCredentialID: 0,
-  repositoryUrl: '',
+  githubAppInstallationID: 0,
+  githubRepositoryID: 0,
+  repositoryOwner: '',
+  repositoryName: '',
   repositoryBranch: '',
   codePath: '',
   imageRegistryCredentialID: 0,
@@ -160,12 +162,19 @@ const finalizeApplicationSourceConfigurationAndMoveToNextTab = (configuration) =
   }
   newApplicationState.command = configuration.command
   newApplicationState.buildArgs = buildArgs
-  newApplicationState.gitCredentialID = parseInt(configuration.gitCredentialID)
   newApplicationState.imageRegistryCredentialID = parseInt(configuration.imageRegistryCredentialID)
-  newApplicationState.gitCredentialID = configuration.gitCredentialID === 0 ? null : configuration.gitCredentialID
+  newApplicationState.githubAppInstallationID =
+    !configuration.githubAppInstallationID || configuration.githubAppInstallationID === 0
+      ? null
+      : parseInt(configuration.githubAppInstallationID.toString())
+  newApplicationState.githubRepositoryID =
+    !configuration.githubRepositoryID || configuration.githubRepositoryID === 0
+      ? null
+      : parseInt(configuration.githubRepositoryID.toString())
   newApplicationState.imageRegistryCredentialID =
     configuration.imageRegistryCredentialID === 0 ? null : configuration.imageRegistryCredentialID
-  newApplicationState.repositoryUrl = configuration.gitRepoUrl
+  newApplicationState.repositoryOwner = configuration.repositoryOwner
+  newApplicationState.repositoryName = configuration.repositoryName
   newApplicationState.repositoryBranch = configuration.gitBranch
   newApplicationState.codePath = configuration.codePath
   newApplicationState.sourceCodeCompressedFileName = configuration.sourceCodeFile

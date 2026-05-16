@@ -76,8 +76,10 @@ const {
             }
             gitEndpoint
             gitProvider
-            gitCredentialID
-            repositoryUrl
+            githubAppInstallationID
+            githubRepositoryID
+            repositoryOwner
+            repositoryName
             repositoryBranch
             codePath
             imageRegistryCredentialID
@@ -408,9 +410,14 @@ const applyChanges = async () => {
             (key) => persistentVolumeBindingMap(application)[key]
           ),
           // update this part
-          gitCredentialID:
-            application.latestDeployment.gitCredentialID === 0 ? null : application.latestDeployment.gitCredentialID,
-          repositoryUrl: application.latestDeployment.repositoryUrl,
+          githubAppInstallationID:
+            application.latestDeployment.githubAppInstallationID === 0
+              ? null
+              : application.latestDeployment.githubAppInstallationID,
+          githubRepositoryID:
+            application.latestDeployment.githubRepositoryID === 0 ? null : application.latestDeployment.githubRepositoryID,
+          repositoryOwner: application.latestDeployment.repositoryOwner,
+          repositoryName: application.latestDeployment.repositoryName,
           repositoryBranch: application.latestDeployment.repositoryBranch,
           codePath: application.latestDeployment.codePath,
           imageRegistryCredentialID:

@@ -3,7 +3,7 @@ import { computed, reactive, ref } from 'vue'
 import axios from 'axios'
 import { useAuthStore } from '@/store/auth.js'
 import { TabPanel } from '@headlessui/vue'
-import { useLazyQuery, useQuery } from '@vue/apollo-composable'
+import { useLazyQuery, useMutation, useQuery } from '@vue/apollo-composable'
 import gql from 'graphql-tag'
 import { toast } from 'vue-sonner'
 import { useI18n } from 'vue-i18n'
@@ -13,7 +13,6 @@ import DockerfileEditor from '@/views/partials/DeployApplication/DockerfileEdito
 import BuildArgInput from '@/views/partials/BuildArgInput.vue'
 import { getHttpBaseUrl } from '@/vendor/utils.js'
 import CreateImageRegistryCredentialModal from '@/views/partials/CreateImageRegistryCredentialModal.vue'
-import CreateGitCredentialModal from '@/views/partials/CreateGitCredentialModal.vue'
 import ChooseOtherDockerConfigurationModal from '@/views/partials/ChooseOtherDockerConfigurationModal.vue'
 
 const { t } = useI18n()
@@ -36,8 +35,11 @@ const availableGitBranches = ref([])
 const stateRef = reactive({
   command: '',
   sourceCodeFile: '',
-  gitCredentialID: 0,
-  gitRepoUrl: '',
+  githubAppInstallationID: 0,
+  githubRepositoryID: 0,
+  repositoryOwner: '',
+  repositoryName: '',
+  newGithubInstallationID: '',
   gitBranch: '',
   codePath: '',
   imageRegistryCredentialID: 0,
@@ -61,7 +63,7 @@ const closeDockerFileEditor = () => {
 
 const enableGenerateConfigurationButton = computed(() => {
   if (props.applicationSourceType === 'git') {
-    return stateRef.gitRepoUrl !== '' && stateRef.gitBranch !== ''
+    return stateRef.githubAppInstallationID !== 0 && stateRef.githubRepositoryID !== 0 && stateRef.gitBranch !== ''
   } else if (props.applicationSourceType === 'sourceCode') {
     return stateRef.sourceCodeFile !== ''
   } else if (props.applicationSourceType === 'image') {
@@ -94,18 +96,19 @@ const {
 const imageRegistryCredentials = computed(() => imageRegistryCredentialList.value?.imageRegistryCredentials ?? [])
 
 onImageRegistryCredentialListError((err) => toast.error(err.message))
-// Fetch git credentials
+// Fetch GitHub App installations
 const {
-  result: gitCredentialList,
-  onError: onGitCredentialListError,
-  refetch: refetchGitCredentialList
+  result: githubAppInstallationList,
+  onError: onGithubAppInstallationListError,
+  refetch: refetchGithubAppInstallations
 } = useQuery(
   gql`
     query {
-      gitCredentials {
+      githubAppInstallations {
         id
-        name
-        type
+        installationID
+        accountLogin
+        accountType
       }
     }
   `,
@@ -114,9 +117,99 @@ const {
     pollInterval: 10000
   }
 )
-const gitCredentials = computed(() => gitCredentialList.value?.gitCredentials ?? [])
+const githubAppInstallations = computed(() => githubAppInstallationList.value?.githubAppInstallations ?? [])
 
-onGitCredentialListError((err) => toast.error(err.message))
+onGithubAppInstallationListError((err) => toast.error(err.message))
+
+const {
+  mutate: connectGithubInstallation,
+  loading: connectingGithubInstallation,
+  onDone: onConnectGithubInstallationDone,
+  onError: onConnectGithubInstallationError
+} = useMutation(gql`
+  mutation ($input: GitHubAppInstallationInput!) {
+    connectGitHubAppInstallation(input: $input) {
+      id
+      installationID
+      accountLogin
+      accountType
+    }
+  }
+`)
+
+const connectGithubAppInstallation = () => {
+  if (stateRef.newGithubInstallationID === '') {
+    return
+  }
+  connectGithubInstallation({
+    input: {
+      installationID: parseInt(stateRef.newGithubInstallationID)
+    }
+  })
+}
+
+onConnectGithubInstallationDone(() => {
+  toast.success('GitHub App installation connected')
+  stateRef.newGithubInstallationID = ''
+  refetchGithubAppInstallations()
+})
+
+onConnectGithubInstallationError((err) => toast.error(err.message))
+
+const {
+  load: fetchGithubRepositoriesRaw,
+  refetch: refetchGithubRepositoriesRaw,
+  loading: fetchingGithubRepositories,
+  onError: onFetchGithubRepositoriesError,
+  onResult: onFetchGithubRepositoriesResult,
+  variables: fetchGithubRepositoriesVariables
+} = useLazyQuery(
+  gql`
+    query ($installationID: Uint!) {
+      githubAppRepositories(installationID: $installationID) {
+        id
+        name
+        owner
+        fullName
+        defaultBranch
+      }
+    }
+  `,
+  null,
+  {
+    fetchPolicy: 'no-cache',
+    nextFetchPolicy: 'no-cache'
+  }
+)
+
+const githubRepositories = ref([])
+
+const fetchGithubRepositories = () => {
+  availableGitBranches.value = []
+  stateRef.gitBranch = ''
+  stateRef.githubRepositoryID = 0
+  stateRef.repositoryOwner = ''
+  stateRef.repositoryName = ''
+  if (stateRef.githubAppInstallationID === 0) {
+    githubRepositories.value = []
+    return
+  }
+  fetchGithubRepositoriesVariables.value = {
+    installationID: parseInt(stateRef.githubAppInstallationID.toString())
+  }
+  if (fetchGithubRepositoriesRaw() === false) {
+    refetchGithubRepositoriesRaw()
+  }
+}
+
+onFetchGithubRepositoriesResult((d) => {
+  githubRepositories.value = d.data?.githubAppRepositories ?? []
+})
+
+onFetchGithubRepositoriesError((err) => {
+  toast.error(err.message)
+  githubRepositories.value = []
+})
 
 // Fetch git branches
 const {
@@ -140,14 +233,17 @@ const {
 )
 
 const fetchGitBranches = () => {
-  if (stateRef.gitRepoUrl === '') {
+  const repo = githubRepositories.value.find((item) => item.id.toString() === stateRef.githubRepositoryID.toString())
+  if (!repo || stateRef.githubAppInstallationID === 0) {
     return
   }
-  let gitRepoUrl = stateRef.gitRepoUrl.trim()
+  stateRef.repositoryOwner = repo.owner
+  stateRef.repositoryName = repo.name
   fetchGitBranchesVariables.value = {
     input: {
-      gitCredentialId: stateRef.gitCredentialID,
-      repositoryUrl: gitRepoUrl
+      githubAppInstallationID: parseInt(stateRef.githubAppInstallationID.toString()),
+      repositoryOwner: repo.owner,
+      repositoryName: repo.name
     }
   }
   if (fetchGitBranchesRaw() === false) {
@@ -279,11 +375,12 @@ const generateConfiguration = () => {
     stateRef.detectedServiceName = "😅 You don't need configuration for docker image"
     stateRef.isDockerConfigurationGenerated = true
   } else {
-    let gitCredentialID = parseInt(stateRef.gitCredentialID.toString())
     generateConfigurationVariables.value.input = {
       sourceType: props.applicationSourceType,
-      gitCredentialID: gitCredentialID === 0 ? null : gitCredentialID,
-      repositoryUrl: stateRef.gitRepoUrl === '' ? null : stateRef.gitRepoUrl,
+      githubAppInstallationID:
+        stateRef.githubAppInstallationID === 0 ? null : parseInt(stateRef.githubAppInstallationID.toString()),
+      repositoryOwner: stateRef.repositoryOwner === '' ? null : stateRef.repositoryOwner,
+      repositoryName: stateRef.repositoryName === '' ? null : stateRef.repositoryName,
       repositoryBranch: stateRef.gitBranch === '' ? null : stateRef.gitBranch,
       codePath: stateRef.codePath,
       customDockerFile: '',
@@ -298,9 +395,10 @@ const generateConfiguration = () => {
 const generateConfigurationForCustomDockerFile = (customDockerFile) => {
   generateConfigurationVariables.value.input = {
     sourceType: 'custom',
-    gitCredentialID: null,
+    githubAppInstallationID: null,
     repositoryBranch: null,
-    repositoryUrl: null,
+    repositoryOwner: null,
+    repositoryName: null,
     customDockerFile: customDockerFile,
     sourceCodeCompressedFileName: null
   }
@@ -308,10 +406,6 @@ const generateConfigurationForCustomDockerFile = (customDockerFile) => {
     generateConfigurationRefetch()
   }
 }
-
-// Create Git Credential
-const createGitCredentialModalRef = ref(null)
-const openCreateGitCredentialModal = computed(() => createGitCredentialModalRef.value?.openModal ?? (() => {}))
 
 // Create Image Registry Credential
 const createImageRegistryCredentialModalRef = ref(null)
@@ -328,7 +422,6 @@ const openChooseOtherDockerConfigurationModal = computed(
 
 <template>
   <!--  Modals -->
-  <CreateGitCredentialModal ref="createGitCredentialModalRef" :callback-on-create="refetchGitCredentialList" />
   <CreateImageRegistryCredentialModal
     ref="createImageRegistryCredentialModalRef"
     :callback-on-create="refetchImageRegistryCredentialList" />
@@ -342,46 +435,57 @@ const openChooseOtherDockerConfigurationModal = computed(
       <div v-if="applicationSourceType === 'git'" class="w-full">
         <p class="text-xl font-medium">{{ t('partials.gitRepoInfo') }}</p>
 
-        <!-- Git Credentials -->
+        <!-- GitHub App Installation -->
         <div class="mt-6">
-          <label class="block text-sm font-medium text-gray-700" for="git_credential"
-            >{{ t('partials.pickGitCredential') }}</label
-          >
+          <label class="block text-sm font-medium text-gray-700" for="github_installation">GitHub App Installation</label>
+          <div class="mt-2 flex gap-2">
+            <input
+              v-model="stateRef.newGithubInstallationID"
+              autocomplete="off"
+              class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+              placeholder="GitHub installation ID"
+              type="number" />
+            <FilledButton
+              type="secondary"
+              slim
+              :loading="connectingGithubInstallation"
+              :disabled="stateRef.newGithubInstallationID === ''"
+              @click="connectGithubAppInstallation"
+              >Connect</FilledButton
+            >
+          </div>
           <div class="mt-1">
             <select
-              id="git_credential"
-              v-model="stateRef.gitCredentialID"
-              @change="fetchGitBranches"
+              id="github_installation"
+              v-model="stateRef.githubAppInstallationID"
+              @change="fetchGithubRepositories"
               class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
-              <option selected value="0">{{ t('partials.noCredential') }}</option>
-              <option v-for="credential in gitCredentials" :key="credential.id" :value="credential.id">
-                {{ credential.name }} [{{ credential.type }}]
+              <option selected value="0">Select installation</option>
+              <option v-for="installation in githubAppInstallations" :key="installation.id" :value="installation.id">
+                {{ installation.accountLogin }} [{{ installation.accountType }}]
               </option>
             </select>
           </div>
-          <p class="mt-2 flex items-center text-sm">
-            {{ t('partials.needPrivateRepoCred') }}
-            <a @click="openCreateGitCredentialModal" class="ml-1.5 cursor-pointer font-bold text-primary-600"
-              >{{ t('partials.clickHere') }}</a
-            >
-          </p>
         </div>
 
-        <!-- Git Repository URL -->
+        <!-- Git Repository -->
         <div class="mt-4">
-          <label class="block text-sm font-medium text-gray-700" for="git_repo_url"
-            >{{ t('partials.gitRepoUrl') }}<span class="text-red-600"> *</span></label
-          >
+          <label class="block text-sm font-medium text-gray-700" for="github_repository">
+            GitHub Repository<span class="text-red-600"> *</span>
+            <span class="ml-2 italic" v-if="fetchingGithubRepositories">
+              <font-awesome-icon icon="fa-solid fa-spinner" class="animate-spin" />&nbsp;&nbsp;{{ t('partials.fetching') }}
+            </span>
+          </label>
           <div class="mt-1">
-            <input
-              id="git_repo_url"
-              v-model="stateRef.gitRepoUrl"
-              autocomplete="off"
+            <select
+              id="github_repository"
+              v-model="stateRef.githubRepositoryID"
+              @change="fetchGitBranches"
               class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
-              name="name"
-              :placeholder="t('partials.enterGitRepoUrl')"
-              type="text"
-              v-debounce:1000ms="fetchGitBranches" />
+              :disabled="stateRef.githubAppInstallationID === 0">
+              <option selected disabled value="0">Select repository</option>
+              <option v-for="repo in githubRepositories" :key="repo.id" :value="repo.id">{{ repo.fullName }}</option>
+            </select>
           </div>
         </div>
 
