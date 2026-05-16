@@ -9,7 +9,7 @@ export const useAuthStore = defineStore('auth_details', () => {
   const IsLoggedIn = ref(false)
   const AccessToken = ref('')
   const IsLoggingInProgress = ref(false)
-  const currentUsername = ref('')
+  const currentEmail = ref('')
   const currentRole = ref('')
   let currentTime = ref(Date.now())
 
@@ -31,7 +31,7 @@ export const useAuthStore = defineStore('auth_details', () => {
     try {
       const decoded = jwtDecode(token)
       currentRole.value = decoded.role ?? ''
-      currentUsername.value = decoded.username ?? ''
+      currentEmail.value = decoded.email ?? decoded.username ?? ''
     } catch (e) {
       currentRole.value = ''
     }
@@ -40,9 +40,9 @@ export const useAuthStore = defineStore('auth_details', () => {
     }, 1000)
   }
 
-  async function Login(username, password, totp) {
+  async function Login(email, password, totp) {
     let data = new FormData()
-    data.append('username', username)
+    data.append('email', email)
     data.append('password', password)
     data.append('totp', totp)
 
@@ -69,7 +69,8 @@ export const useAuthStore = defineStore('auth_details', () => {
         return {
           success: false,
           message: e.response.data.message || 'Unexpected error',
-          totp_required: e.response.data.totp_required
+          totp_required: e.response.data.totp_required || false,
+          email_verification_required: e.response.data.email_verification_required || false
         }
       } else {
         return {
@@ -81,7 +82,7 @@ export const useAuthStore = defineStore('auth_details', () => {
     }
   }
 
-  async function Register(username, password) {
+  async function Register(email, password) {
     const HTTP_BASE_URL = getHttpBaseUrl()
 
     try {
@@ -89,13 +90,12 @@ export const useAuthStore = defineStore('auth_details', () => {
         method: 'post',
         url: `${HTTP_BASE_URL}/auth/register`,
         headers: { 'Content-Type': 'application/json' },
-        data: { username, password }
+        data: { email, password }
       })
       const resData = res.data
-      SetCredential(resData.token)
       return {
         success: true,
-        message: 'Account created successfully!'
+        message: resData.message || 'Registration successful. Please check your email to verify your account.'
       }
     } catch (e) {
       if (e.response) {
@@ -170,7 +170,7 @@ export const useAuthStore = defineStore('auth_details', () => {
         const token = localStorage.getItem('token')
         if (token) {
           const decoded = jwtDecode(token)
-          currentUsername.value = decoded.username ?? ''
+          currentEmail.value = decoded.email ?? decoded.username ?? ''
           currentRole.value = decoded.role ?? ''
           const exp = moment(new Date(decoded.exp * 1000))
           return moment.duration(exp.diff(currentTime.value)).humanize(true)
@@ -214,7 +214,7 @@ export const useAuthStore = defineStore('auth_details', () => {
     StartAuthChecker,
     sessionRelativeTimeoutStatus,
     fetchSWVersion,
-    currentUsername,
+    currentEmail,
     currentRole,
     isAdmin
   }

@@ -1,10 +1,9 @@
 <script setup>
 import { reactive, ref } from 'vue'
 import { useAuthStore } from '@/store/auth.js'
-import router from '@/router/index.js'
 import FilledButton from '@/views/components/FilledButton.vue'
 
-const username = ref('')
+const email = ref('')
 const password = ref('')
 const confirmPassword = ref('')
 const registrationStatus = reactive({
@@ -28,13 +27,10 @@ const register = async () => {
     return
   }
 
-  const res = await authStore.Register(username.value, password.value)
+  const res = await authStore.Register(email.value, password.value)
   registrationStatus.success = res.success
   registrationStatus.message = res.message
   registrationStatus.visible = true
-  if (res.success) {
-    window.open(router.resolve({ name: 'Applications' }).href, '_self')
-  }
 }
 </script>
 
@@ -74,18 +70,18 @@ const register = async () => {
             class="block font-medium"
             >{{ registrationStatus.message }}</strong>
         </div>
-        <form class="space-y-4" @keydown.enter.prevent="register">
+        <form v-if="!registrationStatus.success" class="space-y-4" @keydown.enter.prevent="register">
           <div>
-            <label class="block text-sm font-medium leading-6 text-gray-900" for="reg-username">Username</label>
+            <label class="block text-sm font-medium leading-6 text-gray-900" for="reg-email">Email</label>
             <div class="mt-1">
               <input
-                id="reg-username"
-                v-model="username"
-                autocomplete="username"
+                id="reg-email"
+                v-model="email"
+                autocomplete="email"
                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-xs ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                placeholder="Choose a username"
+                placeholder="Enter your email address"
                 required
-                type="text" />
+                type="email" />
             </div>
           </div>
           <div>
@@ -122,6 +118,11 @@ const register = async () => {
             <RouterLink to="/login" class="font-semibold text-primary-600 hover:text-primary-500">Sign in</RouterLink>
           </p>
         </form>
+        <div v-else class="text-center">
+          <p class="text-gray-600">
+            <RouterLink to="/login" class="font-semibold text-primary-600 hover:text-primary-500">Go to Login</RouterLink>
+          </p>
+        </div>
       </div>
     </div>
   </div>

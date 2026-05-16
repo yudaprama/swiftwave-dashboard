@@ -28,6 +28,7 @@ import DomainManagementPage from '@/views/pages/DomainManagement.vue'
 import RedirectRuleManagementPage from '@/views/pages/RedirectRuleManagement.vue'
 import IngressRuleManagementPage from '@/views/pages/IngressRuleManagement.vue'
 import RegisterView from '@/views/pages/RegisterView.vue'
+import VerifyEmailView from '@/views/pages/VerifyEmailView.vue'
 import PlanSelectionPage from '@/views/pages/PlanSelection.vue'
 import BillingManagementPage from '@/views/pages/BillingManagement.vue'
 import UsageOverviewPage from '@/views/pages/UsageOverview.vue'
@@ -56,6 +57,11 @@ const router = createRouter({
       path: '/register',
       name: 'Register',
       component: RegisterView
+    },
+    {
+      path: '/verify-email',
+      name: 'Verify Email',
+      component: VerifyEmailView
     },
     {
       path: '',

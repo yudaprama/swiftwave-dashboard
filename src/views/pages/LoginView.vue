@@ -4,22 +4,37 @@ import { useAuthStore } from '@/store/auth.js'
 import router from '@/router/index.js'
 import FilledButton from '@/views/components/FilledButton.vue'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import axios from 'axios'
+import { getHttpBaseUrl } from '@/vendor/utils.js'
 
-const username = ref('')
+const email = ref('')
 const password = ref('')
 const totp = ref('')
 const authenticationStatus = reactive({
   visible: false,
   success: false,
   message: '',
-  totp_required: false
+  totp_required: false,
+  email_verification_required: false
+})
+const resendEmail = ref('')
+const resendStatus = reactive({
+  visible: false,
+  success: false,
+  message: ''
 })
 const authStore = useAuthStore()
 
 const login = async () => {
-  let res = await authStore.Login(username.value, password.value, totp.value)
+  let res = await authStore.Login(email.value, password.value, totp.value)
   if (res.totp_required) {
     authenticationStatus.totp_required = res.totp_required
+  } else if (res.email_verification_required) {
+    authenticationStatus.email_verification_required = true
+    authenticationStatus.success = false
+    authenticationStatus.message = res.message
+    authenticationStatus.visible = true
+    resendEmail.value = email.value
   } else {
     authenticationStatus.success = res.success
     authenticationStatus.message = res.message
@@ -33,6 +48,21 @@ const login = async () => {
       }
       window.open(router.resolve({ name: 'Applications' }).href, '_self')
     }
+  }
+}
+
+const resendVerification = async () => {
+  if (!resendEmail.value) return
+  const HTTP_BASE_URL = getHttpBaseUrl()
+  try {
+    await axios.post(`${HTTP_BASE_URL}/auth/resend-verification`, { email: resendEmail.value })
+    resendStatus.visible = true
+    resendStatus.success = true
+    resendStatus.message = 'Verification email sent! Please check your inbox.'
+  } catch (e) {
+    resendStatus.visible = true
+    resendStatus.success = false
+    resendStatus.message = e.response?.data?.message || 'Failed to resend verification email.'
   }
 }
 </script>
@@ -102,20 +132,40 @@ const login = async () => {
           >
         </div>
 
+        <!-- Email Verification Resend -->
+        <div v-if="authenticationStatus.email_verification_required" class="mb-5 rounded-sm border-s-4 border-blue-500 bg-blue-50 p-4">
+          <p class="mb-2 text-sm text-blue-800">Enter your email to resend the verification link:</p>
+          <div class="flex gap-2">
+            <input
+              v-model="resendEmail"
+              class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-xs ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              placeholder="your@email.com"
+              type="email" />
+            <button
+              @click="resendVerification"
+              class="whitespace-nowrap rounded-md bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-700">
+              Resend
+            </button>
+          </div>
+          <div v-if="resendStatus.visible" class="mt-2">
+            <p :class="resendStatus.success ? 'text-green-700' : 'text-red-700'" class="text-sm">{{ resendStatus.message }}</p>
+          </div>
+        </div>
+
         <!--   Login Form   -->
         <form class="space-y-4" @keydown.enter.prevent="login">
           <div>
-            <label class="block text-sm font-medium leading-6 text-gray-900" for="username">{{ $t('login.usernameLabel') }}</label>
+            <label class="block text-sm font-medium leading-6 text-gray-900" for="email">Email</label>
             <div class="mt-1">
               <input
-                id="username"
-                v-model="username"
-                autocomplete="username"
+                id="email"
+                v-model="email"
+                autocomplete="email"
                 class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-xs ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                name="username"
-                :placeholder="$t('login.enterUsername')"
+                name="email"
+                placeholder="Enter your email"
                 required
-                type="text" />
+                type="email" />
             </div>
           </div>
           <div>

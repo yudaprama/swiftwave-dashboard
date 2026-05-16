@@ -15,7 +15,6 @@ import Table from '@/views/components/Table/Table.vue'
 import TableHeader from '@/views/components/Table/TableHeader.vue'
 import UserListRow from '@/views/partials/UserListRow.vue'
 import TableMessage from '@/views/components/Table/TableMessage.vue'
-import { preventSpaceInput } from '@/vendor/utils.js'
 import Code from '@/views/components/Code.vue'
 import Divider from '@/views/components/Divider.vue'
 
@@ -29,7 +28,7 @@ const closeModal = () => {
 
 // New user form state
 const newUser = reactive({
-  username: '',
+  email: '',
   password: ''
 })
 
@@ -43,7 +42,7 @@ const {
     mutation ($input: UserInput!) {
       createUser(input: $input) {
         id
-        username
+        email
         totpEnabled
       }
     }
@@ -58,7 +57,7 @@ const {
 onUserCreateSuccess(() => {
   closeModal()
   refetchUserList()
-  newUser.username = ''
+  newUser.email = ''
   newUser.password = ''
   toast.success(t('users.createSuccess'))
 })
@@ -79,7 +78,7 @@ const {
 `)
 
 const deleteUserWithConfirmation = (user) => {
-  if (confirm(t('users.deleteConfirm', { username: user.username }))) {
+  if (confirm(t('users.deleteConfirm', { email: user.email }))) {
     deleteUser({ id: user.id })
   }
 }
@@ -104,7 +103,7 @@ const {
     query {
       users {
         id
-        username
+        email
         totpEnabled
       }
     }
@@ -266,19 +265,18 @@ onDisableTotpError((err) => {
       <template v-slot:body>
         {{ $t('users.createHint') }}
         <form @submit.prevent="createUser">
-          <!-- Username Field -->
+          <!-- Email Field -->
           <div class="mt-4">
-            <label class="block text-sm font-medium text-gray-700" for="username"> {{ $t('common.username') }} </label>
+            <label class="block text-sm font-medium text-gray-700" for="email"> {{ $t('common.email') }} </label>
             <div class="mt-1">
               <input
-                id="username"
-                v-model="newUser.username"
-                @keydown="preventSpaceInput"
-                autocomplete="off"
+                id="email"
+                v-model="newUser.email"
+                autocomplete="email"
                 class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
-                name="username"
-                :placeholder="$t('common.username')"
-                type="text" />
+                name="email"
+                :placeholder="$t('common.email')"
+                type="email" />
             </div>
           </div>
           <!-- Password Field -->
@@ -326,7 +324,7 @@ onDisableTotpError((err) => {
     <!-- Tables -->
     <Table class="mt-8">
       <template v-slot:header>
-        <TableHeader align="left">{{ $t('common.username') }}</TableHeader>
+        <TableHeader align="left">{{ $t('common.email') }}</TableHeader>
         <TableHeader align="center">{{ $t('common.status') }}</TableHeader>
         <TableHeader align="center">{{ $t('users.role') }}</TableHeader>
         <TableHeader align="center">{{ $t('users.twofa') }}</TableHeader>

@@ -7,7 +7,7 @@ import FilledButton from '@/views/components/FilledButton.vue'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
-const currentUsername = useAuthStore().currentUsername
+const currentEmail = useAuthStore().currentEmail
 defineProps({
   user: {
     type: Object,
@@ -38,7 +38,7 @@ defineProps({
   <tr>
     <TableRow align="left">
       <div class="text-sm font-medium text-gray-900">
-        {{ user.username }}
+        {{ user.email }}
       </div>
     </TableRow>
     <TableRow align="center">
@@ -47,7 +47,7 @@ defineProps({
     <TableRow align="center">
       <span class="text-sm text-gray-700"> {{ t('partials.administrator') }} </span>
     </TableRow>
-    <TableRow align="center" v-if="currentUsername === user.username" flex>
+    <TableRow align="center" v-if="currentEmail === user.email" flex>
       <FilledButton
         type="primary"
         slim
@@ -65,7 +65,7 @@ defineProps({
       <Badge type="danger" v-else>{{ t('partials.totpDisabled') }}</Badge>
     </TableRow>
     <TableRow align="right">
-      <TextButton :click="() => deleteUser(user)" type="danger" :disabled="currentUsername === user.username">
+      <TextButton :click="() => deleteUser(user)" type="danger" :disabled="currentEmail === user.email">
         {{ t('common.delete') }}
       </TextButton>
     </TableRow>
