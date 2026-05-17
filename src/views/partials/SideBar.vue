@@ -235,23 +235,6 @@ const startCountDown = () => {
           </template>
         </SideBarOption>
 
-        <SideBarOption v-if="authStore.isAdmin" :active-urls="['Servers']">
-          <template #icon>
-            <font-awesome-icon icon="fa-solid fa-server" />
-          </template>
-          <template #title>{{ $t('sidebar.manageServers') }}</template>
-          <template #content>
-            <div class="space-y-2">
-              <RouterLink
-                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
-                to="/servers">
-                <font-awesome-icon icon="fa-solid fa-list-ul" />
-                <span class="mx-2 text-sm font-medium">{{ $t('sidebar.serverList') }}</span>
-              </RouterLink>
-            </div>
-          </template>
-        </SideBarOption>
-
         <SideBarOption v-if="!authStore.isAdmin" :active-urls="['Plans', 'Billing', 'Usage']">
           <template #icon>
             <font-awesome-icon icon="fa-solid fa-credit-card" />

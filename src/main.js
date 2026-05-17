@@ -283,7 +283,7 @@ app.directive('debounce', vueDebounce({ lock: true }))
 app.mount('#app')
 
 // Protect routes
-const adminOnlyRoutes = ['Servers', 'System Logs', 'Users']
+const adminOnlyRoutes = ['System Logs', 'Users']
 router.beforeEach(async (to) => {
   const authStore = useAuthStore()
   if ((to.name === 'Setup' && parseInt(to.query?.update ?? 0) === 0) || to.name === 'Maintenance') {
