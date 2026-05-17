@@ -35,7 +35,6 @@ import UsageOverviewPage from '@/views/pages/UsageOverview.vue'
 
 import ServerManagementPage from '@/views/pages/ServerManagement.vue'
 import ServerLogsPage from '@/views/pages/ServerLogs.vue'
-import ServerAnalyticsPage from '@/views/pages/ServerAnalytics.vue'
 import SystemLogsPage from '@/views/pages/SystemLogs.vue'
 import AppAuthBasicAccessControlList from '@/views/pages/AppAuthBasicAccessControlList.vue'
 import ApplicationGroupDetailsPage from '@/views/pages/ApplicationGroupDetails.vue'
@@ -233,11 +232,6 @@ const router = createRouter({
       path: '/server/logs',
       name: 'Server Logs',
       component: ServerLogsPage
-    },
-    {
-      path: '/server/analytics',
-      name: 'Server Analytics',
-      component: ServerAnalyticsPage
     },
     {
       path: '/logs',

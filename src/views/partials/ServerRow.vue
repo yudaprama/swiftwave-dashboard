@@ -7,7 +7,7 @@ import { getHttpBaseUrl } from '@/vendor/utils.js'
 import { useRouter } from 'vue-router'
 import SetupServerModal from '@/views/partials/SetupServerModal.vue'
 import EnableServerProxyModal from '@/views/partials/EnableServerProxyModal.vue'
-import { useMutation } from '@vue/apollo-composable'
+import { useMutation, useQuery } from '@vue/apollo-composable'
 import gql from 'graphql-tag'
 import { toast } from 'vue-sonner'
 import SetupResourceMonitoring from '@/views/partials/SetupResourceMonitoring.vue'
@@ -204,14 +204,21 @@ const setupResourceMonitoring = () => {
   }
 }
 
-// Open analytics page
+// Grafana Cloud URL
+const { result: grafanaCloudUrlResult } = useQuery(gql`
+  query {
+    grafanaCloudUrl
+  }
+`)
+
+// Open analytics page (Grafana Cloud)
 const openAnalyticsPage = () => {
-  router.push({
-    name: 'Server Analytics',
-    query: {
-      id: props.server.id
-    }
-  })
+  const url = grafanaCloudUrlResult.value?.grafanaCloudUrl
+  if (url) {
+    window.open(url, '_blank')
+  } else {
+    toast.info('Grafana Cloud URL is not configured. Please set it in the SwiftWave config.')
+  }
 }
 
 // Disable deployment on server
@@ -467,7 +474,7 @@ const enableMaintenanceMode = () => {
 
     <TableRow align="center" flex>
       <FilledButton type="primary" slim :click="openAnalyticsPage">
-        <font-awesome-icon icon="fa-solid fa-chart-column" />&nbsp;&nbsp;&nbsp;{{ t('serverAnalytics.title') }}
+        <font-awesome-icon icon="fa-solid fa-chart-column" />&nbsp;&nbsp;&nbsp;Grafana Dashboard
       </FilledButton>
     </TableRow>
     <TableRow align="center" flex>
