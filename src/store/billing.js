@@ -202,25 +202,44 @@ export const useBillingStore = defineStore('billing', () => {
     }
   }
 
-  async function upgradePlan(planId) {
+  async function upgradePlan(planId, voucherCode) {
     try {
       const { resolveClient } = useApolloClient()
       const client = resolveClient()
       const { data } = await client.mutate({
         mutation: gql`
-          mutation($planId: Uint!) {
-            upgradePlan(planId: $planId) {
+          mutation($planId: Uint!, $voucherCode: String) {
+            upgradePlan(planId: $planId, voucherCode: $voucherCode) {
               id
               xenditInvoiceUrl
               status
+              amountCents
             }
           }
         `,
-        variables: { planId }
+        variables: { planId, voucherCode: voucherCode || null }
       })
       await fetchSubscription()
       await fetchQuotaUsage()
       return { success: true, invoice: data.upgradePlan }
+    } catch (e) {
+      return { success: false, message: e.message }
+    }
+  }
+
+  async function validateVoucher(code) {
+    try {
+      const { resolveClient } = useApolloClient()
+      const client = resolveClient()
+      const { data } = await client.mutate({
+        mutation: gql`
+          mutation($code: String!) {
+            applyVoucher(code: $code)
+          }
+        `,
+        variables: { code }
+      })
+      return { success: data.applyVoucher }
     } catch (e) {
       return { success: false, message: e.message }
     }
@@ -263,6 +282,7 @@ export const useBillingStore = defineStore('billing', () => {
     fetchUsageHistory,
     fetchCurrentOverage,
     upgradePlan,
+    validateVoucher,
     cancelSubscription
   }
 })

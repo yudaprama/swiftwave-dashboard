@@ -8,6 +8,11 @@ const billingStore = useBillingStore()
 const authStore = useAuthStore()
 const upgrading = ref(false)
 
+// Voucher state
+const voucherCode = ref('')
+const voucherStatus = ref(null) // null | 'valid' | 'invalid' | 'checking'
+const voucherMessage = ref('')
+
 onMounted(async () => {
   await Promise.all([billingStore.fetchPlans(), billingStore.fetchSubscription()])
 })
@@ -21,15 +26,41 @@ const isCurrentPlan = (plan) => {
   return billingStore.currentPlan?.id === plan.id
 }
 
+const checkVoucher = async () => {
+  if (!voucherCode.value.trim()) {
+    voucherStatus.value = null
+    voucherMessage.value = ''
+    return
+  }
+  voucherStatus.value = 'checking'
+  const res = await billingStore.validateVoucher(voucherCode.value.trim())
+  if (res.success) {
+    voucherStatus.value = 'valid'
+    voucherMessage.value = 'Voucher code is valid'
+  } else {
+    voucherStatus.value = 'invalid'
+    voucherMessage.value = res.message || 'Invalid voucher code'
+  }
+}
+
+const clearVoucher = () => {
+  voucherCode.value = ''
+  voucherStatus.value = null
+  voucherMessage.value = ''
+}
+
 const upgrade = async (plan) => {
   if (isCurrentPlan(plan)) return
   if (!confirm(`Upgrade to ${plan.name} plan?`)) return
 
+  const code = voucherStatus.value === 'valid' ? voucherCode.value.trim() : null
+
   upgrading.value = true
-  const res = await billingStore.upgradePlan(plan.id)
+  const res = await billingStore.upgradePlan(plan.id, code)
   upgrading.value = false
 
   if (res.success) {
+    clearVoucher()
     if (res.invoice?.xenditInvoiceUrl) {
       window.open(res.invoice.xenditInvoiceUrl, '_blank')
       toast.success('Invoice created. Please complete payment.')
@@ -53,6 +84,40 @@ const upgrade = async (plan) => {
         Current plan: <span class="font-semibold text-primary-700">{{ billingStore.currentPlan.name }}</span>
         <span v-if="billingStore.isPastDue" class="ml-2 rounded bg-yellow-100 px-2 py-0.5 text-xs text-yellow-800">Past Due</span>
         <span v-if="billingStore.isSuspended" class="ml-2 rounded bg-red-100 px-2 py-0.5 text-xs text-red-800">Suspended</span>
+      </p>
+    </div>
+
+    <!-- Voucher code input -->
+    <div class="mt-4 rounded-lg border bg-white p-4 shadow-sm">
+      <label class="block text-sm font-medium text-gray-700">Have a voucher code?</label>
+      <div class="mt-2 flex items-center gap-2">
+        <input
+          v-model="voucherCode"
+          type="text"
+          placeholder="Enter voucher code"
+          class="w-full max-w-xs rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+          @keyup.enter="checkVoucher"
+        />
+        <button
+          :disabled="!voucherCode.trim() || voucherStatus === 'checking'"
+          class="rounded-md bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700 disabled:opacity-50"
+          @click="checkVoucher">
+          {{ voucherStatus === 'checking' ? 'Checking...' : 'Apply' }}
+        </button>
+        <button
+          v-if="voucherStatus"
+          class="text-sm text-gray-500 hover:text-gray-700"
+          @click="clearVoucher">
+          Clear
+        </button>
+      </div>
+      <p v-if="voucherStatus === 'valid'" class="mt-2 text-sm text-green-600">
+        <font-awesome-icon icon="fa-solid fa-check-circle" class="mr-1" />
+        {{ voucherMessage }}
+      </p>
+      <p v-else-if="voucherStatus === 'invalid'" class="mt-2 text-sm text-red-600">
+        <font-awesome-icon icon="fa-solid fa-times-circle" class="mr-1" />
+        {{ voucherMessage }}
       </p>
     </div>
 
