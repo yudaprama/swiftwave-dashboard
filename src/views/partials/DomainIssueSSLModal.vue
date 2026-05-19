@@ -1,6 +1,9 @@
 <script setup>
 import { reactive, ref } from 'vue';
 import { toast } from 'vue-sonner'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 import ModalDialog from '../components/ModalDialog.vue';
 import { useMutation } from '@vue/apollo-composable';
 import gql from 'graphql-tag';
@@ -48,7 +51,7 @@ const {
 );
 
 onAutoIssueSslDone(() => {
-    toast.success('SSL issue request submitted successfully');
+    toast.success(t('partials.sslIssueSuccess'));
     closeModal();
 });
 
@@ -82,7 +85,7 @@ const {
 );
 
 onAddCustomSSLDone(() => {
-    toast.success('Custom SSL added successfully. It can take few minutes to apply properly');
+    toast.success(t('partials.customSSLAddSuccess'));
     closeModal();
 });
 
@@ -97,7 +100,7 @@ const issueSSL = () => {
         details.sslFullChain = details.sslFullChain.trim();
         details.sslPrivateKey = details.sslPrivateKey.trim();
         if (details.sslFullChain === '' || details.sslPrivateKey === '') {
-            toast.error('Please fill all the required fields');
+            toast.error(t('partials.fillRequiredFields'));
             return;
         }
         addCustomSSL({

@@ -149,7 +149,7 @@ const connectGithubAppInstallation = () => {
 }
 
 onConnectGithubInstallationDone(() => {
-  toast.success('GitHub App installation connected')
+  toast.success(t('applicationDetails.githubAppConnected'))
   stateRef.newGithubInstallationID = ''
   refetchGithubAppInstallations()
 })
@@ -254,7 +254,7 @@ const fetchGitBranches = () => {
 onFetchGitBranchesResult((d) => {
   if (d.data && d.data.gitBranches) {
     availableGitBranches.value = d.data.gitBranches
-    toast.success('Available branches fetched')
+    toast.success(t('applicationDetails.availableBranchesFetched'))
   }
 })
 onFetchGitBranchesError((err) => {
@@ -304,7 +304,7 @@ const uploadSourceCode = async () => {
       toast.error(res.message)
     }
   } catch (e) {
-    toast.error('failed to upload source code')
+    toast.error(t('applicationDetails.failedToUploadSourceCode'))
   }
   stateRef.isUploadingSourceCode = false
 }

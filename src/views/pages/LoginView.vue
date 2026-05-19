@@ -85,11 +85,11 @@ const login = () => {
 
         <!--   Login Form   -->
         <form class="space-y-4" @keydown.enter.prevent="login">
-          <p class="text-center text-sm text-gray-600">Sign in or create an account with your GitHub identity.</p>
+          <p class="text-center text-sm text-gray-600">{{ $t('login.signInHint') }}</p>
           <div class="py-2">
             <FilledButton :click="login" class="w-full">
               <font-awesome-icon icon="fa-brands fa-github" class="mr-2" />
-              Continue with GitHub
+              {{ $t('login.continueWithGitHub') }}
             </FilledButton>
           </div>
         </form>

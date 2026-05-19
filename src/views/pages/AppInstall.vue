@@ -185,7 +185,7 @@ const fetchStackDetails = async () => {
     })
     .catch((error) => {
       console.error(error);
-      toast.error('Invalid stack file');
+      toast.error(t('deploy.invalidStackFile'));
       router.push({ name: 'App Store' });
     });
 };

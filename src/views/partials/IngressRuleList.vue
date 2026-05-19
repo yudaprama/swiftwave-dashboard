@@ -11,6 +11,9 @@ import IngressRuleRow from '@/views/partials/IngressRuleRow.vue'
 import ModalDialog from '@/views/components/ModalDialog.vue'
 import FilledButton from '@/views/components/FilledButton.vue'
 import router from '@/router/index.js'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const props = defineProps({
   applicationId: {
@@ -111,7 +114,7 @@ const {
 )
 
 const deleteIngressRulesWithConfirmation = (ingress_rule) => {
-  if (confirm('Are you sure you want to delete this ingress rule ?')) {
+  if (confirm(t('partials.ingressDeleteConfirm'))) {
     deleteIngressRule({
       id: ingress_rule.id
     })
@@ -119,7 +122,7 @@ const deleteIngressRulesWithConfirmation = (ingress_rule) => {
 }
 
 onIngressDeleteSuccess(() => {
-  toast.success('Ingress Rule will be deleted shortly\nThis can take upto 5 minutes to reflect in the system')
+  toast.success(t('partials.ingressDeleteSuccess'))
   refetchIngressRules()
 })
 
@@ -146,9 +149,9 @@ const enableHttpsRedirect = (ingress_rule) => {
 
 onEnableHttpsRedirectSuccess((res) => {
   if (res.data.enableHttpsRedirectIngressRule) {
-    toast.success('Requested to enable HTTPS redirect. Refresh after few seconds')
+    toast.success(t('partials.enableHttpsSuccess'))
   } else {
-    toast.error('Failed to enable HTTPS redirect')
+    toast.error(t('partials.enableHttpsFail'))
   }
 })
 
@@ -174,9 +177,9 @@ const disableHttpsRedirect = (ingress_rule) => {
 
 onDisableHttpsRedirectSuccess((res) => {
   if (res.data.disableHttpsRedirectIngressRule) {
-    toast.success('Requested to disable HTTPS redirect. Refresh after few seconds')
+    toast.success(t('partials.disableHttpsSuccess'))
   } else {
-    toast.error('Failed to disable HTTPS redirect')
+    toast.error(t('partials.disableHttpsFail'))
   }
 })
 
@@ -196,7 +199,7 @@ const {
 `)
 
 const recreateIngressRuleWithConfirmation = (ingress_rule) => {
-  if (confirm('Are you sure you want to recreate this ingress rule ?')) {
+  if (confirm(t('partials.recreateConfirm'))) {
     recreateIngressRule({
       id: ingress_rule.id
     })
@@ -204,7 +207,7 @@ const recreateIngressRuleWithConfirmation = (ingress_rule) => {
 }
 
 onRecreateIngressRuleSuccess(() => {
-  toast.success('Ingress Rule will be recreated shortly')
+  toast.success(t('partials.recreateSuccess'))
   refetchIngressRules()
 })
 
@@ -281,9 +284,7 @@ const {
 
 const setupAuthentication = () => {
   if (
-    !confirm(
-      `This operation can take 5~6 seconds to apply.\nDon't leave this page until the request is completed.\n\nAre you sure you want to continue?`
-    )
+    !confirm(t('partials.setupAuthConfirm'))
   ) {
     return
   }
@@ -298,7 +299,7 @@ onSetupAuthenticationError((err) => {
 })
 
 onSetupAuthenticationDone(() => {
-  toast.success('Ingress Rule is now protected')
+  toast.success(t('partials.ingressProtected'))
   refetchIngressRules()
   closeSetupAuthenticationModal()
 })
@@ -340,9 +341,7 @@ const {
 
 const disableAuthentication = () => {
   if (
-    !confirm(
-      "This operation can take 5~6 seconds to apply.\nDon't leave this page until the request is completed.\n\nAre you sure you want to continue?"
-    )
+    !confirm(t('partials.setupAuthConfirm'))
   ) {
     return
   }
@@ -357,9 +356,9 @@ onDisableAuthenticationError((err) => {
 
 onDisableAuthenticationDone((res) => {
   if (res.data.disableIngressRuleProtection) {
-    toast.success('Requested to disable authentication. Refresh after few seconds')
+    toast.success(t('partials.disableAuthSuccess'))
   } else {
-    toast.error('Failed to disable authentication')
+    toast.error(t('partials.disableAuthFail'))
   }
   refetchIngressRules()
   closeDisableAuthenticationModal()

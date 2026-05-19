@@ -4,6 +4,9 @@ import { reactive, ref } from 'vue'
 import { useMutation } from '@vue/apollo-composable'
 import gql from 'graphql-tag'
 import { toast } from 'vue-sonner'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 import ModalDialog from '@/views/components/ModalDialog.vue'
 import FilledButton from '@/views/components/FilledButton.vue'
 
@@ -65,7 +68,7 @@ const {
 
 onImageRegistryCredentialCreateSuccess(() => {
   closeModal()
-  toast.success('Image Registry Credential created successfully')
+  toast.success(t('imageRegistryCredentials.createSuccess'))
   props.callbackOnCreate()
 })
 

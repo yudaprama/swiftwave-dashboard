@@ -1,7 +1,9 @@
 <script setup>
 import { onMounted, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useBillingStore } from '@/store/billing.js'
 
+const { t } = useI18n()
 const billingStore = useBillingStore()
 
 onMounted(async () => {
@@ -15,13 +17,13 @@ onMounted(async () => {
 const quotaItems = computed(() => {
   if (!billingStore.quotaUsage) return []
   return [
-    { label: 'Applications', key: 'applications', icon: 'fa-solid fa-box' },
-    { label: 'Domains', key: 'domains', icon: 'fa-solid fa-link' },
-    { label: 'Persistent Volumes', key: 'persistentVolumes', icon: 'fa-solid fa-hard-drive' },
-    { label: 'Git Credentials', key: 'gitCredentials', icon: 'fa-solid fa-code-branch' },
-    { label: 'Image Credentials', key: 'imageRegistryCredentials', icon: 'fa-solid fa-cloud' },
-    { label: 'App Groups', key: 'applicationGroups', icon: 'fa-solid fa-cubes-stacked' },
-    { label: 'Memory (MB)', key: 'totalMemoryMB', icon: 'fa-solid fa-memory' }
+    { label: t('usage.applications'), key: 'applications', icon: 'fa-solid fa-box' },
+    { label: t('usage.domains'), key: 'domains', icon: 'fa-solid fa-link' },
+    { label: t('usage.persistentVolumes'), key: 'persistentVolumes', icon: 'fa-solid fa-hard-drive' },
+    { label: t('usage.gitCredentials'), key: 'gitCredentials', icon: 'fa-solid fa-code-branch' },
+    { label: t('usage.imageCredentials'), key: 'imageRegistryCredentials', icon: 'fa-solid fa-cloud' },
+    { label: t('usage.appGroups'), key: 'applicationGroups', icon: 'fa-solid fa-cubes-stacked' },
+    { label: t('usage.memoryMb'), key: 'totalMemoryMB', icon: 'fa-solid fa-memory' }
   ]
 })
 
@@ -44,20 +46,17 @@ const formatDate = (date) => {
 
 <template>
   <div class="p-6">
-    <h1 class="text-2xl font-bold text-gray-900">Usage</h1>
+    <h1 class="text-2xl font-bold text-gray-900">{{ $t('usage.title') }}</h1>
 
-    <!-- Overage warning -->
     <div v-if="billingStore.currentOverage.overageMemoryMb > 0" class="mt-4 rounded-lg border-l-4 border-yellow-400 bg-yellow-50 p-4">
       <p class="text-sm text-yellow-800">
         <font-awesome-icon icon="fa-solid fa-triangle-exclamation" class="mr-1" />
-        Memory overage: {{ billingStore.currentOverage.overageMemoryMb }} MB
-        ({{ billingStore.currentOverage.overageCents }} cents overage charge)
+        {{ $t('usage.memoryOverage', { mb: billingStore.currentOverage.overageMemoryMb, cents: billingStore.currentOverage.overageCents }) }}
       </p>
     </div>
 
-    <!-- Quota usage bars -->
     <div class="mt-6 rounded-lg border bg-white p-6 shadow-sm">
-      <h2 class="text-lg font-semibold text-gray-900">Resource Quotas</h2>
+      <h2 class="text-lg font-semibold text-gray-900">{{ $t('usage.resourceQuotas') }}</h2>
       <div class="mt-4 space-y-4">
         <div v-for="item in quotaItems" :key="item.key">
           <div v-if="billingStore.quotaUsage[item.key]" class="flex items-center gap-4">
@@ -81,22 +80,21 @@ const formatDate = (date) => {
       </div>
     </div>
 
-    <!-- Usage history table -->
     <div class="mt-6 rounded-lg border bg-white shadow-sm">
       <div class="border-b p-6 pb-3">
-        <h2 class="text-lg font-semibold text-gray-900">Usage History</h2>
+        <h2 class="text-lg font-semibold text-gray-900">{{ $t('usage.usageHistory') }}</h2>
       </div>
       <div class="overflow-x-auto">
         <table class="w-full text-left text-sm">
           <thead class="bg-gray-50 text-xs uppercase text-gray-500">
             <tr>
-              <th class="px-4 py-3">Date</th>
-              <th class="px-4 py-3">Apps</th>
-              <th class="px-4 py-3">Domains</th>
-              <th class="px-4 py-3">PVs</th>
-              <th class="px-4 py-3">Git Creds</th>
-              <th class="px-4 py-3">Memory MB</th>
-              <th class="px-4 py-3">Overage</th>
+              <th class="px-4 py-3">{{ $t('usage.historyDate') }}</th>
+              <th class="px-4 py-3">{{ $t('usage.historyApps') }}</th>
+              <th class="px-4 py-3">{{ $t('usage.historyDomains') }}</th>
+              <th class="px-4 py-3">{{ $t('usage.historyPvs') }}</th>
+              <th class="px-4 py-3">{{ $t('usage.historyGitCreds') }}</th>
+              <th class="px-4 py-3">{{ $t('usage.historyMemoryMb') }}</th>
+              <th class="px-4 py-3">{{ $t('usage.historyOverage') }}</th>
             </tr>
           </thead>
           <tbody>
@@ -115,7 +113,7 @@ const formatDate = (date) => {
               </td>
             </tr>
             <tr v-if="billingStore.usageHistory.length === 0">
-              <td colspan="7" class="px-4 py-8 text-center text-gray-500">No usage data yet</td>
+              <td colspan="7" class="px-4 py-8 text-center text-gray-500">{{ $t('usage.noData') }}</td>
             </tr>
           </tbody>
         </table>

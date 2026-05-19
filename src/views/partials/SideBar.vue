@@ -10,7 +10,9 @@ import gql from 'graphql-tag'
 import { toast } from 'vue-sonner'
 import ModalDialog from '@/views/components/ModalDialog.vue'
 import LanguageSwitcher from '@/views/components/LanguageSwitcher.vue'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const authStore = useAuthStore()
 const router = useRouter()
 
@@ -31,7 +33,7 @@ const isShowSideBar = computed(() => {
 })
 
 const logoutWithConfirmation = () => {
-  if (confirm('Are you sure you want to logout?')) {
+  if (confirm(t('sidebar.logoutConfirm'))) {
     authStore.Logout()
   }
 }
@@ -77,16 +79,16 @@ onRestartSystemError((error) => {
 
 onRestartSystemDone((val) => {
   if (val.data.restartSystem) {
-    toast.success('System restart requested')
+    toast.success(t('sidebar.restartRequested'))
     isSystemRestartModalOpen.value = true
     startCountDown()
   } else {
-    toast.error('System restart failed')
+    toast.error(t('sidebar.restartFailed'))
   }
 })
 
 const systemRestart = () => {
-  if (confirm('Are you sure you want to restart swiftwave ?\nYour deployed applications will not face any downtime.')) {
+  if (confirm(t('sidebar.restartConfirm'))) {
     restartSystem()
   }
 }
@@ -239,26 +241,32 @@ const startCountDown = () => {
           <template #icon>
             <font-awesome-icon icon="fa-solid fa-credit-card" />
           </template>
-          <template #title> Billing </template>
+          <template #title>{{ $t('sidebar.billing') }}</template>
           <template #content>
             <div class="space-y-2">
               <RouterLink
                 class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
                 to="/plans">
                 <font-awesome-icon icon="fa-solid fa-tags" />
-                <span class="mx-2 text-sm font-medium">Plans</span>
+                <span class="mx-2 text-sm font-medium">{{ $t('plans.title') }}</span>
               </RouterLink>
               <RouterLink
                 class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
                 to="/billing">
                 <font-awesome-icon icon="fa-solid fa-file-invoice-dollar" />
-                <span class="mx-2 text-sm font-medium">Billing</span>
+                <span class="mx-2 text-sm font-medium">{{ $t('billing.title') }}</span>
               </RouterLink>
               <RouterLink
                 class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
                 to="/usage">
                 <font-awesome-icon icon="fa-solid fa-chart-bar" />
-                <span class="mx-2 text-sm font-medium">Usage</span>
+                <span class="mx-2 text-sm font-medium">{{ $t('sidebar.usage') }}</span>
+              </RouterLink>
+              <RouterLink
+                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
+                to="/testimonial">
+                <font-awesome-icon icon="fa-solid fa-comment-dots" />
+                <span class="mx-2 text-sm font-medium">{{ $t('sidebar.shareFeedback') }}</span>
               </RouterLink>
             </div>
           </template>
@@ -304,13 +312,19 @@ const startCountDown = () => {
                 class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
                 to="/plans">
                 <font-awesome-icon icon="fa-solid fa-tags" />
-                <span class="mx-2 text-sm font-medium">Plans</span>
+                <span class="mx-2 text-sm font-medium">{{ $t('plans.title') }}</span>
               </RouterLink>
               <RouterLink
                 class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
                 to="/users">
                 <font-awesome-icon icon="fa-solid fa-users" />
                 <span class="mx-2 text-sm font-medium">{{ $t('sidebar.manageUsers') }}</span>
+              </RouterLink>
+              <RouterLink
+                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
+                to="/testimonials">
+                <font-awesome-icon icon="fa-solid fa-quote-left" />
+                <span class="mx-2 text-sm font-medium">{{ $t('sidebar.testimonials') }}</span>
               </RouterLink>
               <div
                 class="flex transform cursor-pointer items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"

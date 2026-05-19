@@ -5,6 +5,9 @@ import { reactive, ref } from 'vue';
 import { useMutation } from '@vue/apollo-composable';
 import gql from 'graphql-tag';
 import { toast } from 'vue-sonner'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 import { preventSpaceInput } from '@/vendor/utils.js';
 
 const props = defineProps({
@@ -64,7 +67,7 @@ onDomainRegisterSuccess((r) => {
     closeModal();
     newDomainDetails.name = '';
     isInvalidDomainName.value = false;
-    toast.success('Domain registered successfully');
+    toast.success(t('partials.domainRegisteredSuccess'));
     props.callbackOnCreate(r.data.addDomain.id);
 });
 

@@ -4,7 +4,10 @@ import PageBar from '@/views/components/PageBar.vue'
 import { useMutation, useQuery } from '@vue/apollo-composable'
 import gql from 'graphql-tag'
 import { toast } from 'vue-sonner'
+import { useI18n } from 'vue-i18n'
 import { computed, reactive, ref, watch } from 'vue'
+
+const { t } = useI18n()
 import Table from '@/views/components/Table/Table.vue'
 import TableHeader from '@/views/components/Table/TableHeader.vue'
 import TableMessage from '@/views/components/Table/TableMessage.vue'
@@ -77,9 +80,7 @@ const {
 
 const addAccessControlList = () => {
   if (
-    !confirm(
-      `This operation can take 5~6 seconds to apply.\nDon't leave this page until the request is completed.\n\nAre you sure you want to continue?`
-    )
+    !confirm(t('appAuth.operationWaitConfirm'))
   ) {
     return
   }
@@ -95,7 +96,7 @@ onAddAccessControlListError((err) => {
 })
 
 onAddAccessControlListDone(() => {
-  toast.success('New ACL Userlist added successfully')
+  toast.success(t('appAuth.aclAddedSuccess'))
   refetchAppBasicAuthAccessControlLists()
   isAddAccessControlListModalOpen.value = false
 })
@@ -127,9 +128,7 @@ const {
 
 const deleteAccessControlList = () => {
   if (
-    !confirm(
-      `This operation can take 5~6 seconds to apply.\nDon't leave this page until the request is completed.\n\nAre you sure you want to continue?`
-    )
+    !confirm(t('appAuth.operationWaitConfirm'))
   ) {
     return
   }
@@ -144,9 +143,9 @@ onDeleteAccessControlListError((err) => {
 
 onDeleteAccessControlListDone((res) => {
   if (res.data.deleteAppBasicAuthAccessControlList) {
-    toast.success('User list deleted successfully')
+    toast.success(t('appAuth.userListDeletedSuccess'))
   } else {
-    toast.error('User list deletion failed')
+    toast.error(t('appAuth.userListDeleteFailed'))
   }
   refetchAppBasicAuthAccessControlLists()
   closeDeleteAccessControlListModal()
@@ -193,13 +192,11 @@ const {
 
 const addUser = () => {
   if (addUserInfo.confirmPassword !== addUserInfo.password) {
-    toast.error('Password and Confirm Password do not match')
+    toast.error(t('appAuth.passwordMismatch'))
     return
   }
   if (
-    !confirm(
-      "This operation can take 5~6 seconds to apply.\nDon't leave this page until the request is completed.\n\nAre you sure you want to continue?"
-    )
+    !confirm(t('appAuth.operationWaitConfirm'))
   ) {
     return
   }
@@ -217,7 +214,7 @@ onAddUserError((err) => {
 })
 
 onAddUserDone(() => {
-  toast.success('User added successfully')
+  toast.success(t('appAuth.userAddedSuccess'))
   refetchAppBasicAuthAccessControlLists()
   closeAddUserModal()
 })
@@ -249,9 +246,7 @@ const {
 
 const deleteUser = () => {
   if (
-    !confirm(
-      "This operation can take 5~6 seconds to apply.\nDon't leave this page until the request is completed.\n\nAre you sure you want to continue?"
-    )
+    !confirm(t('appAuth.operationWaitConfirm'))
   ) {
     return
   }
@@ -266,9 +261,9 @@ onDeleteUserError((err) => {
 
 onDeleteUserDone((res) => {
   if (res.data.deleteAppBasicAuthAccessControlUser) {
-    toast.success('User deleted successfully')
+    toast.success(t('appAuth.userDeletedSuccess'))
   } else {
-    toast.error('User deletion failed')
+    toast.error(t('appAuth.userDeleteFailed'))
   }
   refetchAppBasicAuthAccessControlLists()
   closeDeleteUserModal()
@@ -310,13 +305,11 @@ const {
 
 const changePassword = () => {
   if (changePasswordInfo.password !== changePasswordInfo.confirmPassword) {
-    toast.error('Password and Confirm Password do not match')
+    toast.error(t('appAuth.passwordMismatch'))
     return
   }
   if (
-    !confirm(
-      "This operation can take 5~6 seconds to apply.\nDon't leave this page until the request is completed.\n\nAre you sure you want to continue?"
-    )
+    !confirm(t('appAuth.operationWaitConfirm'))
   ) {
     return
   }
@@ -332,9 +325,9 @@ onChangePasswordError((err) => {
 
 onChangePasswordDone((res) => {
   if (res.data.updateAppBasicAuthAccessControlUserPassword) {
-    toast.success('Password changed successfully')
+    toast.success(t('appAuth.passwordChangedSuccess'))
   } else {
-    toast.error('Password change failed')
+    toast.error(t('appAuth.passwordChangeFailed'))
   }
   refetchAppBasicAuthAccessControlLists()
   closeChangePasswordModal()

@@ -4,6 +4,9 @@ import { reactive, ref } from 'vue'
 import { useMutation } from '@vue/apollo-composable'
 import gql from 'graphql-tag'
 import { toast } from 'vue-sonner'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 import FilledButton from '@/views/components/FilledButton.vue'
 import { preventSpaceInput } from '@/vendor/utils.js'
 
@@ -70,7 +73,7 @@ const {
 
 onGitCredentialCreateSuccess(() => {
   closeModal()
-  toast.success('Git Credential created successfully')
+  toast.success(t('gitCredentials.createSuccess'))
   props.callbackOnCreate()
 })
 

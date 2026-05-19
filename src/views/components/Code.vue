@@ -1,6 +1,9 @@
 <script setup>
 import { toast } from 'vue-sonner'
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 defineProps({
   showCopyButton: {
@@ -34,13 +37,13 @@ const copyToClipboard = () => {
     document.body.removeChild(textArea)
   }
   if (isSuccess) {
-    toast.success('Copied to clipboard')
+    toast.success(t('applicationDetails.copySuccess'))
     showCopyBorder.value = true
     setTimeout(() => {
       showCopyBorder.value = false
     }, 2000)
   } else {
-    toast.error('Failed to copy to clipboard')
+    toast.error(t('applicationDetails.copyFail'))
   }
 }
 </script>

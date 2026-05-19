@@ -32,6 +32,8 @@ import VerifyEmailView from '@/views/pages/VerifyEmailView.vue'
 import PlanSelectionPage from '@/views/pages/PlanSelection.vue'
 import BillingManagementPage from '@/views/pages/BillingManagement.vue'
 import UsageOverviewPage from '@/views/pages/UsageOverview.vue'
+import TestimonialSubmitPage from '@/views/pages/TestimonialSubmit.vue'
+import TestimonialManagementPage from '@/views/pages/TestimonialManagement.vue'
 
 import SystemLogsPage from '@/views/pages/SystemLogs.vue'
 import AppAuthBasicAccessControlList from '@/views/pages/AppAuthBasicAccessControlList.vue'
@@ -240,6 +242,16 @@ const router = createRouter({
       path: '/usage',
       name: 'Usage',
       component: UsageOverviewPage
+    },
+    {
+      path: '/testimonial',
+      name: 'Testimonial',
+      component: TestimonialSubmitPage
+    },
+    {
+      path: '/testimonials',
+      name: 'Testimonials',
+      component: TestimonialManagementPage
     }
   ]
 })

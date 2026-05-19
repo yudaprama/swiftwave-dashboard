@@ -5,6 +5,9 @@ import { computed, reactive, ref } from 'vue'
 import { useLazyQuery, useMutation } from '@vue/apollo-composable'
 import gql from 'graphql-tag'
 import { toast } from 'vue-sonner'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 import CreateDomainModal from '@/views/partials/CreateDomainModal.vue'
 
 const props = defineProps({
@@ -88,7 +91,7 @@ const {
 
 onIngressRuleCreateSuccess(() => {
   closeModal()
-  toast.success('Ingress Rule created successfully')
+  toast.success(t('ingressRules.createSuccess'))
   props.callbackOnCreate()
 })
 

@@ -7,6 +7,9 @@ import { computed, ref } from 'vue'
 import FilledButton from '@/views/components/FilledButton.vue'
 import { round } from 'lodash'
 import { toast } from 'vue-sonner'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 import ModalDialog from '@/views/components/ModalDialog.vue'
 import Badge from '@/views/components/Badge.vue'
 
@@ -93,7 +96,7 @@ const {
 `)
 
 onBackupCreateSuccess(() => {
-  toast.success('Backup will be created shortly ! Check the status in the backups list section.')
+  toast.success(t('partials.backupCreatedSuccess'))
 })
 
 onBackupCreateFail((err) => {

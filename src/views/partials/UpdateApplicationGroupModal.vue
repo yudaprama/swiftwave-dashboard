@@ -5,6 +5,9 @@ import { computed, ref } from 'vue'
 import { useLazyQuery, useMutation } from '@vue/apollo-composable'
 import gql from 'graphql-tag'
 import { toast } from 'vue-sonner'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 import ComboBoxComponent from '@/views/components/ComboBoxComponent.vue'
 
 const props = defineProps({
@@ -104,11 +107,11 @@ const updateApplicationGroup = async () => {
 
 onApplicationGroupUpdateSuccess((val) => {
   if (val.data?.updateApplicationGroup) {
-    toast.success('Application group updated')
+    toast.success(t('partials.appGroupUpdated'))
     closeModal()
     props.callbackOnUpdate()
   } else {
-    toast.error('Application group update failed')
+    toast.error(t('partials.appGroupUpdateFailed'))
   }
 })
 

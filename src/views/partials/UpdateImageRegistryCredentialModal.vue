@@ -2,6 +2,9 @@
 import { useLazyQuery, useMutation } from '@vue/apollo-composable'
 import gql from 'graphql-tag'
 import { toast } from 'vue-sonner'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 import { reactive, ref } from 'vue'
 import ModalDialog from '@/views/components/ModalDialog.vue'
 import { preventSpaceInput } from '@/vendor/utils.js'
@@ -107,7 +110,7 @@ onImageRegistryCredentialUpdateError((err) => {
 
 onImageRegistryCredentialUpdateSuccess(() => {
   closeModal()
-  toast.success('Image Registry Credential updated successfully')
+  toast.success(t('imageRegistryCredentials.updateSuccess'))
   props.callbackOnPop()
 })
 </script>

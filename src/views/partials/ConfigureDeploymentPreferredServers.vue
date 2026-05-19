@@ -5,6 +5,9 @@ import { computed, ref } from 'vue'
 import { useQuery } from '@vue/apollo-composable'
 import gql from 'graphql-tag'
 import { toast } from 'vue-sonner'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const props = defineProps({
   hostnames: {
@@ -38,7 +41,7 @@ const { result: serversDetailsRaw, onError: onServersDetailsError } = useQuery(
 const serversDetails = computed(() => serversDetailsRaw.value?.servers ?? [])
 
 onServersDetailsError((err) => {
-  toast.error('Failed to fetch servers \n' + err.message)
+  toast.error(t('partials.failedFetchServers') + '\n' + err.message)
 })
 
 const openModal = () => {
