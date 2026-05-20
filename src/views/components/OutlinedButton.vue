@@ -37,18 +37,16 @@ const isDisabled = computed(() => {
 <template>
   <button
     :class="{
-      'border-primary-600 hover:shadow-md focus-visible:outline-primary-700': type === 'primary',
-      'border-secondary-600 hover:shadow-md focus-visible:outline-secondary-700': type === 'secondary',
-      'border-success-600 hover:shadow-md focus-visible:outline-success-700': type === 'success',
-      'border-warning-600 hover:shadow-md focus-visible:outline-warning-700': type === 'warning',
-      'border-danger-600 hover:shadow-md focus-visible:outline-danger-700': type === 'danger',
-      'text-primary-600 hover:shadow-md focus-visible:outline-primary-700': type === 'primary',
-      'text-secondary-600 hover:shadow-md focus-visible:outline-secondary-700': type === 'secondary',
-      'text-success-600 hover:shadow-md focus-visible:outline-success-700': type === 'success',
-      'text-warning-600 hover:shadow-md focus-visible:outline-warning-700': type === 'warning',
-      'text-danger-600 hover:shadow-md focus-visible:outline-danger-700': type === 'danger',
-      'hover:border-[type]-600/80': !disabled,
-      'hover:text-[type]-600/80': !disabled,
+      'border-primary-600 hover:shadow-md focus-visible:outline-primary-700 dark:border-primary-400': type === 'primary',
+      'border-secondary-600 hover:shadow-md focus-visible:outline-secondary-700 dark:border-secondary-400': type === 'secondary',
+      'border-success-600 hover:shadow-md focus-visible:outline-success-700 dark:border-success-400': type === 'success',
+      'border-warning-600 hover:shadow-md focus-visible:outline-warning-700 dark:border-warning-400': type === 'warning',
+      'border-danger-600 hover:shadow-md focus-visible:outline-danger-700 dark:border-danger-400': type === 'danger',
+      'text-primary-600 hover:shadow-md focus-visible:outline-primary-700 dark:text-primary-400': type === 'primary',
+      'text-secondary-600 hover:shadow-md focus-visible:outline-secondary-700 dark:text-secondary-400': type === 'secondary',
+      'text-success-600 hover:shadow-md focus-visible:outline-success-700 dark:text-success-400': type === 'success',
+      'text-warning-600 hover:shadow-md focus-visible:outline-warning-700 dark:text-warning-400': type === 'warning',
+      'text-danger-600 hover:shadow-md focus-visible:outline-danger-700 dark:text-danger-400': type === 'danger',
       'cursor-not-allowed opacity-50': disabled,
       'cursor-progress': loading,
       'py-2 text-sm': !slim,
@@ -66,12 +64,11 @@ const isDisabled = computed(() => {
       :class="{
         'h-5 w-5': !slim,
         'h-3 w-3': slim,
-        'text-primary-700': type === 'primary',
-        'text-secondary-700': type === 'secondary',
-        'text-success-700': type === 'success',
-        'text-warning-700': type === 'warning',
-        'text-danger-700': type === 'danger',
-        'text-info-700': type === 'info'
+        'text-primary-700 dark:text-primary-400': type === 'primary',
+        'text-secondary-700 dark:text-secondary-400': type === 'secondary',
+        'text-success-700 dark:text-success-400': type === 'success',
+        'text-warning-700 dark:text-warning-400': type === 'warning',
+        'text-danger-700 dark:text-danger-400': type === 'danger'
       }"
       class="-ml-1 mr-3 animate-spin"
       fill="none"
@@ -83,11 +80,8 @@ const isDisabled = computed(() => {
         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
         fill="currentColor"></path>
     </svg>
-    <!-- linear wave spinner -->
 
     <!-- text -->
     <slot></slot>
   </button>
 </template>
-
-<style scoped></style>

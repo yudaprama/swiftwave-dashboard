@@ -175,23 +175,23 @@ const openUrlInNewPage = (url) => {
     <font-awesome-icon icon="fa-solid fa-cubes-stacked" class="mr-2 text-primary-600" />
     {{ $t('deploy.deployStack') }}
   </p>
-  <section class="mx-auto mt-8 flex h-full w-full max-w-7xl space-x-8">
+  <section class="mx-auto mt-8 flex h-full w-full max-w-7xl space-x-8 px-2 md:px-0">
     <div class="h-full w-1/2">
       <!--  Stack Name  -->
       <div>
-        <label class="block text-sm font-medium text-gray-700">{{ $t('deploy.stackName') }}<span class="text-red-600"> *</span></label>
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ $t('deploy.stackName') }}<span class="text-red-600"> *</span></label>
         <div class="mt-1">
           <input
             autocomplete="off"
             v-model="stateRef.stackName"
-            class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+            class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-secondary-700 dark:text-gray-200 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
             :placeholder="$t('deploy.enterStackName')"
             type="text" />
         </div>
       </div>
       <!--   Stack Config (Yaml)   -->
       <div class="mt-3 h-[80%]">
-        <label class="block text-sm font-medium text-gray-700"
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300"
           >{{ $t('deploy.stackConfigYaml') }}<span class="text-red-600"> *</span></label
         >
         <div ref="editor" class="mt-1 h-full w-full overflow-hidden rounded-md border-2 border-primary-300" />
@@ -273,7 +273,7 @@ const openUrlInNewPage = (url) => {
                 {{ $t('deploy.view') }}
               </FilledButton>
             </div>
-            <div v-if="stateRef.deployedApplicationsResult.length === 0" class="text-center text-gray-500">
+            <div v-if="stateRef.deployedApplicationsResult.length === 0" class="text-center text-gray-500 dark:text-gray-400">
               {{ $t('deploy.noApplicationsDeployed') }}
             </div>
           </div>

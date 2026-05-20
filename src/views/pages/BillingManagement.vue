@@ -65,20 +65,20 @@ const payInvoice = (url) => {
 </script>
 
 <template>
-  <div class="p-6">
-    <h1 class="text-2xl font-bold text-gray-900">{{ $t('billing.title') }}</h1>
+  <div class="p-6 px-2 md:px-6">
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">{{ $t('billing.title') }}</h1>
 
-    <div class="mt-6 rounded-lg border bg-white p-6 shadow-sm">
-      <h2 class="text-lg font-semibold text-gray-900">{{ $t('billing.subscription') }}</h2>
+    <div class="mt-6 rounded-lg border bg-white dark:bg-secondary-800 p-6 shadow-sm">
+      <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100">{{ $t('billing.subscription') }}</h2>
       <div v-if="billingStore.subscription" class="mt-4">
         <div class="flex items-center gap-3">
-          <span class="text-sm text-gray-600">{{ $t('billing.plan') }}</span>
+          <span class="text-sm text-gray-600 dark:text-gray-400">{{ $t('billing.plan') }}</span>
           <span class="font-semibold">{{ billingStore.currentPlan?.name || $t('billing.free') }}</span>
           <span :class="statusColor(billingStore.subscription.status)" class="rounded px-2 py-0.5 text-xs font-medium">
             {{ billingStore.subscription.status }}
           </span>
         </div>
-        <div class="mt-2 text-sm text-gray-600">
+        <div class="mt-2 text-sm text-gray-600 dark:text-gray-400">
           <p>{{ $t('billing.period') }} {{ formatDate(billingStore.subscription.currentPeriodStart) }} - {{ formatDate(billingStore.subscription.currentPeriodEnd) }}</p>
           <p v-if="billingStore.subscription.cancelAtPeriodEnd" class="mt-1 text-yellow-700">
             <font-awesome-icon icon="fa-solid fa-triangle-exclamation" class="mr-1" />
@@ -92,16 +92,16 @@ const payInvoice = (url) => {
           {{ $t('billing.cancelSubscription') }}
         </button>
       </div>
-      <p v-else class="mt-4 text-sm text-gray-500">{{ $t('billing.noSubscription') }}</p>
+      <p v-else class="mt-4 text-sm text-gray-500 dark:text-gray-400">{{ $t('billing.noSubscription') }}</p>
     </div>
 
-    <div class="mt-6 rounded-lg border bg-white shadow-sm">
-      <div class="border-b p-6 pb-3">
-        <h2 class="text-lg font-semibold text-gray-900">{{ $t('billing.invoices') }}</h2>
+    <div class="mt-6 rounded-lg border bg-white dark:bg-secondary-800 shadow-sm">
+      <div class="border-b dark:border-gray-700 p-6 pb-3">
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100">{{ $t('billing.invoices') }}</h2>
       </div>
       <div class="overflow-x-auto">
         <table class="w-full text-left text-sm">
-          <thead class="bg-gray-50 text-xs uppercase text-gray-500">
+          <thead class="bg-gray-50 dark:bg-secondary-900 text-xs uppercase text-gray-500 dark:text-gray-400">
             <tr>
               <th class="px-6 py-3">{{ $t('billing.date') }}</th>
               <th class="px-6 py-3">{{ $t('billing.description') }}</th>
@@ -111,7 +111,7 @@ const payInvoice = (url) => {
             </tr>
           </thead>
           <tbody>
-            <tr v-for="inv in billingStore.invoices" :key="inv.id" class="border-b">
+            <tr v-for="inv in billingStore.invoices" :key="inv.id" class="border-b dark:border-gray-700">
               <td class="px-6 py-4">{{ formatDate(inv.createdAt) }}</td>
               <td class="px-6 py-4">{{ inv.description }}</td>
               <td class="px-6 py-4">{{ formatCurrency(inv.amountCents, inv.currency) }}</td>
@@ -127,11 +127,11 @@ const payInvoice = (url) => {
                   @click="payInvoice(inv.xenditInvoiceUrl)">
                   {{ $t('billing.payNow') }}
                 </button>
-                <span v-else class="text-gray-400">-</span>
+                <span v-else class="text-gray-400 dark:text-gray-500">-</span>
               </td>
             </tr>
             <tr v-if="billingStore.invoices.length === 0">
-              <td colspan="5" class="px-6 py-8 text-center text-gray-500">{{ $t('billing.noInvoices') }}</td>
+              <td colspan="5" class="px-6 py-8 text-center text-gray-500 dark:text-gray-400">{{ $t('billing.noInvoices') }}</td>
             </tr>
           </tbody>
         </table>

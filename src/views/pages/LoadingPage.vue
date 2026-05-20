@@ -26,7 +26,7 @@ defineProps({
 <style scoped>
 @reference "../../assets/css/base.css";
 .loading-page {
-  @apply w-screen h-screen flex flex-col justify-center items-center absolute bg-white z-50
+  @apply w-screen h-screen flex flex-col justify-center items-center absolute bg-white z-50 dark:bg-secondary-900
 }
 
 @keyframes pulse {

@@ -17,6 +17,12 @@ const themeStore = useThemeStore()
 const router = useRouter()
 
 const isMobileSidebarOpen = ref(false)
+const isSidebarCollapsed = ref(localStorage.getItem('sidebar-collapsed') === 'true')
+
+const toggleSidebar = () => {
+  isSidebarCollapsed.value = !isSidebarCollapsed.value
+  localStorage.setItem('sidebar-collapsed', isSidebarCollapsed.value)
+}
 
 onBeforeMount(() => {
   const token = localStorage.getItem('token')
@@ -76,7 +82,18 @@ const isShowSideBar = computed(() => {
     </MobileSidebarDrawer>
 
     <!-- Desktop sidebar -->
-    <SideBar v-if="isShowSideBar" class="hidden md:flex" />
+    <div v-if="isShowSideBar" class="relative hidden md:flex">
+      <SideBar :collapsed="isSidebarCollapsed" />
+      <button
+        type="button"
+        class="absolute -right-3 top-8 z-10 flex h-6 w-6 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 shadow-sm transition-colors hover:bg-gray-50 dark:border-gray-600 dark:bg-secondary-700 dark:text-gray-400 dark:hover:bg-secondary-600"
+        :aria-label="isSidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'"
+        @click="toggleSidebar">
+        <font-awesome-icon
+          :icon="isSidebarCollapsed ? 'fa-solid fa-chevron-right' : 'fa-solid fa-chevron-left'"
+          class="text-xs" />
+      </button>
+    </div>
 
     <!-- Main content -->
     <main

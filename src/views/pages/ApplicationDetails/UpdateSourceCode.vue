@@ -465,7 +465,7 @@ const openChooseOtherDockerConfigurationModal = computed(
 
         <!-- GitHub App Installation -->
         <div class="mt-6">
-          <label class="block text-sm font-medium text-gray-700" for="github_installation">GitHub App Installation</label>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300" for="github_installation">GitHub App Installation</label>
           <div class="mt-1">
             <select
               id="github_installation"
@@ -482,7 +482,7 @@ const openChooseOtherDockerConfigurationModal = computed(
 
         <!-- Git Repository -->
         <div class="mt-4">
-          <label class="block text-sm font-medium text-gray-700" for="github_repository">
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300" for="github_repository">
             GitHub Repository
             <span class="ml-2 italic" v-if="fetchingGithubRepositories"
               ><font-awesome-icon icon="fa-solid fa-spinner" class="animate-spin" />&nbsp;&nbsp;{{ $t('applicationDetails.fetching') }}</span
@@ -503,7 +503,7 @@ const openChooseOtherDockerConfigurationModal = computed(
 
         <!-- Git Branch -->
         <div class="mt-4">
-          <label class="block text-sm font-medium text-gray-700" for="name"
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300" for="name"
             >{{ $t('applicationDetails.gitBranch') }}
             <span class="ml-2 italic" v-if="fetchingGitBranches"
               ><font-awesome-icon icon="fa-solid fa-spinner" class="animate-spin" />&nbsp;&nbsp;{{ $t('applicationDetails.fetching') }}</span
@@ -524,7 +524,7 @@ const openChooseOtherDockerConfigurationModal = computed(
 
         <!-- Code Path -->
         <div class="mt-4">
-          <label class="block text-sm font-medium text-gray-700" for="name">{{ $t('applicationDetails.codePath') }}</label>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300" for="name">{{ $t('applicationDetails.codePath') }}</label>
           <div class="mt-1">
             <input
               id="name"
@@ -534,7 +534,7 @@ const openChooseOtherDockerConfigurationModal = computed(
               name="name"
               :placeholder="$t('applicationDetails.codePathHint')"
               type="text" />
-            <p class="mt-1 text-xs text-gray-800">
+            <p class="mt-1 text-xs text-gray-800 dark:text-gray-300">
               {{ $t('applicationDetails.codePathNote') }}
             </p>
           </div>
@@ -573,7 +573,7 @@ const openChooseOtherDockerConfigurationModal = computed(
       <div v-else-if="applicationSourceType === 'image'" class="w-full">
         <!-- Docker Image URL-->
         <div class="mt-6">
-          <label class="block text-sm font-medium text-gray-700" for="docker_image"
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300" for="docker_image"
             >{{ $t('applicationDetails.dockerImageLabel') }} <span class="text-red-600"> *</span>
           </label>
           <div class="mt-1">
@@ -589,7 +589,7 @@ const openChooseOtherDockerConfigurationModal = computed(
         </div>
         <!-- Image Registry Credentials -->
         <div class="mt-4">
-          <label class="block text-sm font-medium text-gray-700" for="image_registry_credential"
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300" for="image_registry_credential"
             >{{ $t('applicationDetails.pickImageRegistryCredential') }}
           </label>
           <div class="mt-1">
@@ -635,7 +635,7 @@ const openChooseOtherDockerConfigurationModal = computed(
         :click="openChooseOtherDockerConfigurationModal"
         >{{ $t('applicationDetails.incorrectServiceChangeConfig') }}
       </FilledButton>
-      <p class="mt-4 font-medium text-gray-700">
+      <p class="mt-4 font-medium text-gray-700 dark:text-gray-300">
         {{ $t('applicationDetails.detectedServiceName') }}
         <span class="font-normal text-primary-600">{{ stateRef.detectedServiceName }}</span>
       </p>
@@ -644,7 +644,7 @@ const openChooseOtherDockerConfigurationModal = computed(
       </FilledButton>
       <!-- Docker Command-->
       <div class="mt-4">
-        <label class="block text-sm font-medium text-gray-700" for="docker_command"
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300" for="docker_command"
           >{{ $t('applicationDetails.dockerImageCommand') }}
         </label>
         <div class="mt-1">
@@ -656,11 +656,11 @@ const openChooseOtherDockerConfigurationModal = computed(
             name="docker_command"
             :placeholder="$t('applicationDetails.enterDockerCommand')"
             type="text" />
-          <p class="mt-1 text-xs text-gray-800">{{ $t('applicationDetails.dockerCommandNote') }}</p>
+          <p class="mt-1 text-xs text-gray-800 dark:text-gray-300">{{ $t('applicationDetails.dockerCommandNote') }}</p>
         </div>
       </div>
       <div v-if="stateRef.dockerBuildArgs.length !== 0">
-        <p class="mt-4 font-medium text-gray-700">{{ $t('applicationDetails.dockerBuildArgsLabel') }}</p>
+        <p class="mt-4 font-medium text-gray-700 dark:text-gray-300">{{ $t('applicationDetails.dockerBuildArgsLabel') }}</p>
         <div class="w-full">
           <BuildArgInput
             v-for="buildArg in stateRef.dockerBuildArgs"

@@ -456,7 +456,7 @@ const applyChanges = async () => {
   <div v-if="applicationGroupDetailsLoading">
     <p>{{ t('common.loading') }}</p>
   </div>
-  <section v-else class="mx-auto w-full max-w-7xl">
+  <section v-else class="mx-auto w-full max-w-7xl px-2 md:px-0">
     <!--  Modals  -->
     <DeleteApplicationsModal ref="deleteApplicationsModal" :application-ids="applicationIds" />
     <RestartApplicationsModal
@@ -483,17 +483,17 @@ const applyChanges = async () => {
         </div>
       </div>
       <!--     Status   -->
-      <div class="text-center font-medium text-gray-800">
+      <div class="text-center font-medium text-gray-800 dark:text-gray-200">
         <div class="flex flex-row items-center gap-5 px-3 text-center">
-          <div class="flex flex-row items-center text-sm text-gray-700">
+          <div class="flex flex-row items-center text-sm text-gray-700 dark:text-gray-300">
             <font-awesome-icon icon="fa-solid fa-boxes-stacked" class="me-1 text-info-500" />
             {{ totalServiceCount }}&nbsp;{{ t('groups.services', totalServiceCount) }}
           </div>
-          <div class="flex flex-row items-center text-sm text-gray-700">
+          <div class="flex flex-row items-center text-sm text-gray-700 dark:text-gray-300">
             <font-awesome-icon icon="fa-solid fa-heart-circle-check" class="me-1 text-success-500" />
             {{ healthyServiceCount }}&nbsp;{{ t('groups.healthyCount', healthyServiceCount) }}
           </div>
-          <div class="flex flex-row items-center text-sm text-gray-700">
+          <div class="flex flex-row items-center text-sm text-gray-700 dark:text-gray-300">
             <font-awesome-icon icon="fa-solid fa-heart-circle-exclamation" class="me-1 text-danger-500" />
             {{ unhealthyServiceCount }}&nbsp;{{ t('groups.unhealthyCount', unhealthyServiceCount) }}
           </div>
@@ -503,7 +503,7 @@ const applyChanges = async () => {
     <!--  Second line  -->
     <div class="mt-3.5 flex w-full flex-row items-center justify-between">
       <div class="flex gap-2">
-        <div class="flex items-center gap-2 text-gray-800">
+        <div class="flex items-center gap-2 text-gray-800 dark:text-gray-200">
           <div
             v-if="ingressRules.length > 0"
             class="deployment-head max-w-[40vw]"
@@ -717,7 +717,7 @@ const applyChanges = async () => {
         <!--  Update Config Notify bar  -->
         <div
           v-if="isAnyAppInfoChanged"
-          class="mt-4 flex flex-row items-center justify-end gap-2 rounded-md border border-gray-300 p-2">
+          class="mt-4 flex flex-row items-center justify-end gap-2 rounded-md border border-gray-300 p-2 dark:border-gray-600">
           <span class="mr-4 font-medium">{{ t('groups.configUpdated') }}</span>
           <FilledButton type="primary" :click="applyChanges" :loading="isApplyingChanges">{{ t('groups.applyChanges') }}</FilledButton>
           <FilledButton type="secondary" :click="refetchGroupApplicationDetails">{{ t('common.cancel') }}</FilledButton>
@@ -754,6 +754,6 @@ const applyChanges = async () => {
 }
 
 .router-link-exact-active {
-  @apply bg-secondary-100 font-medium text-black;
+  @apply bg-secondary-100 font-medium text-black dark:bg-secondary-700 dark:text-gray-100;
 }
 </style>

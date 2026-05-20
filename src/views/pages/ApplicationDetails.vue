@@ -267,7 +267,7 @@ const openApplicationGroupUpdateModal = () => {
   <div v-if="applicationDetailsLoading">
     <p>{{ $t('common.loading') }}</p>
   </div>
-  <section v-else class="mx-auto w-full max-w-7xl">
+  <section v-else class="mx-auto w-full max-w-7xl px-2 md:px-0">
     <!--  First line  -->
     <div class="flex w-full flex-row items-center justify-between">
       <!--   App name     -->
@@ -308,7 +308,7 @@ const openApplicationGroupUpdateModal = () => {
         </div>
       </div>
       <!--     Status   -->
-      <div class="text-center font-medium text-gray-800">
+      <div class="text-center font-medium text-gray-800 dark:text-gray-200">
         <p v-if="applicationDetails.isSleeping" class="w-full pe-[5vw] text-center text-sm text-blue-600">
           <font-awesome-icon icon="fa-solid fa-bed" />
           {{ $t('applicationDetails.sleeping') }}
@@ -316,19 +316,19 @@ const openApplicationGroupUpdateModal = () => {
         <div v-else-if="realtimeInfo.InfoFound" class="flex flex-row items-center gap-5 px-3 text-center">
           <div
             v-if="applicationDetails.realtimeInfo.HealthStatus === 'healthy'"
-            class="flex flex-row items-center text-sm text-gray-700">
+            class="flex flex-row items-center text-sm text-gray-700 dark:text-gray-300">
             <font-awesome-icon icon="fa-solid fa-heart-circle-check" class="me-1 text-success-500" />
             {{ $t('applicationDetails.healthy') }}
           </div>
           <div
             v-else-if="applicationDetails.realtimeInfo.HealthStatus === 'unhealthy'"
-            class="flex flex-row items-center text-sm text-gray-700">
+            class="flex flex-row items-center text-sm text-gray-700 dark:text-gray-300">
             <font-awesome-icon icon="fa-solid fa-heart-circle-exclamation" class="me-1 text-danger-500" />
             {{ $t('applicationDetails.unhealthy') }}
           </div>
           <div
             v-else-if="applicationDetails.realtimeInfo.HealthStatus === 'unknown'"
-            class="flex flex-row items-center text-sm text-gray-700">
+            class="flex flex-row items-center text-sm text-gray-700 dark:text-gray-300">
             <font-awesome-icon icon="fa-solid fa-heart-circle-xmark" class="me-1 text-warning-600" />
             {{ $t('applicationDetails.unknown') }}
           </div>
@@ -351,7 +351,7 @@ const openApplicationGroupUpdateModal = () => {
     <div class="mt-3.5 flex w-full flex-row items-center justify-between">
       <!--   Deployment info   -->
       <div class="flex gap-2">
-        <div class="flex items-center gap-2 text-gray-800">
+        <div class="flex items-center gap-2 text-gray-800 dark:text-gray-200">
           <div v-if="applicationDetails.latestDeployment.upstreamType === 'git'" class="flex gap-2">
             <div class="deployment-head">
               <font-awesome-icon icon="fa-brands fa-github" />
@@ -402,7 +402,7 @@ const openApplicationGroupUpdateModal = () => {
             {{ $t('applicationDetails.sourceCodeUploaded') }}
           </p>
         </div>
-        <div class="flex items-center gap-2 text-gray-800">
+        <div class="flex items-center gap-2 text-gray-800 dark:text-gray-200">
           <div
             v-if="isIngressRulesAvailable"
             class="deployment-head max-w-[40vw]"
@@ -485,7 +485,7 @@ const openApplicationGroupUpdateModal = () => {
         <!--  Update Config Notify bar  -->
         <div
           v-if="applicationUpdater.isConfigurationUpdated"
-          class="mt-4 flex flex-row items-center justify-end gap-2 rounded-md border border-gray-300 p-2">
+          class="mt-4 flex flex-row items-center justify-end gap-2 rounded-md border border-gray-300 dark:border-gray-600 p-2">
           <span class="mr-4 font-medium">{{ $t('applicationDetails.configUpdated') }}</span>
           <FilledButton
             :click="applicationUpdater.applyConfigurationChanges"
@@ -511,14 +511,14 @@ const openApplicationGroupUpdateModal = () => {
 <style scoped>
 @reference "../../assets/css/base.css";
 .deployment-head {
-  @apply relative flex items-center justify-center gap-2.5  rounded-full border border-secondary-300 px-2 py-1 text-sm font-normal;
+  @apply relative flex items-center justify-center gap-2.5  rounded-full border border-secondary-300 dark:border-gray-600 px-2 py-1 text-sm font-normal;
 }
 
 .quick-actions {
-  @apply flex overflow-hidden rounded-full border border-secondary-300 text-sm  text-secondary-700;
+  @apply flex overflow-hidden rounded-full border border-secondary-300 dark:border-gray-600 text-sm  text-secondary-700 dark:text-gray-300;
 
   .button {
-    @apply cursor-pointer px-2.5 py-1 hover:bg-secondary-200;
+    @apply cursor-pointer px-2.5 py-1 hover:bg-secondary-200 dark:hover:bg-gray-700;
   }
 
   .divider {

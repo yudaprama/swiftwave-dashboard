@@ -130,7 +130,7 @@ onGitCredentialUpdateSuccess(() => {
       <form v-else @submit.prevent="">
         <!--  Name Field   -->
         <div class="mt-4">
-          <label class="block text-sm font-medium text-gray-700" for="name">
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300" for="name">
             Name (Provide a name to identify the credential)
           </label>
           <div class="mt-1">
@@ -138,7 +138,7 @@ onGitCredentialUpdateSuccess(() => {
               id="name"
               v-model="gitCredentialDetails.name"
               autocomplete="off"
-              class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+              class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-secondary-800 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
               name="name"
               placeholder="Name"
               type="text" />
@@ -146,31 +146,31 @@ onGitCredentialUpdateSuccess(() => {
         </div>
         <!-- Type Field -->
         <div class="mt-4">
-          <label class="block text-sm font-medium text-gray-700" for="username"> Authentication Type </label>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300" for="username"> Authentication Type </label>
           <div class="mt-1">
             <select
               id="git_credential"
               v-model="gitCredentialDetails.type"
-              class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
+              class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-secondary-800 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
               <option selected value="">No Credential</option>
               <option value="http">HTTP</option>
               <option value="ssh">SSH</option>
             </select>
           </div>
-          <p class="mt-1 text-sm text-gray-500">
+          <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
             If some applications already using this credential, changing the authentication type can cause issues.
           </p>
         </div>
         <!-- Username Field -->
         <div class="mt-4" v-if="gitCredentialDetails.type === 'http'">
-          <label class="block text-sm font-medium text-gray-700" for="username"> Git Username </label>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300" for="username"> Git Username </label>
           <div class="mt-1">
             <input
               id="username"
               v-model="gitCredentialDetails.username"
               @keydown="preventSpaceInput"
               autocomplete="off"
-              class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+              class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-secondary-800 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
               name="username"
               placeholder="Git Username"
               type="text" />
@@ -178,13 +178,13 @@ onGitCredentialUpdateSuccess(() => {
         </div>
         <!-- Password Field -->
         <div class="mt-4" v-if="gitCredentialDetails.type === 'http'">
-          <label class="block text-sm font-medium text-gray-700" for="password"> Git Password / Auth Token </label>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300" for="password"> Git Password / Auth Token </label>
           <div class="mt-1">
             <input
               id="password"
               v-model="gitCredentialDetails.password"
               autocomplete="off"
-              class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+              class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-secondary-800 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
               name="password"
               placeholder="Git Password"
               type="text" />
@@ -192,15 +192,15 @@ onGitCredentialUpdateSuccess(() => {
         </div>
         <!-- Private Key Field -->
         <div class="mt-4" v-if="gitCredentialDetails.type === 'ssh'">
-          <label class="block text-sm font-medium text-gray-700" for="ssh_private_key">
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300" for="ssh_private_key">
             Private Key (In OpenSSH Format)
           </label>
-          <p class="mt-1 text-sm text-gray-500">Leave the input blank to keep the existing private key</p>
+          <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Leave the input blank to keep the existing private key</p>
           <div class="mt-2">
             <textarea
               id="ssh_private_key"
               v-model="gitCredentialDetails.sshPrivateKey"
-              class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+              class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-secondary-800 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
               placeholder="Private Key (In OpenSSH Format)"
               type="text"
               rows="5" />

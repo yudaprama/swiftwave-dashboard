@@ -91,7 +91,7 @@ onMounted(() => {
       'w-full': props.fullWidth
     }">
     <select
-      class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+      class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-secondary-800 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
       v-model="selectedPersistentVolume">
       <option value="" disabled selected>{{ $t('partials.selectPersistentVolume') }}</option>
       <option v-for="pv in persistentVolumes" :key="pv.id" :value="getValue(pv)">

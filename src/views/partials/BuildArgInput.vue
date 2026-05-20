@@ -21,11 +21,11 @@ defineProps({
 
 <template>
   <div class="mt-4">
-    <label :for="argKey" class="block text-sm font-medium text-gray-700"
+    <label :for="argKey" class="block text-sm font-medium text-gray-700 dark:text-gray-300"
       >{{ argKey }}
 
       <br v-if="description !== ''" />
-      <span class="text-xs font-normal text-gray-800">{{ description }}</span>
+      <span class="text-xs font-normal text-gray-800 dark:text-gray-400">{{ description }}</span>
     </label>
     <div class="mt-2">
       <input
@@ -33,7 +33,7 @@ defineProps({
         :name="argKey"
         :value="value"
         autocomplete="off"
-        class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+        class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-secondary-800 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
         placeholder="{{ description }}"
         type="text"
         @input="(e) => updateBuildArg(e.target.value)" />

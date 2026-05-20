@@ -15,7 +15,7 @@ const refetchIngressRuleList = computed(() => ingressRuleListRef.value?.refetchI
 </script>
 
 <template>
-  <section class="mx-auto w-full max-w-7xl">
+  <section class="mx-auto w-full max-w-7xl px-2 md:px-0">
     <!-- Modal for create persistent volumes -->
     <CreateIngressRuleModal :callback-on-create="refetchIngressRuleList" ref="newIngressRuleModalRef" />
     <!-- Top Page bar   -->

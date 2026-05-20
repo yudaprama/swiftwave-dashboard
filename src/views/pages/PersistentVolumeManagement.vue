@@ -218,7 +218,7 @@ const showDetails = (volume) => {
 </script>
 
 <template>
-  <section class="mx-auto w-full max-w-7xl">
+  <section class="mx-auto w-full max-w-7xl px-2 md:px-0">
     <!-- Drawer for persistent volume backups -->
     <PersistentVolumeBackups
       :is-drawer-open="isBackupDrawerOpen"
@@ -248,7 +248,7 @@ const showDetails = (volume) => {
           <div class="mx-auto max-w-md space-y-8">
             <input
               @change="(e) => (restoreFileFieldRef = e.target)"
-              class="w-full cursor-pointer rounded-md bg-gray-100 text-sm text-black file:mr-4 file:cursor-pointer file:border-0 file:bg-gray-800 file:px-4 file:py-2 file:text-white file:hover:bg-gray-700 focus:outline-hidden"
+              class="w-full cursor-pointer rounded-md bg-gray-100 dark:bg-secondary-800 text-sm text-black dark:text-gray-100 file:mr-4 file:cursor-pointer file:border-0 file:bg-gray-800 file:px-4 file:py-2 file:text-white file:hover:bg-gray-700 focus:outline-hidden"
               accept=".tar.gz"
               type="file" />
           </div>
@@ -278,16 +278,16 @@ const showDetails = (volume) => {
       <template v-slot:body>
         <div class="mt-4 flex w-full flex-row gap-2">
           <div class="w-1/2">
-            <label class="block text-sm font-medium text-gray-700">{{ $t('pv.volumeName') }}</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ $t('pv.volumeName') }}</label>
             <div class="mt-1">
               <p
-                class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
+                class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-secondary-800 dark:text-gray-100 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
                 {{ selectedVolumeDetails.name }}
               </p>
             </div>
           </div>
           <div class="w-1/2">
-            <label class="block text-sm font-medium text-gray-700">{{ $t('pv.volumeType') }}</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ $t('pv.volumeType') }}</label>
             <div class="mt-1">
               <Badge type="success" v-if="selectedVolumeDetails.type === 'local'">{{ $t('pv.local') }}</Badge>
               <Badge type="warning" v-if="selectedVolumeDetails.type === 'nfs'"> &nbsp;&nbsp;NFS&nbsp;&nbsp;</Badge>
@@ -296,53 +296,53 @@ const showDetails = (volume) => {
           </div>
         </div>
         <div class="mt-4" v-if="selectedVolumeDetails.type === 'nfs'">
-          <label class="block text-sm font-medium text-gray-700">{{ $t('pv.nfsConfig') }}</label>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ $t('pv.nfsConfig') }}</label>
           <div class="mt-1">
             <p
-              class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
+              class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-secondary-800 dark:text-gray-100 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
               {{ selectedVolumeDetails.nfsConfig.host }}:{{ selectedVolumeDetails.nfsConfig.path }}
             </p>
           </div>
         </div>
         <div class="mt-4" v-if="selectedVolumeDetails.type === 'nfs'">
-          <label class="block text-sm font-medium text-gray-700">{{ $t('pv.nfsVersion') }}</label>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ $t('pv.nfsVersion') }}</label>
           <div class="mt-1">
             <p
-              class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
+              class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-secondary-800 dark:text-gray-100 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
               {{ selectedVolumeDetails.nfsConfig.version }}
             </p>
           </div>
         </div>
         <div class="mt-4" v-if="selectedVolumeDetails.type === 'cifs'">
-          <label class="block text-sm font-medium text-gray-700">{{ $t('pv.cifsHost') }}</label>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ $t('pv.cifsHost') }}</label>
           <div class="mt-1">
             <p
-              class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
+              class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-secondary-800 dark:text-gray-100 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
               {{ selectedVolumeDetails.cifsConfig.host }}
             </p>
           </div>
         </div>
         <div class="mt-4" v-if="selectedVolumeDetails.type === 'cifs'">
-          <label class="block text-sm font-medium text-gray-700">{{ $t('pv.cifsShare') }}</label>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ $t('pv.cifsShare') }}</label>
           <div class="mt-1">
             <p
-              class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
+              class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-secondary-800 dark:text-gray-100 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
               {{ selectedVolumeDetails.cifsConfig.share }}
             </p>
           </div>
         </div>
         <div class="mt-4 flex w-full flex-row gap-2" v-if="selectedVolumeDetails.type === 'cifs'">
           <div class="w-1/2">
-            <label class="block text-sm font-medium text-gray-700">{{ $t('common.username') }}</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ $t('common.username') }}</label>
             <div class="mt-1">
               <p
-                class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
+                class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-secondary-800 dark:text-gray-100 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
                 {{ selectedVolumeDetails.cifsConfig.username }}
               </p>
             </div>
           </div>
           <div class="w-1/2">
-            <label class="block text-sm font-medium text-gray-700">{{ $t('common.password') }}</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ $t('common.password') }}</label>
             <div class="mt-1">
               <SecuredText>{{ selectedVolumeDetails.cifsConfig.password }}</SecuredText>
             </div>
@@ -350,19 +350,19 @@ const showDetails = (volume) => {
         </div>
         <div class="mt-4 flex w-full flex-row gap-2" v-if="selectedVolumeDetails.type === 'cifs'">
           <div class="w-1/2">
-            <label class="block text-sm font-medium text-gray-700">{{ $t('pv.fileMode') }}</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ $t('pv.fileMode') }}</label>
             <div class="mt-1">
               <p
-                class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
+                class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-secondary-800 dark:text-gray-100 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
                 {{ selectedVolumeDetails.cifsConfig.file_mode }}
               </p>
             </div>
           </div>
           <div class="w-1/2">
-            <label class="block text-sm font-medium text-gray-700">{{ $t('pv.dirMode') }}</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ $t('pv.dirMode') }}</label>
             <div class="mt-1">
               <p
-                class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
+                class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-secondary-800 dark:text-gray-100 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
                 {{ selectedVolumeDetails.cifsConfig.dir_mode }}
               </p>
             </div>
@@ -370,19 +370,19 @@ const showDetails = (volume) => {
         </div>
         <div class="mt-4 flex w-full flex-row gap-2" v-if="selectedVolumeDetails.type === 'cifs'">
           <div class="w-1/2">
-            <label class="block text-sm font-medium text-gray-700">UID</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">UID</label>
             <div class="mt-1">
               <p
-                class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
+                class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-secondary-800 dark:text-gray-100 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
                 {{ selectedVolumeDetails.cifsConfig.uid }}
               </p>
             </div>
           </div>
           <div class="w-1/2">
-            <label class="block text-sm font-medium text-gray-700">GID</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">GID</label>
             <div class="mt-1">
               <p
-                class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
+                class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-secondary-800 dark:text-gray-100 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
                 {{ selectedVolumeDetails.cifsConfig.gid }}
               </p>
             </div>

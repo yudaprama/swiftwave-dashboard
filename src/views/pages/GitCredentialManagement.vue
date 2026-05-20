@@ -83,7 +83,7 @@ onGitCredentialListError((err) => {
 </script>
 
 <template>
-  <section class="mx-auto w-full max-w-7xl">
+  <section class="mx-auto w-full max-w-7xl px-2 md:px-0">
     <!-- Modal for create -->
     <CreateGitCredentialModal ref="createGitCredentialModalRef" :callback-on-create="refetchGitCredentialList" />
     <!-- Top Page bar   -->

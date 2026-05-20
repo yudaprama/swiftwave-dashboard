@@ -30,7 +30,7 @@ const viewApplicationDetails = () => {
 <template>
   <tr v-show="isVisible">
     <TableRow align="left">
-      <div class="text-sm font-medium text-gray-900">
+      <div class="text-sm font-medium text-gray-900 dark:text-gray-100">
         <span v-if="application.latestDeployment.upstreamType === 'git'">
           <font-awesome-icon icon="fa-solid fa-code-branch" class="me-2" />
           {{ application.name }}
@@ -45,38 +45,38 @@ const viewApplicationDetails = () => {
       </div>
     </TableRow>
     <TableRow align="center" flex>
-      <div v-if="application.isSleeping" class="flex flex-row items-center text-sm text-gray-700">
+      <div v-if="application.isSleeping" class="flex flex-row items-center text-sm text-gray-700 dark:text-gray-300">
         <font-awesome-icon icon="fa-solid fa-bed" class="me-1 text-blue-600" />
         {{ $t('partials.sleeping') }}
       </div>
       <div
         v-else-if="application.realtimeInfo.HealthStatus === 'healthy'"
-        class="flex flex-row items-center text-sm text-gray-700">
+        class="flex flex-row items-center text-sm text-gray-700 dark:text-gray-300">
         <font-awesome-icon icon="fa-solid fa-heart-circle-check" class="me-1 text-success-500" />
         {{ $t('partials.healthy') }}
       </div>
       <div
         v-else-if="application.realtimeInfo.HealthStatus === 'unhealthy'"
-        class="flex flex-row items-center text-sm text-gray-700">
+        class="flex flex-row items-center text-sm text-gray-700 dark:text-gray-300">
         <font-awesome-icon icon="fa-solid fa-heart-circle-exclamation" class="me-1 text-danger-500" />
         {{ $t('partials.unhealthy') }}
       </div>
-      <div v-else class="text-sm text-gray-700">----</div>
+      <div v-else class="text-sm text-gray-700 dark:text-gray-300">----</div>
     </TableRow>
     <!-- Replicas -->
     <TableRow v-if="application.realtimeInfo.InfoFound" align="center">
-      <div v-if="application.realtimeInfo.DeploymentMode === 'replicated'" class="text-sm text-gray-700">
+      <div v-if="application.realtimeInfo.DeploymentMode === 'replicated'" class="text-sm text-gray-700 dark:text-gray-300">
         {{ application.realtimeInfo.RunningReplicas }} / {{ application.realtimeInfo.DesiredReplicas }}
       </div>
-      <div v-else-if="application.realtimeInfo.DeploymentMode === 'global'" class="text-sm text-gray-700">{{ $t('partials.global') }}</div>
+      <div v-else-if="application.realtimeInfo.DeploymentMode === 'global'" class="text-sm text-gray-700 dark:text-gray-300">{{ $t('partials.global') }}</div>
     </TableRow>
     <TableRow v-else align="center">
-      <div class="text-sm text-gray-700">----</div>
+      <div class="text-sm text-gray-700 dark:text-gray-300">----</div>
     </TableRow>
     <!-- END Replicas -->
     <TableRow align="center" flex>
       <StatusBadge
-        class="text-gray-700"
+        class="text-gray-700 dark:text-gray-300"
         v-if="application.latestDeployment.status === 'deployed'"
         type="success"
         small

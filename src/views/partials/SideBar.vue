@@ -17,6 +17,12 @@ import ConfirmDialog from '@/views/components/ConfirmDialog.vue'
 
 const { t } = useI18n()
 const emit = defineEmits(['navigate'])
+const props = defineProps({
+  collapsed: {
+    type: Boolean,
+    default: false
+  }
+})
 const authStore = useAuthStore()
 const router = useRouter()
 
@@ -121,15 +127,17 @@ router.afterEach(() => {
 <template>
   <aside
     v-if="isShowSideBar"
-    class="scrollbox flex h-screen flex-col overflow-y-auto border-r bg-primary-600 px-2 pb-2 pt-6 dark:border-gray-700 dark:bg-secondary-900">
-    <div class="px-3">
-      <RouterLink to="/">
-        <img :src="Logo" alt="SwiftWave logo" class="w-full max-w-40" />
+    class="scrollbox flex h-screen flex-col overflow-y-auto border-r bg-primary-600 px-2 pb-2 pt-6 transition-all duration-300 dark:border-gray-700 dark:bg-secondary-900"
+    :class="collapsed ? 'w-16 items-center' : 'w-80'">
+    <div :class="collapsed ? 'px-0' : 'px-3'">
+      <RouterLink to="/" class="flex items-center justify-center">
+        <img v-if="!collapsed" :src="Logo" alt="SwiftWave logo" class="w-full max-w-40" />
+        <img v-else src="@/assets/images/logo.png" alt="SwiftWave" class="h-8 w-8" />
       </RouterLink>
     </div>
     <div class="mt-6 flex flex-1 flex-col justify-between">
       <nav>
-        <SideBarOption :active-urls="['Deploy Application', 'Deploy Stack', 'App Store', 'Install from App Store']">
+        <SideBarOption :collapsed="collapsed" :active-urls="['Deploy Application', 'Deploy Stack', 'App Store', 'Install from App Store']">
           <template #icon>
             <font-awesome-icon icon="fa-solid fa-hammer" />
           </template>
@@ -158,7 +166,7 @@ router.afterEach(() => {
           </template>
         </SideBarOption>
 
-        <SideBarOption :active-urls="['Applications', 'Persistent Volumes']">
+        <SideBarOption :collapsed="collapsed" :active-urls="['Applications', 'Persistent Volumes']">
           <template #icon>
             <font-awesome-icon icon="fa-solid fa-box" />
           </template>
@@ -181,7 +189,7 @@ router.afterEach(() => {
           </template>
         </SideBarOption>
 
-        <SideBarOption :active-urls="['Domains', 'Redirect Rules', 'Ingress Rules']">
+        <SideBarOption :collapsed="collapsed" :active-urls="['Domains', 'Redirect Rules', 'Ingress Rules']">
           <template #icon>
             <font-awesome-icon icon="fa-solid fa-route" />
           </template>
@@ -210,7 +218,7 @@ router.afterEach(() => {
           </template>
         </SideBarOption>
 
-        <SideBarOption :active-urls="['Git Credentials', 'Image Registry Credentials']">
+        <SideBarOption :collapsed="collapsed" :active-urls="['Git Credentials', 'Image Registry Credentials']">
           <template #icon>
             <font-awesome-icon icon="fa-solid fa-vault" />
           </template>
@@ -233,7 +241,7 @@ router.afterEach(() => {
           </template>
         </SideBarOption>
 
-        <SideBarOption :active-urls="['Application Auth Basic ACL']">
+        <SideBarOption :collapsed="collapsed" :active-urls="['Application Auth Basic ACL']">
           <template #icon>
             <font-awesome-icon icon="fa-solid fa-shield-halved" />
           </template>
@@ -250,7 +258,7 @@ router.afterEach(() => {
           </template>
         </SideBarOption>
 
-        <SideBarOption v-if="!authStore.isAdmin" :active-urls="['Plans', 'Billing', 'Usage']">
+        <SideBarOption v-if="!authStore.isAdmin" :collapsed="collapsed" :active-urls="['Plans', 'Billing', 'Usage']">
           <template #icon>
             <font-awesome-icon icon="fa-solid fa-credit-card" />
           </template>
@@ -285,7 +293,7 @@ router.afterEach(() => {
           </template>
         </SideBarOption>
 
-        <SideBarOption v-if="authStore.isAdmin" :active-urls="['System Logs']">
+        <SideBarOption v-if="authStore.isAdmin" :collapsed="collapsed" :active-urls="['System Logs']">
           <template #icon>
             <font-awesome-icon icon="fa-solid fa-gear" />
           </template>
@@ -315,7 +323,7 @@ router.afterEach(() => {
           </template>
         </SideBarOption>
 
-        <SideBarOption v-if="authStore.isAdmin" :active-urls="['Users']">
+        <SideBarOption v-if="authStore.isAdmin" :collapsed="collapsed" :active-urls="['Users']">
           <template #icon>
             <font-awesome-icon icon="fa-solid fa-user-tie" />
           </template>
@@ -359,13 +367,16 @@ router.afterEach(() => {
         </SideBarOption>
       </nav>
     </div>
-    <div class="flex items-center justify-between px-2 text-sm font-medium text-white">
+    <div v-if="!collapsed" class="flex items-center justify-between px-2 text-sm font-medium text-white">
       <LanguageSwitcher />
       <ThemeToggle />
       <span> v{{ swVersion }}</span>
     </div>
-    <div class="px-2 text-sm font-medium text-white">
+    <div v-if="!collapsed" class="px-2 text-sm font-medium text-white">
       <span>{{ $t('sidebar.autoLogout') }} {{ authStore.sessionRelativeTimeoutStatus }}</span>
+    </div>
+    <div v-else class="flex flex-col items-center gap-2 px-0 pt-2">
+      <ThemeToggle />
     </div>
     <ChangePasswordModal :is-modal-open="isChangePasswordModalOpen" :close-modal="closeChangePasswordModal" />
     <Teleport to="body">

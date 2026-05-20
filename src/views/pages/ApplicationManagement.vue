@@ -104,7 +104,7 @@ const applicationGroups = computed(() => applicationGroupsResult.value?.applicat
 </script>
 
 <template>
-  <section class="mx-auto w-full max-w-7xl">
+  <section class="mx-auto w-full max-w-7xl px-2 md:px-0">
     <!-- Deploy Apps Page bar   -->
     <PageBar>
       <template v-slot:title>{{ $t('applications.deployedServices') }}</template>
@@ -128,7 +128,7 @@ const applicationGroups = computed(() => applicationGroupsResult.value?.applicat
       </template>
     </PageBar>
 
-    <p class="mt-6 text-sm font-medium">
+    <p class="mt-6 text-sm font-medium dark:text-gray-100">
       <font-awesome-icon icon="fa-solid fa-hammer" class="me-1" />
       {{ $t('applications.deployedApplications') }}
     </p>
@@ -158,7 +158,7 @@ const applicationGroups = computed(() => applicationGroupsResult.value?.applicat
     </Table>
 
     <!--  Deployed Projects Bar   -->
-    <p class="mt-6 text-sm font-medium">
+    <p class="mt-6 text-sm font-medium dark:text-gray-100">
       <font-awesome-icon icon="fa-solid fa-layer-group" class="me-1" />
       {{ $t('applications.deployedProjects') }}
     </p>

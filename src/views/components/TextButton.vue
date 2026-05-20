@@ -34,11 +34,11 @@ const onClick = () => {
 <template>
   <a
     :class="{
-      'text-primary-600': type === 'primary',
-      'text-secondary-600': type === 'secondary',
-      'text-success-600': type === 'success',
-      'text-danger-600': type === 'danger',
-      'text-warning-600': type === 'warning',
+      'text-primary-600 dark:text-primary-400': type === 'primary',
+      'text-secondary-600 dark:text-secondary-400': type === 'secondary',
+      'text-success-600 dark:text-success-400': type === 'success',
+      'text-danger-600 dark:text-danger-400': type === 'danger',
+      'text-warning-600 dark:text-warning-400': type === 'warning',
       'cursor-not-allowed! text-gray-400!': disabled
     }"
     class="cursor-pointer"
@@ -47,5 +47,3 @@ const onClick = () => {
     <DotLoader v-else />
   </a>
 </template>
-
-<style scoped></style>

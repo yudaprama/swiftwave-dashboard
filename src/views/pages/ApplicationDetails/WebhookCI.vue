@@ -101,7 +101,7 @@ const regenerateWebhookTokenWithConfirmation = async () => {
 
 <template>
   <!--  NOTE -->
-  <div class="mb-8 rounded-md border-l-4 border-yellow-500 bg-yellow-100 p-3 text-yellow-700" role="alert">
+  <div class="mb-8 rounded-md border-l-4 border-yellow-500 bg-yellow-100 dark:bg-yellow-900/30 p-3 text-yellow-700 dark:text-yellow-300" role="alert">
     <p class="font-bold">{{ $t('applicationDetails.webhookNote') }}</p>
     <p>{{ $t('applicationDetails.webhookNoteMessage') }}</p>
   </div>
@@ -114,9 +114,9 @@ const regenerateWebhookTokenWithConfirmation = async () => {
   <!--  Link with a copy button -->
   <div class="mt-6">
     <div class="relative flex flex-row items-center gap-2">
-      <input :value="webhookTriggerLink" class="w-full rounded-md border border-gray-300 p-2" readonly type="text" />
+      <input :value="webhookTriggerLink" class="w-full rounded-md border border-gray-300 dark:border-gray-600 p-2 dark:bg-secondary-700 dark:text-gray-200" readonly type="text" />
       <button
-        class="absolute bottom-1 right-1 top-1 rounded-md bg-secondary-200 px-3 text-sm font-bold hover:bg-secondary-300"
+        class="absolute bottom-1 right-1 top-1 rounded-md bg-secondary-200 dark:bg-secondary-600 px-3 text-sm font-bold hover:bg-secondary-300 dark:hover:bg-secondary-500 dark:text-gray-200"
         @click="copyToClipboard(webhookTriggerLink)">
         {{ $t('applicationDetails.copyLabel') }}
         <font-awesome-icon icon="fa-solid fa-copy" />

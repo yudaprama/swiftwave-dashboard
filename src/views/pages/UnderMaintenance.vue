@@ -39,8 +39,8 @@ onMounted(() => {
 <template>
   <div class="flex h-full w-full max-w-7xl flex-col items-center justify-center gap-6 sm:px-0">
     <img alt="swiftwave brand logo" :src="logo" class="mb-8 h-10" />
-    <h1 class="text-4xl font-bold text-gray-900">{{ $t('maintenance.title') }}</h1>
-    <p class="text-center text-lg text-gray-600">
+    <h1 class="text-4xl font-bold text-gray-900 dark:text-gray-100">{{ $t('maintenance.title') }}</h1>
+    <p class="text-center text-lg text-gray-600 dark:text-gray-400">
       {{ $t('maintenance.message') }}<br />{{ $t('maintenance.redirectMsg') }}
     </p>
   </div>

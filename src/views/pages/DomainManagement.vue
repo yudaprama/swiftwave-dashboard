@@ -184,7 +184,7 @@ const openIssueSSLModal = computed(() => issueSSLModal.value?.openModal ?? (() =
 </script>
 
 <template>
-    <section class="mx-auto w-full max-w-7xl">
+    <section class="mx-auto w-full max-w-7xl px-2 md:px-0">
         <!-- Modal for add domain -->
         <CreateDomainModal :callback-on-create="refetchDomainList" ref="createDomainModal" />
         <!-- Modal for issuing domain -->
@@ -194,21 +194,21 @@ const openIssueSSLModal = computed(() => issueSSLModal.value?.openModal ?? (() =
             <template v-slot:header>{{ $t('domains.sslDetailsTitle') }}</template>
             <template v-slot:body>
                 <div>
-                    <p class="mt-0.5"><b>{{ $t('domains.sslStatus') }}</b> {{ (viewSslDetailsResult?.sslStatus ?? '').toUpperCase() }}
+                    <p class="mt-0.5 dark:text-gray-300"><b>{{ $t('domains.sslStatus') }}</b> {{ (viewSslDetailsResult?.sslStatus ?? '').toUpperCase() }}
                     </p>
-                    <p class="mt-0.5"><b>{{ $t('domains.sslIssuedBy') }}</b> {{ viewSslDetailsResult.sslIssuer }}</p>
-                    <p class="mt-0.5"><b>{{ $t('domains.sslIssuedAt') }}</b> {{ sslDetailsIssuedAt }}</p>
+                    <p class="mt-0.5 dark:text-gray-300"><b>{{ $t('domains.sslIssuedBy') }}</b> {{ viewSslDetailsResult.sslIssuer }}</p>
+                    <p class="mt-0.5 dark:text-gray-300"><b>{{ $t('domains.sslIssuedAt') }}</b> {{ sslDetailsIssuedAt }}</p>
                     <Disclosure class="mt-4">
                         <template v-slot:title>{{ $t('domains.sslFullChain') }}</template>
                         <template v-slot:body>
-                            <textarea class="mt-2 w-full rounded-lg border-gray-200 align-top shadow-xs sm:text-sm"
+                            <textarea class="mt-2 w-full rounded-lg border-gray-200 dark:border-gray-700 dark:bg-secondary-800 dark:text-gray-100 align-top shadow-xs sm:text-sm"
                                 readonly rows="5" v-bind:value="viewSslDetailsResult.sslFullChain"></textarea>
                         </template>
                     </Disclosure>
                     <Disclosure class="mt-3">
                         <template v-slot:title>{{ $t('domains.sslPrivateKey') }}</template>
                         <template v-slot:body>
-                            <textarea class="mt-2 w-full rounded-lg border-gray-200 align-top shadow-xs sm:text-sm"
+                            <textarea class="mt-2 w-full rounded-lg border-gray-200 dark:border-gray-700 dark:bg-secondary-800 dark:text-gray-100 align-top shadow-xs sm:text-sm"
                                 readonly rows="5" v-bind:value="viewSslDetailsResult.sslPrivateKey"></textarea>
                         </template>
                     </Disclosure>

@@ -103,13 +103,13 @@ defineExpose({
                 <form @submit.prevent="">
                     <!--  Name Field   -->
                     <div class="mt-4">
-                        <label class="block text-sm font-medium text-gray-700" for="name">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300" for="name">
                             Domain Name (example: example.com)
                         </label>
                         <div class="mt-1">
                             <input id="name" v-model="newDomainDetails.name" @keydown="preventSpaceInput"
                                 autocomplete="off"
-                                class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                                class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-secondary-800 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
                                 name="name" placeholder="example.com or test.example.com" type="text" />
                         </div>
                     </div>

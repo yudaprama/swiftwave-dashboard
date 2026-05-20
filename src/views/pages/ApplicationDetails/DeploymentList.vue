@@ -69,7 +69,7 @@ onDeploymentsError((err) => {
       </TableMessage>
     </template>
     <template v-slot:body>
-      <tr v-for="deployment in deployments" :key="deployment.id" class="text-sm text-secondary-700">
+      <tr v-for="deployment in deployments" :key="deployment.id" class="text-sm text-secondary-700 dark:text-gray-300">
         <TableRow align="left" flex>
           <RouterLink
             :to="{
@@ -80,7 +80,7 @@ onDeploymentsError((err) => {
               }
             }"
             class="w-full">
-            <div class="cursor-pointer text-secondary-900 hover:text-primary-600">
+            <div class="cursor-pointer text-secondary-900 hover:text-primary-600 dark:text-gray-100 dark:hover:text-primary-400">
               {{ deployment.id.split('-')[0] }}
             </div>
           </RouterLink>
@@ -187,7 +187,7 @@ onDeploymentsError((err) => {
             </div>
           </div>
         </TableRow>
-        <TableRow align="center" class="w-36 text-secondary-900">
+        <TableRow align="center" class="w-36 text-secondary-900 dark:text-gray-100">
           <div class="flex">
             <StatusBadge v-if="deployment.status === 'deployed'" type="success"
               >{{ camelCaseToSpacedCapitalized(deployment.status) }}

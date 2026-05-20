@@ -99,7 +99,7 @@ function selectSystemLog(log) {
     </template>
   </PageBar>
 
-  <div class="mt-8 flex w-full gap-4">
+  <div class="mt-8 flex w-full gap-4 px-2 md:px-0">
     <!--  System logs list  -->
     <div
       class="scrollbox flex max-h-[80vh] w-[400px] flex-col gap-2 overflow-y-auto pr-2"
@@ -108,9 +108,9 @@ function selectSystemLog(log) {
         @click="() => selectSystemLog(log)"
         :key="log.id"
         v-for="log in systemLogsResult"
-        class="w-full cursor-pointer select-none rounded-lg border-2 border-secondary-200 p-3 hover:bg-secondary-200"
+        class="w-full cursor-pointer select-none rounded-lg border-2 border-secondary-200 dark:border-gray-600 p-3 hover:bg-secondary-200 dark:hover:bg-gray-700"
         :class="{
-          'border-secondary-400 bg-secondary-200': log.name === logFileName
+          'border-secondary-400 bg-secondary-200 dark:bg-gray-600': log.name === logFileName
         }">
         <p class="font-medium">{{ log.name }}</p>
         <p>{{ moment(new Date(log.modTime)).format('Do MMMM YYYY - h:mm:ss a') }}</p>
@@ -122,7 +122,7 @@ function selectSystemLog(log) {
     </div>
     <!--  Server log result  -->
     <div
-      class="relative max-h-[80vh] w-full overflow-y-hidden whitespace-pre-wrap rounded-lg border-2 border-secondary-200 bg-secondary-100 p-4">
+      class="relative max-h-[80vh] w-full overflow-y-hidden whitespace-pre-wrap rounded-lg border-2 border-secondary-200 dark:border-gray-600 bg-secondary-100 dark:bg-secondary-800 p-4">
       <FilledButton type="secondary" :click="loadServerLogsContent" class="absolute right-2 top-2">
         <font-awesome-icon
           icon="fa-solid fa-arrows-rotate"

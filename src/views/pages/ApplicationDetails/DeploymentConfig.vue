@@ -27,7 +27,7 @@ const openConfigureDeploymentPreferredServers = () => {
     :update-hostnames="applicationUpdater.updatePreferredServerHostnames"
     :hostnames="applicationUpdater.deploymentConfigurationDetails.preferredServerHostnames" />
   <div class="mt-3 flex flex-row items-center">
-    <p class="font-medium text-black">{{ $t('applicationDetails.deploymentStrategy') }}</p>
+    <p class="font-medium text-black dark:text-gray-100">{{ $t('applicationDetails.deploymentStrategy') }}</p>
     <font-awesome-icon class="px-4" icon="fa-solid fa-arrow-right" />
     <div class="flex flex-row items-center gap-2">
       <p class="font-medium">{{ $t('applicationDetails.replicated') }}</p>
@@ -49,9 +49,9 @@ const openConfigureDeploymentPreferredServers = () => {
   </div>
   <!-- Preferred Servers  -->
   <div class="mt-2">
-    <p class="font-medium text-black">{{ $t('applicationDetails.deploymentPreferredServers') }}</p>
+    <p class="font-medium text-black dark:text-gray-100">{{ $t('applicationDetails.deploymentPreferredServers') }}</p>
     <div class="mt-1">
-      <label class="block cursor-pointer text-sm font-medium text-gray-700">{{ $t('applicationDetails.clickToSelectServer') }}</label>
+      <label class="block cursor-pointer text-sm font-medium text-gray-700 dark:text-gray-300">{{ $t('applicationDetails.clickToSelectServer') }}</label>
       <input
         class="mt-1 block w-full cursor-pointer rounded-md border-gray-300 text-sm shadow-xs focus:border-primary-500 focus:ring-primary-500"
         :placeholder="$t('applicationDetails.clickToAddServers')"
@@ -63,7 +63,7 @@ const openConfigureDeploymentPreferredServers = () => {
   </div>
   <!--   Container Hostname    -->
   <div class="mt-3">
-    <p class="font-medium text-black">{{ $t('applicationDetails.containerHostname') }}</p>
+    <p class="font-medium text-black dark:text-gray-100">{{ $t('applicationDetails.containerHostname') }}</p>
     <div class="mt-1">
       <input
         class="mt-1 block w-full rounded-md border-gray-300 text-sm shadow-xs focus:border-primary-500 focus:ring-primary-500"
@@ -80,7 +80,7 @@ const openConfigureDeploymentPreferredServers = () => {
     <template v-slot:body>
       <div class="flex w-full flex-row gap-5">
         <div>
-          <label class="block text-sm font-medium text-gray-700"
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300"
             >{{ $t('applicationDetails.memoryLimit') }}<span class="text-red-600"> *</span>
           </label>
           <div class="mt-1">
@@ -93,7 +93,7 @@ const openConfigureDeploymentPreferredServers = () => {
           </div>
         </div>
         <div>
-          <label class="block text-sm font-medium text-gray-700"
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300"
             >Reserved Memory (MB)<span class="text-red-600"> *</span>
           </label>
           <div class="mt-1">
@@ -130,7 +130,7 @@ const openConfigureDeploymentPreferredServers = () => {
     </template>
     <template v-slot:body>
       <div class="flex flex-row items-center gap-2">
-        <p class="text-sm font-medium text-gray-700">Custom Healthcheck</p>
+        <p class="text-sm font-medium text-gray-700 dark:text-gray-300">Custom Healthcheck</p>
         <div class="multi-select">
           <div
             @click="
@@ -157,7 +157,7 @@ const openConfigureDeploymentPreferredServers = () => {
         </div>
       </div>
       <div class="mt-2" v-if="applicationUpdater.deploymentConfigurationDetails.customHealthCheck.enabled">
-        <label class="block text-sm font-medium text-gray-700"
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300"
           >Healthcheck Test Command<span class="text-red-600"> *</span>
         </label>
         <div class="mt-1">
@@ -178,7 +178,7 @@ const openConfigureDeploymentPreferredServers = () => {
         class="mt-3 flex w-full flex-row gap-5"
         v-if="applicationUpdater.deploymentConfigurationDetails.customHealthCheck.enabled">
         <div class="w-1/5">
-          <label class="block text-sm font-medium text-gray-700"
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300"
             >Check Interval (Seconds)<span class="text-red-600"> *</span>
           </label>
           <div class="mt-1">
@@ -195,7 +195,7 @@ const openConfigureDeploymentPreferredServers = () => {
           </div>
         </div>
         <div class="w-1/5">
-          <label class="block text-sm font-medium text-gray-700"
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300"
             >Check Timeout (Seconds)<span class="text-red-600"> *</span>
           </label>
           <div class="mt-1">
@@ -212,7 +212,7 @@ const openConfigureDeploymentPreferredServers = () => {
           </div>
         </div>
         <div class="w-1/5">
-          <label class="block text-sm font-medium text-gray-700"
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300"
             >Start Period (Seconds)<span class="text-red-600"> *</span>
           </label>
           <div class="mt-1">
@@ -229,7 +229,7 @@ const openConfigureDeploymentPreferredServers = () => {
           </div>
         </div>
         <div class="w-1/5">
-          <label class="block text-sm font-medium text-gray-700"
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300"
             >Start Interval (Seconds)<span class="text-red-600"> *</span>
           </label>
           <div class="mt-1">
@@ -246,7 +246,7 @@ const openConfigureDeploymentPreferredServers = () => {
           </div>
         </div>
         <div class="w-1/5">
-          <label class="block text-sm font-medium text-gray-700">Retries<span class="text-red-600"> *</span> </label>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">Retries<span class="text-red-600"> *</span> </label>
           <div class="mt-1">
             <input
               autocomplete="off"
@@ -307,11 +307,11 @@ const openConfigureDeploymentPreferredServers = () => {
         </div>
         <!--  Proxy Permission  -->
         <div
-          class="mt-4 flex w-full flex-row gap-20 rounded-md border-2 border-secondary-300 p-2"
+          class="mt-4 flex w-full flex-row gap-20 rounded-md border-2 border-secondary-300 dark:border-gray-600 p-2"
           v-if="applicationUpdater.deploymentConfigurationDetails.dockerProxyConfig.enabled">
           <div class="flex w-1/3 flex-col gap-2">
             <div class="flex flex-row justify-between gap-2">
-              <p class="w-1/3 font-normal text-gray-800">Ping</p>
+              <p class="w-1/3 font-normal text-gray-800 dark:text-gray-200">Ping</p>
               <DockerProxyPermissionChoose
                 :value="applicationUpdater.deploymentConfigurationDetails.dockerProxyConfig.permission.ping"
                 :on-change="
@@ -321,7 +321,7 @@ const openConfigureDeploymentPreferredServers = () => {
                 " />
             </div>
             <div class="flex flex-row justify-between gap-2">
-              <p class="w-1/3 font-normal text-gray-800">Version</p>
+              <p class="w-1/3 font-normal text-gray-800 dark:text-gray-200">Version</p>
               <DockerProxyPermissionChoose
                 :value="applicationUpdater.deploymentConfigurationDetails.dockerProxyConfig.permission.version"
                 :on-change="
@@ -331,7 +331,7 @@ const openConfigureDeploymentPreferredServers = () => {
                 " />
             </div>
             <div class="flex flex-row justify-between gap-2">
-              <p class="w-1/3 font-normal text-gray-800">Info</p>
+              <p class="w-1/3 font-normal text-gray-800 dark:text-gray-200">Info</p>
               <DockerProxyPermissionChoose
                 :value="applicationUpdater.deploymentConfigurationDetails.dockerProxyConfig.permission.info"
                 :on-change="
@@ -341,7 +341,7 @@ const openConfigureDeploymentPreferredServers = () => {
                 " />
             </div>
             <div class="flex flex-row justify-between gap-2">
-              <p class="w-1/3 font-normal text-gray-800">Events</p>
+              <p class="w-1/3 font-normal text-gray-800 dark:text-gray-200">Events</p>
               <DockerProxyPermissionChoose
                 :value="applicationUpdater.deploymentConfigurationDetails.dockerProxyConfig.permission.events"
                 :on-change="
@@ -351,7 +351,7 @@ const openConfigureDeploymentPreferredServers = () => {
                 " />
             </div>
             <div class="flex flex-row justify-between gap-2">
-              <p class="w-1/3 font-normal text-gray-800">Auth</p>
+              <p class="w-1/3 font-normal text-gray-800 dark:text-gray-200">Auth</p>
               <DockerProxyPermissionChoose
                 :value="applicationUpdater.deploymentConfigurationDetails.dockerProxyConfig.permission.auth"
                 :on-change="
@@ -361,7 +361,7 @@ const openConfigureDeploymentPreferredServers = () => {
                 " />
             </div>
             <div class="flex flex-row justify-between gap-2">
-              <p class="w-1/3 font-normal text-gray-800">Secrets</p>
+              <p class="w-1/3 font-normal text-gray-800 dark:text-gray-200">Secrets</p>
               <DockerProxyPermissionChoose
                 :value="applicationUpdater.deploymentConfigurationDetails.dockerProxyConfig.permission.secrets"
                 :on-change="
@@ -371,7 +371,7 @@ const openConfigureDeploymentPreferredServers = () => {
                 " />
             </div>
             <div class="flex flex-row justify-between gap-2">
-              <p class="w-1/3 font-normal text-gray-800">Build</p>
+              <p class="w-1/3 font-normal text-gray-800 dark:text-gray-200">Build</p>
               <DockerProxyPermissionChoose
                 :value="applicationUpdater.deploymentConfigurationDetails.dockerProxyConfig.permission.build"
                 :on-change="
@@ -381,7 +381,7 @@ const openConfigureDeploymentPreferredServers = () => {
                 " />
             </div>
             <div class="flex flex-row justify-between gap-2">
-              <p class="w-1/3 font-normal text-gray-800">Commit</p>
+              <p class="w-1/3 font-normal text-gray-800 dark:text-gray-200">Commit</p>
               <DockerProxyPermissionChoose
                 :value="applicationUpdater.deploymentConfigurationDetails.dockerProxyConfig.permission.commit"
                 :on-change="
@@ -393,7 +393,7 @@ const openConfigureDeploymentPreferredServers = () => {
           </div>
           <div class="flex w-1/3 flex-col gap-2">
             <div class="flex flex-row justify-between gap-2">
-              <p class="w-1/3 font-normal text-gray-800">Configs</p>
+              <p class="w-1/3 font-normal text-gray-800 dark:text-gray-200">Configs</p>
               <DockerProxyPermissionChoose
                 :value="applicationUpdater.deploymentConfigurationDetails.dockerProxyConfig.permission.configs"
                 :on-change="
@@ -403,7 +403,7 @@ const openConfigureDeploymentPreferredServers = () => {
                 " />
             </div>
             <div class="flex flex-row justify-between gap-2">
-              <p class="w-1/3 font-normal text-gray-800">Containers</p>
+              <p class="w-1/3 font-normal text-gray-800 dark:text-gray-200">Containers</p>
               <DockerProxyPermissionChoose
                 :value="applicationUpdater.deploymentConfigurationDetails.dockerProxyConfig.permission.containers"
                 :on-change="
@@ -413,7 +413,7 @@ const openConfigureDeploymentPreferredServers = () => {
                 " />
             </div>
             <div class="flex flex-row justify-between gap-2">
-              <p class="w-1/3 font-normal text-gray-800">Distribution</p>
+              <p class="w-1/3 font-normal text-gray-800 dark:text-gray-200">Distribution</p>
               <DockerProxyPermissionChoose
                 :value="applicationUpdater.deploymentConfigurationDetails.dockerProxyConfig.permission.distribution"
                 :on-change="
@@ -423,7 +423,7 @@ const openConfigureDeploymentPreferredServers = () => {
                 " />
             </div>
             <div class="flex flex-row justify-between gap-2">
-              <p class="w-1/3 font-normal text-gray-800">Exec</p>
+              <p class="w-1/3 font-normal text-gray-800 dark:text-gray-200">Exec</p>
               <DockerProxyPermissionChoose
                 :value="applicationUpdater.deploymentConfigurationDetails.dockerProxyConfig.permission.exec"
                 :on-change="
@@ -433,7 +433,7 @@ const openConfigureDeploymentPreferredServers = () => {
                 " />
             </div>
             <div class="flex flex-row justify-between gap-2">
-              <p class="w-1/3 font-normal text-gray-800">Grpc</p>
+              <p class="w-1/3 font-normal text-gray-800 dark:text-gray-200">Grpc</p>
               <DockerProxyPermissionChoose
                 :value="applicationUpdater.deploymentConfigurationDetails.dockerProxyConfig.permission.grpc"
                 :on-change="
@@ -443,7 +443,7 @@ const openConfigureDeploymentPreferredServers = () => {
                 " />
             </div>
             <div class="flex flex-row justify-between gap-2">
-              <p class="w-1/3 font-normal text-gray-800">Images</p>
+              <p class="w-1/3 font-normal text-gray-800 dark:text-gray-200">Images</p>
               <DockerProxyPermissionChoose
                 :value="applicationUpdater.deploymentConfigurationDetails.dockerProxyConfig.permission.images"
                 :on-change="
@@ -453,7 +453,7 @@ const openConfigureDeploymentPreferredServers = () => {
                 " />
             </div>
             <div class="flex flex-row justify-between gap-2">
-              <p class="w-1/3 font-normal text-gray-800">Networks</p>
+              <p class="w-1/3 font-normal text-gray-800 dark:text-gray-200">Networks</p>
               <DockerProxyPermissionChoose
                 :value="applicationUpdater.deploymentConfigurationDetails.dockerProxyConfig.permission.networks"
                 :on-change="
@@ -463,7 +463,7 @@ const openConfigureDeploymentPreferredServers = () => {
                 " />
             </div>
             <div class="flex flex-row justify-between gap-2">
-              <p class="w-1/3 font-normal text-gray-800">Nodes</p>
+              <p class="w-1/3 font-normal text-gray-800 dark:text-gray-200">Nodes</p>
               <DockerProxyPermissionChoose
                 :value="applicationUpdater.deploymentConfigurationDetails.dockerProxyConfig.permission.nodes"
                 :on-change="
@@ -475,7 +475,7 @@ const openConfigureDeploymentPreferredServers = () => {
           </div>
           <div class="flex w-1/3 flex-col gap-2">
             <div class="flex flex-row justify-between gap-2">
-              <p class="w-1/3 font-normal text-gray-800">Plugins</p>
+              <p class="w-1/3 font-normal text-gray-800 dark:text-gray-200">Plugins</p>
               <DockerProxyPermissionChoose
                 :value="applicationUpdater.deploymentConfigurationDetails.dockerProxyConfig.permission.plugins"
                 :on-change="
@@ -485,7 +485,7 @@ const openConfigureDeploymentPreferredServers = () => {
                 " />
             </div>
             <div class="flex flex-row justify-between gap-2">
-              <p class="w-1/3 font-normal text-gray-800">Services</p>
+              <p class="w-1/3 font-normal text-gray-800 dark:text-gray-200">Services</p>
               <DockerProxyPermissionChoose
                 :value="applicationUpdater.deploymentConfigurationDetails.dockerProxyConfig.permission.services"
                 :on-change="
@@ -495,7 +495,7 @@ const openConfigureDeploymentPreferredServers = () => {
                 " />
             </div>
             <div class="flex flex-row justify-between gap-2">
-              <p class="w-1/3 font-normal text-gray-800">Session</p>
+              <p class="w-1/3 font-normal text-gray-800 dark:text-gray-200">Session</p>
               <DockerProxyPermissionChoose
                 :value="applicationUpdater.deploymentConfigurationDetails.dockerProxyConfig.permission.session"
                 :on-change="
@@ -505,7 +505,7 @@ const openConfigureDeploymentPreferredServers = () => {
                 " />
             </div>
             <div class="flex flex-row justify-between gap-2">
-              <p class="w-1/3 font-normal text-gray-800">Swarm</p>
+              <p class="w-1/3 font-normal text-gray-800 dark:text-gray-200">Swarm</p>
               <DockerProxyPermissionChoose
                 :value="applicationUpdater.deploymentConfigurationDetails.dockerProxyConfig.permission.swarm"
                 :on-change="
@@ -515,7 +515,7 @@ const openConfigureDeploymentPreferredServers = () => {
                 " />
             </div>
             <div class="flex flex-row justify-between gap-2">
-              <p class="w-1/3 font-normal text-gray-800">System</p>
+              <p class="w-1/3 font-normal text-gray-800 dark:text-gray-200">System</p>
               <DockerProxyPermissionChoose
                 :value="applicationUpdater.deploymentConfigurationDetails.dockerProxyConfig.permission.system"
                 :on-change="
@@ -525,7 +525,7 @@ const openConfigureDeploymentPreferredServers = () => {
                 " />
             </div>
             <div class="flex flex-row justify-between gap-2">
-              <p class="w-1/3 font-normal text-gray-800">Tasks</p>
+              <p class="w-1/3 font-normal text-gray-800 dark:text-gray-200">Tasks</p>
               <DockerProxyPermissionChoose
                 :value="applicationUpdater.deploymentConfigurationDetails.dockerProxyConfig.permission.tasks"
                 :on-change="
@@ -535,7 +535,7 @@ const openConfigureDeploymentPreferredServers = () => {
                 " />
             </div>
             <div class="flex flex-row justify-between gap-2">
-              <p class="w-1/3 font-normal text-gray-800">Volumes</p>
+              <p class="w-1/3 font-normal text-gray-800 dark:text-gray-200">Volumes</p>
               <DockerProxyPermissionChoose
                 :value="applicationUpdater.deploymentConfigurationDetails.dockerProxyConfig.permission.volumes"
                 :on-change="

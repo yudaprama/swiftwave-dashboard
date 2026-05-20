@@ -479,7 +479,7 @@ const noOfBlankFields = computed(() => {
   <div v-if="isLoadingStack" class="flex h-full w-full items-center justify-center">
     <DotLoader />
   </div>
-  <section v-else class="relative mx-auto mt-2 flex h-full w-full max-w-7xl flex-col items-center overflow-hidden">
+  <section v-else class="relative mx-auto mt-2 flex h-full w-full max-w-7xl flex-col items-center overflow-hidden px-2 md:px-0">
     <div class="scrollbox h-full w-full overflow-y-auto">
       <!--  Header  -->
       <div class="flex w-full flex-row gap-5">
@@ -490,7 +490,7 @@ const noOfBlankFields = computed(() => {
         <!--    Title and description    -->
         <div>
           <p class="text-xl font-semibold">{{ stackDetails.docs.name }}</p>
-          <p class="text-gray-800">{{ stackDetails.docs.description }}</p>
+          <p class="text-gray-800 dark:text-gray-200">{{ stackDetails.docs.description }}</p>
         </div>
       </div>
       <!--  Iframe Video  -->
@@ -503,7 +503,7 @@ const noOfBlankFields = computed(() => {
         <MarkdownRenderer :source="stackDetails.docs.readme_description" />
       </div>
       <div v-else class="mt-12 w-full">
-        <p class="italic text-gray-800">{{ $t('deploy.noDetailsAvailable') }}</p>
+        <p class="italic text-gray-800 dark:text-gray-200">{{ $t('deploy.noDetailsAvailable') }}</p>
       </div>
     </div>
     <!--  Installation Options  -->
@@ -533,7 +533,7 @@ const noOfBlankFields = computed(() => {
       <div class="mt-4 flex w-full flex-row gap-8">
         <div class="flex w-full flex-col gap-2">
           <div v-if="currentPage === 1">
-            <label class="block text-base font-medium text-gray-700">
+            <label class="block text-base font-medium text-gray-700 dark:text-gray-300">
               <p>{{ $t('deploy.applicationNameLabel') }} <span class="text-red-600"> *</span></p>
               <p class="text-sm font-normal">{{ $t('deploy.provideAppName') }}</p>
             </label>
@@ -547,7 +547,7 @@ const noOfBlankFields = computed(() => {
             </div>
           </div>
           <div v-for="key in formVariables">
-            <label class="block text-base font-medium text-gray-700">
+            <label class="block text-base font-medium text-gray-700 dark:text-gray-300">
               <p v-if="stackDetails.docs.variables[key].title.length > 0">
                 {{ stackDetails.docs.variables[key].title }}
                 <span class="text-red-600" v-if="stackDetails.docs.variables[key].type !== 'markdown'"> *</span>
@@ -619,7 +619,7 @@ const noOfBlankFields = computed(() => {
             </OutlinedButton>
             <div class="flex w-full flex-row items-center gap-2">
               <!--     Progress          -->
-              <div class="h-1.5 w-full rounded-full bg-gray-200">
+              <div class="h-1.5 w-full rounded-full bg-gray-200 dark:bg-gray-700">
                 <div
                   class="h-full rounded-full bg-primary-500 transition-all duration-300"
                   :style="{
@@ -662,7 +662,7 @@ const noOfBlankFields = computed(() => {
                     <p
                       class="text-sm font-medium"
                       :class="{
-                        'text-gray-700': !config.info.exists,
+                        'text-gray-700 dark:text-gray-300': !config.info.exists,
                         'text-red-600': config.info.exists
                       }">
                       {{ config.description }}
@@ -788,7 +788,7 @@ const noOfBlankFields = computed(() => {
             {{ $t('deploy.view') }}
           </FilledButton>
         </div>
-        <div v-if="deployedApplicationsResult.length === 0" class="text-center text-gray-500">
+        <div v-if="deployedApplicationsResult.length === 0" class="text-center text-gray-500 dark:text-gray-400">
           {{ $t('deploy.noApplicationsDeployed') }}
         </div>
 

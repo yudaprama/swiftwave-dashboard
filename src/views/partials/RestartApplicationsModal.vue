@@ -130,7 +130,7 @@ const restartApplications = async () => {
             icon="fa-solid fa-circle-notch"
             class="animate-spin text-base text-warning-500" />
           <font-awesome-icon v-else icon="fa-regular fa-circle" class="text-base text-warning-500" />
-          <span class="text-secondary-800">{{ app.name }}</span>
+          <span class="text-secondary-800 dark:text-gray-200">{{ app.name }}</span>
         </div>
       </div>
     </template>

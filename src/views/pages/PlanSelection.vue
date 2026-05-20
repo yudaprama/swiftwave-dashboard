@@ -79,13 +79,13 @@ const upgrade = async (plan) => {
 </script>
 
 <template>
-  <div class="p-6">
-    <h1 class="text-2xl font-bold text-gray-900">{{ $t('plans.title') }}</h1>
-    <p class="mt-1 text-sm text-gray-500">{{ $t('plans.subtitle') }}</p>
+  <div class="p-6 px-2 md:px-6">
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">{{ $t('plans.title') }}</h1>
+    <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">{{ $t('plans.subtitle') }}</p>
 
     <!-- Current plan badge -->
     <div v-if="billingStore.currentPlan" class="mt-4 rounded-lg bg-primary-50 p-4">
-      <p class="text-sm text-gray-600">
+      <p class="text-sm text-gray-600 dark:text-gray-400">
         {{ $t('plans.currentPlan') }} <span class="font-semibold text-primary-700">{{ billingStore.currentPlan.name }}</span>
         <span v-if="billingStore.isPastDue" class="ml-2 rounded bg-yellow-100 px-2 py-0.5 text-xs text-yellow-800">{{ $t('plans.pastDue') }}</span>
         <span v-if="billingStore.isSuspended" class="ml-2 rounded bg-red-100 px-2 py-0.5 text-xs text-red-800">{{ $t('plans.suspended') }}</span>
@@ -93,14 +93,14 @@ const upgrade = async (plan) => {
     </div>
 
     <!-- Voucher code input -->
-    <div class="mt-4 rounded-lg border bg-white p-4 shadow-sm">
-      <label class="block text-sm font-medium text-gray-700">{{ $t('plans.voucherLabel') }}</label>
+    <div class="mt-4 rounded-lg border bg-white dark:bg-secondary-800 p-4 shadow-sm">
+      <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ $t('plans.voucherLabel') }}</label>
       <div class="mt-2 flex items-center gap-2">
         <input
           v-model="voucherCode"
           type="text"
           :placeholder="$t('plans.voucherPlaceholder')"
-          class="w-full max-w-xs rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500"
+          class="w-full max-w-xs rounded-md border border-gray-300 dark:border-gray-600 px-3 py-2 text-sm focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:bg-secondary-700 dark:text-gray-200"
           @keyup.enter="checkVoucher"
         />
         <button
@@ -111,7 +111,7 @@ const upgrade = async (plan) => {
         </button>
         <button
           v-if="voucherStatus"
-          class="text-sm text-gray-500 hover:text-gray-700"
+          class="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
           @click="clearVoucher">
           {{ $t('plans.clear') }}
         </button>
@@ -135,13 +135,13 @@ const upgrade = async (plan) => {
           'ring-2 ring-primary-500': isCurrentPlan(plan),
           'opacity-60': !plan.isActive
         }"
-        class="rounded-lg border bg-white p-6 shadow-sm">
-        <h3 class="text-lg font-semibold text-gray-900">{{ plan.name }}</h3>
-        <p class="mt-1 text-sm text-gray-500">{{ plan.description }}</p>
-        <p class="mt-4 text-3xl font-bold text-gray-900">{{ formatPrice(plan.priceCents) }}</p>
-        <p v-if="plan.priceCents > 0" class="text-sm text-gray-500">{{ $t('plans.perMonth') }}</p>
+        class="rounded-lg border bg-white dark:bg-secondary-800 p-6 shadow-sm">
+        <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100">{{ plan.name }}</h3>
+        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">{{ plan.description }}</p>
+        <p class="mt-4 text-3xl font-bold text-gray-900 dark:text-gray-100">{{ formatPrice(plan.priceCents) }}</p>
+        <p v-if="plan.priceCents > 0" class="text-sm text-gray-500 dark:text-gray-400">{{ $t('plans.perMonth') }}</p>
 
-        <ul class="mt-6 space-y-3 text-sm text-gray-600">
+        <ul class="mt-6 space-y-3 text-sm text-gray-600 dark:text-gray-400">
           <li class="flex items-center">
             <font-awesome-icon icon="fa-solid fa-box" class="mr-2 w-4 text-primary-500" />
             {{ $t('plans.maxApplications', { count: plan.maxApplications }) }}
@@ -176,7 +176,7 @@ const upgrade = async (plan) => {
           v-if="!authStore.isAdmin"
           :disabled="isCurrentPlan(plan) || upgrading || !plan.isActive"
           :class="{
-            'bg-gray-200 text-gray-500 cursor-not-allowed': isCurrentPlan(plan),
+            'bg-gray-200 dark:bg-gray-600 text-gray-500 dark:text-gray-400 cursor-not-allowed': isCurrentPlan(plan),
             'bg-primary-600 hover:bg-primary-700 text-white': !isCurrentPlan(plan),
             'opacity-50 cursor-not-allowed': upgrading || !plan.isActive
           }"

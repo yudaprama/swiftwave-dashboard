@@ -124,13 +124,13 @@ onImageRegistryCredentialUpdateSuccess(() => {
       <form v-else @submit.prevent="">
         <!--  Name Field   -->
         <div class="mt-4">
-          <label class="block text-sm font-medium text-gray-700" for="url"> URL (example: ghcr.io) </label>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300" for="url"> URL (example: ghcr.io) </label>
           <div class="mt-1">
             <input
               id="url"
               v-model="imageRegitryCredentialDetails.url"
               autocomplete="off"
-              class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+              class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-secondary-800 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
               name="url"
               placeholder="URL"
               type="text" />
@@ -138,14 +138,14 @@ onImageRegistryCredentialUpdateSuccess(() => {
         </div>
         <!-- Username Field -->
         <div class="mt-4">
-          <label class="block text-sm font-medium text-gray-700" for="username"> Image Registry Username</label>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300" for="username"> Image Registry Username</label>
           <div class="mt-1">
             <input
               id="username"
               v-model="imageRegitryCredentialDetails.username"
               @keydown="preventSpaceInput"
               autocomplete="off"
-              class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+              class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-secondary-800 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
               name="username"
               placeholder="Image Registry Username"
               type="text" />
@@ -153,13 +153,13 @@ onImageRegistryCredentialUpdateSuccess(() => {
         </div>
         <!-- Password Field -->
         <div class="mt-4">
-          <label class="block text-sm font-medium text-gray-700" for="password"> Image Registry Password </label>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300" for="password"> Image Registry Password </label>
           <div class="mt-1">
             <input
               id="password"
               v-model="imageRegitryCredentialDetails.password"
               autocomplete="off"
-              class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+              class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-secondary-800 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
               name="password"
               placeholder="Image Registry Password"
               type="text" />

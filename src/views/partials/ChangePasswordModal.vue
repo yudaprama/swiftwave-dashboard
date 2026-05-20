@@ -78,7 +78,7 @@ onPasswordChangeFail((error) => {
           <!-- Username Field -->
           <div class="mt-4">
             <label
-              class="block text-sm font-medium text-gray-700"
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300"
               for="oldPassword">
               {{ $t('partials.oldPassword') }}
             </label>
@@ -87,7 +87,7 @@ onPasswordChangeFail((error) => {
                 id="oldPassword"
                 v-model="passwordDetails.oldPassword"
                 autocomplete="off"
-                class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-secondary-800 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
                 :placeholder="$t('partials.oldPasswordPlaceholder')"
                 type="password" />
             </div>
@@ -95,7 +95,7 @@ onPasswordChangeFail((error) => {
           <!-- Password Field -->
           <div class="mt-4">
             <label
-              class="block text-sm font-medium text-gray-700"
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300"
               for="newPassword">
               {{ $t('partials.newPassword') }}
             </label>
@@ -104,7 +104,7 @@ onPasswordChangeFail((error) => {
                 id="newPassword"
                 v-model="passwordDetails.newPassword"
                 autocomplete="off"
-                class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-secondary-800 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
                 :placeholder="$t('partials.newPasswordPlaceholder')"
                 type="password" />
             </div>

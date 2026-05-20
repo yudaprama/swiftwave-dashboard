@@ -33,8 +33,8 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="flex h-full w-full items-center justify-center bg-[#F9F8F8]">
-    <div class="w-full max-w-md rounded-lg bg-white p-8 shadow-lg">
+  <div class="flex h-full w-full items-center justify-center bg-[#F9F8F8] dark:bg-secondary-900">
+    <div class="w-full max-w-md rounded-lg bg-white p-8 shadow-lg dark:bg-secondary-800">
       <div class="mb-6 text-center">
         <img src="@/assets/images/logo.png" class="mx-auto mb-4 w-14" alt="swiftwave logo" />
         <h1 class="font-prompt text-2xl">{{ $t('login.title') }}</h1>
@@ -42,15 +42,15 @@ onMounted(async () => {
 
       <div v-if="status === 'loading'" class="text-center">
         <div class="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-b-2 border-primary-600"></div>
-        <p class="text-gray-600">{{ $t('verifyEmail.verifying') }}</p>
+        <p class="text-gray-600 dark:text-gray-400">{{ $t('verifyEmail.verifying') }}</p>
       </div>
 
       <div v-else-if="status === 'success'" class="text-center">
         <div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
           <font-awesome-icon icon="fa-solid fa-check" class="text-2xl text-green-600" />
         </div>
-        <h2 class="mb-2 text-xl font-semibold text-gray-900">{{ $t('verifyEmail.successTitle') }}</h2>
-        <p class="mb-6 text-gray-600">{{ message }}</p>
+        <h2 class="mb-2 text-xl font-semibold text-gray-900 dark:text-gray-100">{{ $t('verifyEmail.successTitle') }}</h2>
+        <p class="mb-6 text-gray-600 dark:text-gray-400">{{ message }}</p>
         <RouterLink
           to="/login"
           class="inline-block w-full rounded-md bg-primary-600 px-4 py-2 text-center text-white hover:bg-primary-700">
@@ -62,8 +62,8 @@ onMounted(async () => {
         <div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-100">
           <font-awesome-icon icon="fa-solid fa-xmark" class="text-2xl text-red-600" />
         </div>
-        <h2 class="mb-2 text-xl font-semibold text-gray-900">{{ $t('verifyEmail.failedTitle') }}</h2>
-        <p class="mb-6 text-gray-600">{{ message }}</p>
+        <h2 class="mb-2 text-xl font-semibold text-gray-900 dark:text-gray-100">{{ $t('verifyEmail.failedTitle') }}</h2>
+        <p class="mb-6 text-gray-600 dark:text-gray-400">{{ message }}</p>
         <RouterLink
           to="/login"
           class="inline-block w-full rounded-md bg-primary-600 px-4 py-2 text-center text-white hover:bg-primary-700">

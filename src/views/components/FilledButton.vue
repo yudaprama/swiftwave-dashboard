@@ -37,17 +37,16 @@ const isDisabled = computed(() => {
 <template>
   <button
     :class="{
-      'bg-primary-600 hover:bg-primary-600/80 focus-visible:outline-primary-600': type === 'primary',
-      'bg-secondary-600 hover:bg-secondary-600/80 focus-visible:outline-secondary-600': type === 'secondary',
-      'bg-success-600 hover:bg-success-600/80 focus-visible:outline-success-600': type === 'success',
-      'bg-warning-600 hover:bg-warning-600/80 focus-visible:outline-warning-600': type === 'warning',
-      'bg-danger-600 hover:bg-danger-600/80 focus-visible:outline-danger-600': type === 'danger',
-      'bg-info-600 hover:bg-info-600/80 focus-visible:outline-info-600': type === 'info',
-      'text-black-500 bg-secondary-100 font-medium hover:bg-secondary-200 focus-visible:outline-secondary-400':
+      'bg-primary-600 hover:bg-primary-600/80 focus-visible:outline-primary-600 dark:bg-primary-500 dark:hover:bg-primary-500/80': type === 'primary',
+      'bg-secondary-600 hover:bg-secondary-600/80 focus-visible:outline-secondary-600 dark:bg-secondary-500 dark:hover:bg-secondary-500/80': type === 'secondary',
+      'bg-success-600 hover:bg-success-600/80 focus-visible:outline-success-600 dark:bg-success-500 dark:hover:bg-success-500/80': type === 'success',
+      'bg-warning-600 hover:bg-warning-600/80 focus-visible:outline-warning-600 dark:bg-warning-500 dark:hover:bg-warning-500/80': type === 'warning',
+      'bg-danger-600 hover:bg-danger-600/80 focus-visible:outline-danger-600 dark:bg-danger-500 dark:hover:bg-danger-500/80': type === 'danger',
+      'bg-info-600 hover:bg-info-600/80 focus-visible:outline-info-600 dark:bg-info-500 dark:hover:bg-info-500/80': type === 'info',
+      'text-black-500 bg-secondary-100 font-medium hover:bg-secondary-200 focus-visible:outline-secondary-400 dark:bg-secondary-700 dark:text-gray-200 dark:hover:bg-secondary-600':
         type === 'ghost',
       'font-semibold text-white': type !== 'ghost',
       'cursor-not-allowed opacity-50': disabled,
-      'hover:bg-[type]-600/80': !disabled,
       'cursor-progress': loading,
       'px-3 py-2 text-sm': !slim,
       'px-2 py-1 text-xs': slim,
@@ -76,11 +75,8 @@ const isDisabled = computed(() => {
         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
         fill="currentColor"></path>
     </svg>
-    <!-- linear wave spinner -->
 
     <!-- text -->
     <slot></slot>
   </button>
 </template>
-
-<style scoped></style>

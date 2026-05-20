@@ -259,14 +259,14 @@ onDisableTotpError((err) => {
     <template v-slot:header>{{ $t('users.totp2fa') }}</template>
     <template v-slot:body>
       <div class="mt-6 flex flex-col items-center">
-        <p class="font-medium">{{ $t('users.scanQr') }}</p>
+        <p class="font-medium dark:text-gray-100">{{ $t('users.scanQr') }}</p>
         <VueQrcode class="my-4" :value="enableTotpRequest.totpProvisioningUri" />
-        <p class="font-medium">{{ $t('users.orPasteSecret') }}</p>
+        <p class="font-medium dark:text-gray-100">{{ $t('users.orPasteSecret') }}</p>
         <Code :show-copy-button="false">{{ enableTotpRequest.totpSecret }}</Code>
       </div>
       <Divider />
       <div class="flex w-full flex-col items-center gap-4">
-        <p class="font-medium">{{ $t('users.enterTotp') }}</p>
+        <p class="font-medium dark:text-gray-100">{{ $t('users.enterTotp') }}</p>
         <v-otp-input
           :num-inputs="6"
           input-classes="otp-input"
@@ -287,7 +287,7 @@ onDisableTotpError((err) => {
     </template>
   </ModalDialog>
 
-  <section class="mx-auto w-full max-w-7xl">
+  <section class="mx-auto w-full max-w-7xl px-2 md:px-0">
     <!-- Modal for new user -->
     <ModalDialog :close-modal="closeModal" :is-open="isModalOpen">
       <template v-slot:header>{{ $t('users.createTitle') }}</template>
@@ -296,13 +296,13 @@ onDisableTotpError((err) => {
         <form @submit.prevent="createUser">
           <!-- Email Field -->
           <div class="mt-4">
-            <label class="block text-sm font-medium text-gray-700" for="email"> {{ $t('common.email') }} </label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300" for="email"> {{ $t('common.email') }} </label>
             <div class="mt-1">
               <input
                 id="email"
                 v-model="newUser.email"
                 autocomplete="email"
-                class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-secondary-800 dark:text-gray-100 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
                 name="email"
                 :placeholder="$t('common.email')"
                 type="email" />
@@ -310,13 +310,13 @@ onDisableTotpError((err) => {
           </div>
           <!-- Password Field -->
           <div class="mt-4">
-            <label class="block text-sm font-medium text-gray-700" for="password"> {{ $t('common.password') }} </label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300" for="password"> {{ $t('common.password') }} </label>
             <div class="mt-1">
               <input
                 id="password"
                 v-model="newUser.password"
                 autocomplete="new-password"
-                class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-secondary-800 dark:text-gray-100 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
                 name="password"
                 :placeholder="$t('common.password')"
                 type="password" />

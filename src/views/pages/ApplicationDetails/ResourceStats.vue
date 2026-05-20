@@ -96,7 +96,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <section class="mx-auto w-full">
+  <section class="mx-auto w-full px-2 md:px-0">
     <div class="flex h-full w-full flex-col">
       <!-- Top Page bar   -->
       <PageBar>
@@ -104,7 +104,7 @@ onMounted(() => {
         <template v-slot:subtitle>{{ $t('applicationDetails.monitorResourceAnalytics') }}</template>
         <template v-slot:buttons>
           <select
-            class="block rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+            class="block rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm dark:border-gray-600 dark:bg-secondary-800 dark:text-gray-200"
             v-model="statsTimeframe"
             @change="loadResourceAnalytics">
             <option value="last_1_hour">{{ $t('applicationDetails.last1Hour') }}</option>

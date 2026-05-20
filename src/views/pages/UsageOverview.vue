@@ -45,8 +45,8 @@ const formatDate = (date) => {
 </script>
 
 <template>
-  <div class="p-6">
-    <h1 class="text-2xl font-bold text-gray-900">{{ $t('usage.title') }}</h1>
+  <div class="p-6 px-2 md:px-6">
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">{{ $t('usage.title') }}</h1>
 
     <div v-if="billingStore.currentOverage.overageMemoryMb > 0" class="mt-4 rounded-lg border-l-4 border-yellow-400 bg-yellow-50 p-4">
       <p class="text-sm text-yellow-800">
@@ -55,24 +55,24 @@ const formatDate = (date) => {
       </p>
     </div>
 
-    <div class="mt-6 rounded-lg border bg-white p-6 shadow-sm">
-      <h2 class="text-lg font-semibold text-gray-900">{{ $t('usage.resourceQuotas') }}</h2>
+    <div class="mt-6 rounded-lg border bg-white dark:bg-secondary-800 p-6 shadow-sm">
+      <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100">{{ $t('usage.resourceQuotas') }}</h2>
       <div class="mt-4 space-y-4">
         <div v-for="item in quotaItems" :key="item.key">
           <div v-if="billingStore.quotaUsage[item.key]" class="flex items-center gap-4">
-            <div class="flex w-48 items-center gap-2 text-sm text-gray-600">
+            <div class="flex w-48 items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
               <font-awesome-icon :icon="item.icon" class="w-4" />
               {{ item.label }}
             </div>
             <div class="flex-1">
-              <div class="h-3 w-full rounded-full bg-gray-100">
+              <div class="h-3 w-full rounded-full bg-gray-100 dark:bg-gray-700">
                 <div
                   :class="barColor(usagePercent(billingStore.quotaUsage[item.key]))"
                   :style="{ width: usagePercent(billingStore.quotaUsage[item.key]) + '%' }"
                   class="h-3 rounded-full transition-all"></div>
               </div>
             </div>
-            <div class="w-24 text-right text-sm text-gray-600">
+            <div class="w-24 text-right text-sm text-gray-600 dark:text-gray-400">
               {{ billingStore.quotaUsage[item.key].current }} / {{ billingStore.quotaUsage[item.key].limit }}
             </div>
           </div>
@@ -80,13 +80,13 @@ const formatDate = (date) => {
       </div>
     </div>
 
-    <div class="mt-6 rounded-lg border bg-white shadow-sm">
-      <div class="border-b p-6 pb-3">
-        <h2 class="text-lg font-semibold text-gray-900">{{ $t('usage.usageHistory') }}</h2>
+    <div class="mt-6 rounded-lg border bg-white dark:bg-secondary-800 shadow-sm">
+      <div class="border-b dark:border-gray-700 p-6 pb-3">
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100">{{ $t('usage.usageHistory') }}</h2>
       </div>
       <div class="overflow-x-auto">
         <table class="w-full text-left text-sm">
-          <thead class="bg-gray-50 text-xs uppercase text-gray-500">
+          <thead class="bg-gray-50 dark:bg-secondary-900 text-xs uppercase text-gray-500 dark:text-gray-400">
             <tr>
               <th class="px-4 py-3">{{ $t('usage.historyDate') }}</th>
               <th class="px-4 py-3">{{ $t('usage.historyApps') }}</th>
@@ -98,7 +98,7 @@ const formatDate = (date) => {
             </tr>
           </thead>
           <tbody>
-            <tr v-for="record in billingStore.usageHistory" :key="record.id" class="border-b">
+            <tr v-for="record in billingStore.usageHistory" :key="record.id" class="border-b dark:border-gray-700">
               <td class="px-4 py-3">{{ formatDate(record.createdAt) }}</td>
               <td class="px-4 py-3">{{ record.applications }}</td>
               <td class="px-4 py-3">{{ record.domains }}</td>
@@ -109,11 +109,11 @@ const formatDate = (date) => {
                 <span v-if="record.overageMemoryMb > 0" class="text-red-600">
                   {{ record.overageMemoryMb }} MB
                 </span>
-                <span v-else class="text-gray-400">-</span>
+                <span v-else class="text-gray-400 dark:text-gray-500">-</span>
               </td>
             </tr>
             <tr v-if="billingStore.usageHistory.length === 0">
-              <td colspan="7" class="px-4 py-8 text-center text-gray-500">{{ $t('usage.noData') }}</td>
+              <td colspan="7" class="px-4 py-8 text-center text-gray-500 dark:text-gray-400">{{ $t('usage.noData') }}</td>
             </tr>
           </tbody>
         </table>

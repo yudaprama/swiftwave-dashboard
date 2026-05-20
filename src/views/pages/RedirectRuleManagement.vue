@@ -171,7 +171,7 @@ const openRedirectRuleRegistrationModal = () => {
     ref="createDomainModalRef"
     :callback-on-create="refetchDomains"
     :callback-on-pop="openRedirectRuleRegistrationModal" />
-  <section class="mx-auto w-full max-w-7xl">
+  <section class="mx-auto w-full max-w-7xl px-2 md:px-0">
     <!-- Modal for create redirect rules -->
     <ModalDialog :close-modal="closeModal" :is-open="isModalOpen">
       <template v-slot:header>{{ $t('redirectRules.createTitle') }}</template>
@@ -180,10 +180,10 @@ const openRedirectRuleRegistrationModal = () => {
         <form @submit.prevent="createRedirectRule">
           <!-- Domains -->
           <div class="mt-4">
-            <label class="block text-sm font-medium text-gray-700" for="domain">{{ $t('redirectRules.selectDomainProtocol') }}</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300" for="domain">{{ $t('redirectRules.selectDomainProtocol') }}</label>
             <div class="mt-2 flex space-x-2">
               <select
-                class="block w-4/12 rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                class="block w-4/12 rounded-md border-gray-300 dark:border-gray-600 dark:bg-secondary-800 dark:text-gray-100 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
                 v-model="newRedirectRuleDetails.protocol">
                 <option value="http">HTTP</option>
                 <option value="https">HTTPS</option>
@@ -191,12 +191,12 @@ const openRedirectRuleRegistrationModal = () => {
               <select
                 id="domain"
                 v-model="newRedirectRuleDetails.domainId"
-                class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
+                class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-secondary-800 dark:text-gray-100 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
                 <option value="0">{{ $t('redirectRules.selectDomain') }}</option>
                 <option v-for="domain in domains" :key="domain.id" :value="domain.id">{{ domain.name }}</option>
               </select>
             </div>
-            <p class="mt-2 flex items-center text-sm">
+            <p class="mt-2 flex items-center text-sm dark:text-gray-400">
               {{ $t('redirectRules.needDomain') }}
               <a @click="openNewDomainModal" class="ml-1.5 cursor-pointer font-bold text-primary-600"
                 >{{ $t('redirectRules.registerNewDomain') }}</a
@@ -206,13 +206,13 @@ const openRedirectRuleRegistrationModal = () => {
 
           <!--  Redirected URL   -->
           <div class="mt-4">
-            <label class="block text-sm font-medium text-gray-700" for="name">{{ $t('redirectRules.redirectedUrl') }}</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300" for="name">{{ $t('redirectRules.redirectedUrl') }}</label>
             <div class="mt-1">
               <input
                 id="name"
                 v-model="newRedirectRuleDetails.redirectURL"
                 autocomplete="off"
-                class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-secondary-800 dark:text-gray-100 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
                 name="name"
                 :placeholder="$t('redirectRules.redirectedUrlPlaceholder')"
                 type="text" />
@@ -263,7 +263,7 @@ const openRedirectRuleRegistrationModal = () => {
       <template v-slot:body>
         <tr v-for="redirectRule in redirectRules" :key="redirectRule.id">
           <TableRow align="left">
-            <div class="text-sm font-medium text-gray-900">{{ redirectRule.id }}</div>
+            <div class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ redirectRule.id }}</div>
           </TableRow>
           <TableRow align="center">
             <Badge v-if="redirectRule.status === 'pending'" type="warning">{{ $t('redirectRules.pending') }}</Badge>
@@ -272,7 +272,7 @@ const openRedirectRuleRegistrationModal = () => {
             <Badge v-else-if="redirectRule.status === 'deleting'" type="danger">{{ $t('redirectRules.deleting') }}</Badge>
           </TableRow>
           <TableRow align="center">
-            <div class="text-sm text-gray-900">
+            <div class="text-sm text-gray-900 dark:text-gray-100">
               <a :href="redirectRuleFrontURL(redirectRule)" target="_blank">{{ redirectRuleFrontURL(redirectRule) }}</a
               >&nbsp;&nbsp; <font-awesome-icon icon="fa-solid fa-arrow-right" />&nbsp;&nbsp;
               <a :href="redirectRule.redirectURL" target="_blank">{{ redirectRule.redirectURL }}</a>

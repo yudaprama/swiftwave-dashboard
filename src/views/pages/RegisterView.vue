@@ -38,7 +38,7 @@ const register = async () => {
 
 <template>
   <div class="flex h-full w-full flex-row">
-    <div class="relative flex h-full min-w-[60vw] select-none flex-col items-center bg-[#F9F8F8] pt-52">
+    <div class="relative flex h-full min-w-[60vw] select-none flex-col items-center bg-[#F9F8F8] pt-52 dark:bg-secondary-900">
       <div class="flex w-fit flex-row items-center justify-center gap-2">
         <img src="@/assets/images/logo.png" class="w-14" alt="swiftwave logo" />
         <div class="flex flex-col items-start justify-between">
@@ -72,39 +72,39 @@ const register = async () => {
         </div>
         <form v-if="!registrationStatus.success" class="space-y-4" @keydown.enter.prevent="register">
           <div>
-            <label class="block text-sm font-medium leading-6 text-gray-900" for="reg-email">{{ $t('register.email') }}</label>
+            <label class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100" for="reg-email">{{ $t('register.email') }}</label>
             <div class="mt-1">
               <input
                 id="reg-email"
                 v-model="email"
                 autocomplete="email"
-                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-xs ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-xs ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 dark:bg-secondary-700 dark:text-gray-200 dark:ring-gray-600"
                 :placeholder="$t('register.emailPlaceholder')"
                 required
                 type="email" />
             </div>
           </div>
           <div>
-            <label class="block text-sm font-medium leading-6 text-gray-900" for="reg-password">{{ $t('register.password') }}</label>
+            <label class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100" for="reg-password">{{ $t('register.password') }}</label>
             <div class="mt-1">
               <input
                 id="reg-password"
                 v-model="password"
                 autocomplete="new-password"
-                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-xs ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-xs ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 dark:bg-secondary-700 dark:text-gray-200 dark:ring-gray-600"
                 :placeholder="$t('register.passwordPlaceholder')"
                 required
                 type="password" />
             </div>
           </div>
           <div>
-            <label class="block text-sm font-medium leading-6 text-gray-900" for="reg-confirm-password">{{ $t('register.confirmPassword') }}</label>
+            <label class="block text-sm font-medium leading-6 text-gray-900 dark:text-gray-100" for="reg-confirm-password">{{ $t('register.confirmPassword') }}</label>
             <div class="mt-1">
               <input
                 id="reg-confirm-password"
                 v-model="confirmPassword"
                 autocomplete="new-password"
-                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-xs ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-xs ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 dark:bg-secondary-700 dark:text-gray-200 dark:ring-gray-600"
                 :placeholder="$t('register.confirmPasswordPlaceholder')"
                 required
                 type="password" />
@@ -113,13 +113,13 @@ const register = async () => {
           <div class="py-2">
             <FilledButton :click="register" class="w-full">{{ $t('register.createAccount') }}</FilledButton>
           </div>
-          <p class="text-center text-sm text-gray-500">
+          <p class="text-center text-sm text-gray-500 dark:text-gray-400">
             {{ $t('register.alreadyHaveAccount') }}
             <RouterLink to="/login" class="font-semibold text-primary-600 hover:text-primary-500">{{ $t('register.signIn') }}</RouterLink>
           </p>
         </form>
         <div v-else class="text-center">
-          <p class="text-gray-600">
+          <p class="text-gray-600 dark:text-gray-400">
             <RouterLink to="/login" class="font-semibold text-primary-600 hover:text-primary-500">{{ $t('register.goToLogin') }}</RouterLink>
           </p>
         </div>

@@ -452,22 +452,22 @@ defineExpose({
         <form @submit.prevent="">
           <!--   Auth Type     -->
           <div class="mt-4">
-            <label class="block text-sm font-medium text-gray-700" for="name"> Authentication Type </label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300" for="name"> Authentication Type </label>
             <div class="mt-1">
               <select
                 v-model="selectedAuthenticationType"
-                class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
+                class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-secondary-800 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
                 <option value="basic">Basic Authentication</option>
               </select>
             </div>
           </div>
           <!--  User List Field   -->
           <div class="mt-4" v-if="selectedAuthenticationType === 'basic'">
-            <label class="block text-sm font-medium text-gray-700" for="name"> Select User List </label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300" for="name"> Select User List </label>
             <div class="mt-1">
               <select
                 v-model="selectedACLIdForSetupAuthentication"
-                class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
+                class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-secondary-800 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
                 <option :value="acl.id" :key="acl.id" v-for="acl in appBasicAuthAccessControlLists">
                   {{ acl.name }}
                 </option>

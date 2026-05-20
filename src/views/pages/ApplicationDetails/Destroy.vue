@@ -16,7 +16,7 @@ function deleteApplicationWithConfirmation() {
 
 <template>
   <DeleteApplicationsModal ref="deleteApplicationsModal" :application-ids="[router.currentRoute.value.params.id]" />
-  <div class="w-full rounded-md border border-warning-200 bg-warning-100 p-2">
+  <div class="w-full rounded-md border border-warning-200 dark:border-warning-700 bg-warning-100 dark:bg-warning-900/30 p-2 dark:text-warning-300">
     {{ $t('applicationDetails.destroyWarning') }}
   </div>
   <div class="mt-3 flex flex-col items-start">

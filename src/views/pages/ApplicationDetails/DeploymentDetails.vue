@@ -151,7 +151,7 @@ onCancelDeploymentError((err) => {
   <div v-if="deploymentLoading">
     <p>{{ $t('common.loading') }}</p>
   </div>
-  <section v-else class="mx-auto w-full max-w-7xl text-sm">
+  <section v-else class="mx-auto w-full max-w-7xl text-sm px-2 md:px-0">
     <div class="flex items-center gap-2">
       <p class="text-base font-bold">
         <font-awesome-icon icon="fa-solid fa-signal" />
@@ -176,11 +176,11 @@ onCancelDeploymentError((err) => {
         {{ camelCaseToSpacedCapitalized(deployment.status) }}
       </Badge>
     </div>
-    <div class="mt-2 flex items-center gap-2 font-normal text-gray-800">
+    <div class="mt-2 flex items-center gap-2 font-normal text-gray-800 dark:text-gray-200">
       <font-awesome-icon icon="fa-solid fa-fingerprint" />
       <p>{{ deployment.id }}</p>
     </div>
-    <div class="mt-2 flex items-center gap-2 text-gray-800">
+    <div class="mt-2 flex items-center gap-2 text-gray-800 dark:text-gray-200">
       <font-awesome-icon v-if="deployment.upstreamType === 'git'" icon="fa-solid fa-code-branch" />
       <font-awesome-icon v-if="deployment.upstreamType === 'image'" icon="fa-brands fa-docker" />
       <font-awesome-icon v-if="deployment.upstreamType === 'sourceCode'" icon="fa-solid fa-upload" />
@@ -192,7 +192,7 @@ onCancelDeploymentError((err) => {
       <p v-if="deployment.upstreamType === 'image'">{{ deployment.dockerImage }}</p>
       <p v-if="deployment.upstreamType === 'sourceCode'">{{ $t('applicationDetails.sourceCodeUploaded') }}</p>
     </div>
-    <div class="mt-2 flex items-center gap-2 text-gray-800" v-if="deployment.upstreamType === 'git'">
+    <div class="mt-2 flex items-center gap-2 text-gray-800 dark:text-gray-200" v-if="deployment.upstreamType === 'git'">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="24"
@@ -218,11 +218,11 @@ onCancelDeploymentError((err) => {
       </p>
       <p v-if="!(deployment.commitHash && deployment.commitMessage)" class="italic">{{ $t('applicationDetails.notAvailable') }}</p>
     </div>
-    <div class="mt-2 flex items-center gap-2 font-normal text-gray-800">
+    <div class="mt-2 flex items-center gap-2 font-normal text-gray-800 dark:text-gray-200">
       <font-awesome-icon icon="fa-solid fa-calendar-days" />
       <p>{{ deployedOn }}</p>
     </div>
-    <div class="mb-2 mt-2 flex items-center gap-2 font-normal text-gray-800" v-if="buildArgs.length !== 0">
+    <div class="mb-2 mt-2 flex items-center gap-2 font-normal text-gray-800 dark:text-gray-200" v-if="buildArgs.length !== 0">
       <font-awesome-icon icon="fa-solid fa-hammer" />
       <p><span class="font-medium">{{ $t('applicationDetails.buildArguments') }}</span> <span v-html="buildArgs"></span></p>
     </div>

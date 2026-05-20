@@ -110,13 +110,13 @@ const statusColor = computed(() => {
 
 <template>
   <div class="p-6">
-    <h1 class="mb-6 text-2xl font-bold text-gray-900">{{ t('testimonial.title') }}</h1>
+    <h1 class="mb-6 text-2xl font-bold text-gray-900 dark:text-gray-100">{{ t('testimonial.title') }}</h1>
 
-    <div v-if="loading" class="text-gray-500">{{ t('common.loading') }}</div>
+    <div v-if="loading" class="text-gray-500 dark:text-gray-400">{{ t('common.loading') }}</div>
 
     <!-- Already submitted -->
     <div v-else-if="submitted && existingTestimonial" class="space-y-4">
-      <div class="rounded-lg border bg-white p-6 shadow-sm">
+      <div class="rounded-lg border bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-secondary-800">
         <div class="mb-3 flex items-center justify-between">
           <div class="flex items-center gap-2">
             <span class="text-lg">
@@ -126,11 +126,11 @@ const statusColor = computed(() => {
               {{ statusLabel }}
             </span>
           </div>
-          <span class="text-sm text-gray-500">
+          <span class="text-sm text-gray-500 dark:text-gray-400">
             {{ new Date(existingTestimonial.createdAt).toLocaleDateString() }}
           </span>
         </div>
-        <p class="text-gray-700">{{ existingTestimonial.text }}</p>
+        <p class="text-gray-700 dark:text-gray-300">{{ existingTestimonial.text }}</p>
       </div>
 
       <!-- Voucher code -->
@@ -142,12 +142,12 @@ const statusColor = computed(() => {
     </div>
 
     <!-- Submit form -->
-    <div v-else class="rounded-lg border bg-white p-6 shadow-sm">
-      <p class="mb-6 text-gray-600">{{ t('testimonial.description') }}</p>
+    <div v-else class="rounded-lg border bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-secondary-800">
+      <p class="mb-6 text-gray-600 dark:text-gray-400">{{ t('testimonial.description') }}</p>
 
       <!-- Star rating -->
       <div class="mb-6">
-        <label class="mb-2 block text-sm font-medium text-gray-700">{{ t('testimonial.ratingLabel') }}</label>
+        <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">{{ t('testimonial.ratingLabel') }}</label>
         <div class="flex gap-1">
           <button
             v-for="star in 5"
@@ -165,11 +165,11 @@ const statusColor = computed(() => {
 
       <!-- Text -->
       <div class="mb-6">
-        <label class="mb-2 block text-sm font-medium text-gray-700">{{ t('testimonial.textLabel') }}</label>
+        <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">{{ t('testimonial.textLabel') }}</label>
         <textarea
           v-model="text"
           rows="4"
-          class="w-full rounded-lg border border-gray-300 p-3 text-sm focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
+          class="w-full rounded-lg border border-gray-300 p-3 text-sm focus:border-primary-500 focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-secondary-900 dark:text-gray-200"
           :placeholder="t('testimonial.textPlaceholder')"></textarea>
       </div>
 

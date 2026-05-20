@@ -106,7 +106,7 @@ const openStackFileForInstall = (stack) => {
     <DotLoader />
   </div>
   <!-- Main -->
-  <section v-else class="flex w-full flex-row items-start gap-2 overflow-hidden">
+  <section v-else class="flex w-full flex-row items-start gap-2 overflow-hidden px-2 md:px-0">
     <div class="navbar">
       <input
         class="block w-full rounded-md border-gray-300 text-sm shadow-xs focus:border-primary-500 focus:ring-primary-500"
@@ -155,19 +155,19 @@ const openStackFileForInstall = (stack) => {
           @click="() => chooseApp(app)"
           v-for="app in appsShown"
           :key="app.id"
-          class="flex h-[200px] cursor-pointer flex-col overflow-hidden rounded-xl border border-secondary-300 p-2 hover:border-primary-500 hover:shadow-xs">
+          class="flex h-[200px] cursor-pointer flex-col overflow-hidden rounded-xl border border-secondary-300 dark:border-gray-600 p-2 hover:border-primary-500 hover:shadow-xs">
           <!--    Header    -->
-          <div class="flex flex-row gap-3 border-b pb-2">
+          <div class="flex flex-row gap-3 border-b dark:border-gray-700 pb-2">
             <div class="h-12 w-12 rounded-md p-1.5">
               <img :src="app.logo" class="h-full w-full" :alt="app.title" />
             </div>
             <div>
-              <p class="text-base font-semibold text-gray-800">{{ app.title }}</p>
+              <p class="text-base font-semibold text-gray-800 dark:text-gray-200">{{ app.title }}</p>
               <p class="text-sm">{{ app.category }}</p>
             </div>
           </div>
           <!--    Description Body    -->
-          <div class="mt-2 h-full overflow-hidden text-ellipsis p-1 text-justify text-sm text-secondary-800">
+          <div class="mt-2 h-full overflow-hidden text-ellipsis p-1 text-justify text-sm text-secondary-800 dark:text-gray-300">
             {{ app.description }}
           </div>
         </div>
@@ -208,7 +208,7 @@ const openStackFileForInstall = (stack) => {
 }
 
 .navbar {
-  @apply flex h-min min-w-[200px] max-w-[200px] select-none flex-col flex-wrap gap-1 rounded-lg border border-secondary-300 p-1.5;
+  @apply flex h-min min-w-[200px] max-w-[200px] select-none flex-col flex-wrap gap-1 rounded-lg border border-secondary-300 dark:border-gray-600 p-1.5;
 }
 
 .nav-element {
@@ -216,6 +216,6 @@ const openStackFileForInstall = (stack) => {
 }
 
 .nav-active {
-  @apply bg-secondary-100 font-medium text-black;
+  @apply bg-secondary-100 dark:bg-secondary-700 font-medium text-black dark:text-white;
 }
 </style>

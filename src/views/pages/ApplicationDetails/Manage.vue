@@ -125,7 +125,7 @@ const openWebConsole = () => {
     <div class="flex w-full flex-row items-center justify-between rounded-md p-2">
       <div>
         <p class="inline-flex items-center gap-2 text-lg font-medium">{{ $t('applicationDetails.sshInApplication') }}</p>
-        <p class="text-sm text-secondary-700">{{ $t('applicationDetails.sshInApplicationHint') }}</p>
+        <p class="text-sm text-secondary-700 dark:text-gray-400">{{ $t('applicationDetails.sshInApplicationHint') }}</p>
       </div>
       <FilledButton type="primary" @click="openWebConsole">
         <font-awesome-icon icon="fa-solid fa-terminal" class="mr-2" />
@@ -135,7 +135,7 @@ const openWebConsole = () => {
     <div class="flex w-full flex-row items-center justify-between rounded-md p-2">
       <div>
         <p class="inline-flex items-center gap-2 text-lg font-medium">{{ $t('applicationDetails.restartApplication') }}</p>
-        <p class="text-sm text-secondary-700">
+        <p class="text-sm text-secondary-700 dark:text-gray-400">
           {{ $t('applicationDetails.restartApplicationHint') }}
         </p>
       </div>
@@ -148,7 +148,7 @@ const openWebConsole = () => {
     <div class="flex w-full flex-row items-center justify-between rounded-md p-2">
       <div>
         <p class="inline-flex items-center gap-2 text-lg font-medium">{{ $t('applicationDetails.redeployApplication') }}</p>
-        <p class="text-sm text-secondary-700">{{ $t('applicationDetails.redeployApplicationHint') }}</p>
+        <p class="text-sm text-secondary-700 dark:text-gray-400">{{ $t('applicationDetails.redeployApplicationHint') }}</p>
       </div>
       <FilledButton type="primary" @click="rebuildApplicationWithConfirmation" :loading="rebuildApplicationLoading">
         <font-awesome-icon icon="fa-solid fa-hammer" class="mr-2" />

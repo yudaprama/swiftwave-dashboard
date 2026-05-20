@@ -69,7 +69,7 @@ const statusBadgeColor = (status) => {
 
 <template>
   <div class="p-6">
-    <h1 class="mb-6 text-2xl font-bold text-gray-900">{{ t('testimonial.managementTitle') }}</h1>
+    <h1 class="mb-6 text-2xl font-bold text-gray-900 dark:text-gray-100">{{ t('testimonial.managementTitle') }}</h1>
 
     <!-- Filter -->
     <div class="mb-4 flex gap-2">
@@ -77,15 +77,15 @@ const statusBadgeColor = (status) => {
         v-for="s in ['pending', 'approved', 'rejected']"
         :key="s"
         class="rounded-lg px-4 py-2 text-sm font-medium transition-colors"
-        :class="statusFilter === s ? 'bg-primary-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
+        :class="statusFilter === s ? 'bg-primary-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-secondary-700 dark:text-gray-300 dark:hover:bg-secondary-600'"
         @click="statusFilter = s">
         {{ s.charAt(0).toUpperCase() + s.slice(1) }}
       </button>
     </div>
 
-    <div v-if="loading" class="text-gray-500">{{ t('common.loading') }}</div>
+    <div v-if="loading" class="text-gray-500 dark:text-gray-400">{{ t('common.loading') }}</div>
 
-    <div v-else-if="testimonials.length === 0" class="text-gray-500">
+    <div v-else-if="testimonials.length === 0" class="text-gray-500 dark:text-gray-400">
       {{ t('testimonial.noTestimonials') }}
     </div>
 
@@ -93,7 +93,7 @@ const statusBadgeColor = (status) => {
       <div
         v-for="item in testimonials"
         :key="item.id"
-        class="rounded-lg border bg-white p-5 shadow-sm">
+        class="rounded-lg border bg-white p-5 shadow-sm dark:border-gray-700 dark:bg-secondary-800">
         <div class="mb-3 flex items-center justify-between">
           <div class="flex items-center gap-3">
             <span class="text-lg">{{ '★'.repeat(item.rating) }}{{ '☆'.repeat(5 - item.rating) }}</span>
@@ -101,9 +101,9 @@ const statusBadgeColor = (status) => {
               {{ item.status }}
             </span>
           </div>
-          <span class="text-sm text-gray-500">{{ formatDate(item.createdAt) }}</span>
+          <span class="text-sm text-gray-500 dark:text-gray-400">{{ formatDate(item.createdAt) }}</span>
         </div>
-        <p class="mb-4 text-gray-700">{{ item.text }}</p>
+        <p class="mb-4 text-gray-700 dark:text-gray-300">{{ item.text }}</p>
         <div v-if="item.status === 'pending'" class="flex gap-2">
           <button
             class="rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700"

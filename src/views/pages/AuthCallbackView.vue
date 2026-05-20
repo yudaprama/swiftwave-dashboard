@@ -41,8 +41,8 @@ onMounted(async () => {
   <div class="flex h-full w-full items-center justify-center px-6">
     <div
       :class="{
-        'border-red-500 bg-red-50 text-red-800': !status.success,
-        'border-green-500 bg-green-50 text-green-800': status.success
+        'border-red-500 bg-red-50 text-red-800 dark:bg-red-900/30 dark:text-red-300': !status.success,
+        'border-green-500 bg-green-50 text-green-800 dark:bg-green-900/30 dark:text-green-300': status.success
       }"
       class="w-full max-w-md rounded-sm border-s-4 p-4 text-center font-medium"
       role="alert">
