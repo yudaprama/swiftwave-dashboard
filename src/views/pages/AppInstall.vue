@@ -18,8 +18,11 @@ import CreateDomainModal from '@/views/partials/CreateDomainModal.vue';
 import OutlinedButton from '@/views/components/OutlinedButton.vue';
 import ServerSelector from '@/views/partials/ServerSelector.vue';
 import { useI18n } from 'vue-i18n'
+import { useConfirmDialog } from '@/composables/useConfirmDialog.js'
+import ConfirmDialog from '@/views/components/ConfirmDialog.vue'
 
 const { t } = useI18n()
+const { isOpen: isCancelInstallConfirmOpen, message: cancelInstallMessage, confirmType: cancelInstallType, confirm: askCancelInstall, onConfirm: onCancelInstallConfirm, onCancel: onCancelInstallCancel } = useConfirmDialog()
 
 const route = useRoute();
 const router = useRouter();
@@ -261,8 +264,8 @@ const openInstallNowModal = () => {
   isInstallNowModalOpen.value = true;
 };
 
-const closeModal = () => {
-  if (confirm(t('deploy.cancelInstallConfirm'))) {
+const closeModal = async () => {
+  if (await askCancelInstall(t('deploy.cancelInstallConfirm'), 'warning')) {
     isInstallNowModalOpen.value = false;
     setupSystem();
   }
@@ -834,6 +837,8 @@ const noOfBlankFields = computed(() => {
       </FilledButton>
     </template>
   </ModalDialog>
+
+  <ConfirmDialog :is-open="isCancelInstallConfirmOpen" :message="cancelInstallMessage" :confirm-type="cancelInstallType" :on-confirm="onCancelInstallConfirm" :on-cancel="onCancelInstallCancel" />
 </template>
 
 <style scoped></style>

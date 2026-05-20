@@ -26,12 +26,14 @@ defineProps({
       :class="{
         'h-3 w-3': !small,
         'h-2.5 w-2.5': small,
-        'bg-primary-500': type === 'primary',
-        'bg-secondary-500': type === 'secondary',
-        'bg-success-500': type === 'success',
-        'bg-danger-500': type === 'danger',
-        'bg-warning-500': type === 'warning'
-      }"></div>
+        'bg-primary-500 dark:bg-primary-400': type === 'primary',
+        'bg-secondary-500 dark:bg-secondary-400': type === 'secondary',
+        'bg-success-500 dark:bg-success-400': type === 'success',
+        'bg-danger-500 dark:bg-danger-400': type === 'danger',
+        'bg-warning-500 dark:bg-warning-400': type === 'warning'
+      }"
+      :aria-label="`${type} status`"
+      role="status"></div>
     <slot />
   </div>
 </template>

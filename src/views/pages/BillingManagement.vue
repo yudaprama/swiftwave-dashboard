@@ -4,10 +4,13 @@ import { useI18n } from 'vue-i18n'
 import { useBillingStore } from '@/store/billing.js'
 import { useAuthStore } from '@/store/auth.js'
 import { toast } from 'vue-sonner'
+import { useConfirmDialog } from '@/composables/useConfirmDialog.js'
+import ConfirmDialog from '@/views/components/ConfirmDialog.vue'
 
 const { t } = useI18n()
 const billingStore = useBillingStore()
 const authStore = useAuthStore()
+const { isOpen: isCancelSubConfirmOpen, message: cancelSubMessage, confirmType: cancelSubType, confirm: askCancelSub, onConfirm: onCancelSubConfirm, onCancel: onCancelSubCancel } = useConfirmDialog()
 
 onMounted(async () => {
   await Promise.all([
@@ -47,7 +50,7 @@ const invoiceStatusColor = (status) => {
 }
 
 const cancelSub = async () => {
-  if (!confirm(t('billing.cancelConfirm'))) return
+  if (!await askCancelSub(t('billing.cancelConfirm'), 'warning')) return
   const res = await billingStore.cancelSubscription()
   if (res.success) {
     toast.success(t('billing.cancelSuccess'))
@@ -135,4 +138,5 @@ const payInvoice = (url) => {
       </div>
     </div>
   </div>
+  <ConfirmDialog :is-open="isCancelSubConfirmOpen" :message="cancelSubMessage" :confirm-type="cancelSubType" :on-confirm="onCancelSubConfirm" :on-cancel="onCancelSubCancel" />
 </template>

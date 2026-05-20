@@ -19,8 +19,19 @@ import Badge from '@/views/components/Badge.vue'
 import CreatePersistentVolumeModal from '@/views/partials/CreatePersistentVolumeModal.vue'
 import SecuredText from '@/views/components/SecuredText.vue'
 import { useI18n } from 'vue-i18n'
+import { useConfirmDialog } from '@/composables/useConfirmDialog.js'
+import ConfirmDialog from '@/views/components/ConfirmDialog.vue'
 
 const { t } = useI18n()
+
+const {
+  isOpen: isDeleteConfirmOpen,
+  message: deleteMessage,
+  confirmType: deleteConfirmType,
+  confirm: askDeleteConfirm,
+  onConfirm: onDeleteConfirm,
+  onCancel: onDeleteCancel
+} = useConfirmDialog()
 
 const authStore = useAuthStore()
 
@@ -46,12 +57,8 @@ const {
   }
 )
 
-const deletePersistentVolumeWithConfirmation = (persistent_volume) => {
-  if (
-    confirm(
-      t('pv.deleteConfirm')
-    )
-  ) {
+const deletePersistentVolumeWithConfirmation = async (persistent_volume) => {
+  if (await askDeleteConfirm(t('pv.deleteConfirm'), 'danger')) {
     deletePersistentVolume({
       id: persistent_volume.id
     })
@@ -434,6 +441,8 @@ const showDetails = (volume) => {
           :volume="volume" />
       </template>
     </Table>
+
+    <ConfirmDialog :is-open="isDeleteConfirmOpen" :message="deleteMessage" :confirm-type="deleteConfirmType" :on-confirm="onDeleteConfirm" :on-cancel="onDeleteCancel" />
   </section>
 </template>
 

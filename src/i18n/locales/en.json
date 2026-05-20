@@ -45,6 +45,8 @@
     "cancel": "Cancel",
     "delete": "Delete",
     "confirm": "Confirm",
+    "confirmAction": "Confirm Action",
+    "skipToContent": "Skip to main content",
     "close": "Close",
     "create": "Create",
     "update": "Update",
@@ -123,6 +125,37 @@
     "provide2fa": "Provide 2FA Code",
     "signInHint": "Sign in or create an account with your GitHub identity.",
     "continueWithGitHub": "Continue with GitHub"
+  },
+  "register": {
+    "heading1": "Create",
+    "heading2": "your",
+    "heading3": "account",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "emailPlaceholder": "Enter your email address",
+    "passwordPlaceholder": "At least 8 characters",
+    "confirmPasswordPlaceholder": "Repeat your password",
+    "createAccount": "Create Account",
+    "alreadyHaveAccount": "Already have an account?",
+    "signIn": "Sign in",
+    "goToLogin": "Go to Login",
+    "passwordMismatch": "Passwords do not match",
+    "passwordMinLength": "Password must be at least 8 characters"
+  },
+  "verifyEmail": {
+    "verifying": "Verifying your email...",
+    "successTitle": "Email Verified!",
+    "failedTitle": "Verification Failed",
+    "goToLogin": "Go to Login",
+    "noToken": "Invalid verification link. No token provided.",
+    "defaultSuccess": "Email verified successfully! You can now log in.",
+    "defaultError": "Email verification failed. The link may be invalid or expired."
+  },
+  "authCallback": {
+    "completing": "Completing GitHub login...",
+    "noToken": "GitHub login did not return an access token.",
+    "backToLogin": "Back to login"
   },
   "maintenance": {
     "title": "Under Maintenance",

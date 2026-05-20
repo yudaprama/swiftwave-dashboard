@@ -2,6 +2,21 @@
 
 @config '../../../tailwind.config.js';
 
+/* Font faces - global */
+@font-face {
+  font-family: 'Comfortaa';
+  src: url('@/assets/fonts/Comfortaa-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Prompt';
+  src: url('@/assets/fonts/Prompt-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-display: swap;
+}
+
 /*
   The default border color has changed to `currentcolor` in Tailwind CSS v4,
   so we've added these compatibility styles to make sure everything still
@@ -17,5 +32,26 @@
   ::backdrop,
   ::file-selector-button {
     border-color: var(--color-gray-200, currentcolor);
+  }
+
+  html {
+    font-family: 'Prompt', system-ui, sans-serif;
+  }
+}
+
+/* Dark mode surface tokens */
+.dark {
+  color-scheme: dark;
+}
+
+/* Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

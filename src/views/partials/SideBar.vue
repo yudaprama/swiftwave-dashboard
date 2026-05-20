@@ -10,9 +10,13 @@ import gql from 'graphql-tag'
 import { toast } from 'vue-sonner'
 import ModalDialog from '@/views/components/ModalDialog.vue'
 import LanguageSwitcher from '@/views/components/LanguageSwitcher.vue'
+import ThemeToggle from '@/views/components/ThemeToggle.vue'
 import { useI18n } from 'vue-i18n'
+import { useConfirmDialog } from '@/composables/useConfirmDialog.js'
+import ConfirmDialog from '@/views/components/ConfirmDialog.vue'
 
 const { t } = useI18n()
+const emit = defineEmits(['navigate'])
 const authStore = useAuthStore()
 const router = useRouter()
 
@@ -32,8 +36,10 @@ const isShowSideBar = computed(() => {
   }
 })
 
-const logoutWithConfirmation = () => {
-  if (confirm(t('sidebar.logoutConfirm'))) {
+const { isOpen: isLogoutConfirmOpen, message: logoutMessage, confirm: askLogout, onConfirm: onLogoutConfirm, onCancel: onLogoutCancel } = useConfirmDialog()
+
+const logoutWithConfirmation = async () => {
+  if (await askLogout(t('sidebar.logoutConfirm'))) {
     authStore.Logout()
   }
 }
@@ -87,8 +93,10 @@ onRestartSystemDone((val) => {
   }
 })
 
-const systemRestart = () => {
-  if (confirm(t('sidebar.restartConfirm'))) {
+const { isOpen: isRestartConfirmOpen, message: restartMessage, confirm: askRestart, onConfirm: onRestartConfirm, onCancel: onRestartCancel } = useConfirmDialog()
+
+const systemRestart = async () => {
+  if (await askRestart(t('sidebar.restartConfirm'), 'warning')) {
     restartSystem()
   }
 }
@@ -103,15 +111,20 @@ const startCountDown = () => {
     }
   }, 1000)
 }
+
+// Emit navigate event when clicking any router link (for mobile drawer close)
+router.afterEach(() => {
+  emit('navigate')
+})
 </script>
 
 <template>
   <aside
     v-if="isShowSideBar"
-    class="scrollbox flex h-screen flex-col overflow-y-auto border-r bg-primary-600 px-2 pb-2 pt-6">
+    class="scrollbox flex h-screen flex-col overflow-y-auto border-r bg-primary-600 px-2 pb-2 pt-6 dark:border-gray-700 dark:bg-secondary-900">
     <div class="px-3">
       <RouterLink to="/">
-        <img :src="Logo" alt="logo" class="w-full max-w-40" />
+        <img :src="Logo" alt="SwiftWave logo" class="w-full max-w-40" />
       </RouterLink>
     </div>
     <div class="mt-6 flex flex-1 flex-col justify-between">
@@ -124,19 +137,19 @@ const startCountDown = () => {
           <template #content>
             <div class="space-y-2">
               <RouterLink
-                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-50 hover:text-gray-700"
+                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-50 hover:text-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-gray-100"
                 to="/deploy/app-store">
                 <font-awesome-icon icon="fa-solid fa-store" />
                 <span class="mx-2 text-sm font-medium">{{ $t('sidebar.appStore') }}</span>
               </RouterLink>
               <RouterLink
-                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-50 hover:text-gray-700"
+                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-50 hover:text-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-gray-100"
                 to="/deploy/application">
                 <font-awesome-icon icon="fa-solid fa-hammer" />
                 <span class="mx-2 text-sm font-medium">{{ $t('sidebar.deployApp') }}</span>
               </RouterLink>
               <RouterLink
-                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-50 hover:text-gray-700"
+                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-50 hover:text-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-gray-100"
                 to="/deploy/stack">
                 <font-awesome-icon icon="fa-solid fa-cubes-stacked" />
                 <span class="mx-2 text-sm font-medium">{{ $t('sidebar.deployStack') }}</span>
@@ -153,13 +166,13 @@ const startCountDown = () => {
           <template #content>
             <div class="space-y-2">
               <RouterLink
-                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
+                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-gray-100"
                 to="/applications">
                 <font-awesome-icon icon="fa-solid fa-box" />
                 <span class="mx-2 text-sm font-medium">{{ $t('sidebar.applications') }}</span>
               </RouterLink>
               <RouterLink
-                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
+                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-gray-100"
                 to="/persistent-volumes">
                 <font-awesome-icon icon="fa-solid fa-hard-drive" />
                 <span class="mx-2 text-sm font-medium">{{ $t('sidebar.persistentVolumes') }}</span>
@@ -176,19 +189,19 @@ const startCountDown = () => {
           <template #content>
             <div class="space-y-2">
               <RouterLink
-                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
+                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-gray-100"
                 to="/domains">
                 <font-awesome-icon icon="fa-solid fa-link" />
                 <span class="mx-2 text-sm font-medium">{{ $t('sidebar.domains') }}</span>
               </RouterLink>
               <RouterLink
-                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
+                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-gray-100"
                 to="/ingress-rules">
                 <font-awesome-icon icon="fa-solid fa-network-wired" />
                 <span class="mx-2 text-sm font-medium">{{ $t('sidebar.ingressRules') }}</span>
               </RouterLink>
               <RouterLink
-                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
+                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-gray-100"
                 to="/redirect-rules">
                 <font-awesome-icon icon="fa-solid fa-location-arrow" />
                 <span class="mx-2 text-sm font-medium">{{ $t('sidebar.redirectRules') }}</span>
@@ -205,13 +218,13 @@ const startCountDown = () => {
           <template #content>
             <div class="space-y-2">
               <RouterLink
-                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
+                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-gray-100"
                 to="/git-credentials">
                 <font-awesome-icon icon="fa-solid fa-code-branch" />
                 <span class="mx-2 text-sm font-medium">{{ $t('sidebar.gitCredentials') }}</span>
               </RouterLink>
               <RouterLink
-                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
+                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-gray-100"
                 to="/image-registry-credentials">
                 <font-awesome-icon icon="fa-solid fa-cloud" />
                 <span class="mx-2 text-sm font-medium">{{ $t('sidebar.imageRegCredentials') }}</span>
@@ -228,7 +241,7 @@ const startCountDown = () => {
           <template #content>
             <div class="space-y-2">
               <RouterLink
-                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
+                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-gray-100"
                 to="/app_auth/basic_authentication">
                 <font-awesome-icon icon="fa-solid fa-user-shield" />
                 <span class="mx-2 text-sm font-medium">{{ $t('sidebar.basicAuthentication') }}</span>
@@ -245,25 +258,25 @@ const startCountDown = () => {
           <template #content>
             <div class="space-y-2">
               <RouterLink
-                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
+                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-gray-100"
                 to="/plans">
                 <font-awesome-icon icon="fa-solid fa-tags" />
                 <span class="mx-2 text-sm font-medium">{{ $t('plans.title') }}</span>
               </RouterLink>
               <RouterLink
-                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
+                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-gray-100"
                 to="/billing">
                 <font-awesome-icon icon="fa-solid fa-file-invoice-dollar" />
                 <span class="mx-2 text-sm font-medium">{{ $t('billing.title') }}</span>
               </RouterLink>
               <RouterLink
-                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
+                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-gray-100"
                 to="/usage">
                 <font-awesome-icon icon="fa-solid fa-chart-bar" />
                 <span class="mx-2 text-sm font-medium">{{ $t('sidebar.usage') }}</span>
               </RouterLink>
               <RouterLink
-                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
+                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-gray-100"
                 to="/testimonial">
                 <font-awesome-icon icon="fa-solid fa-comment-dots" />
                 <span class="mx-2 text-sm font-medium">{{ $t('sidebar.shareFeedback') }}</span>
@@ -280,23 +293,24 @@ const startCountDown = () => {
           <template #content>
             <div class="space-y-2">
               <RouterLink
-                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
+                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-gray-100"
                 to="/logs">
                 <font-awesome-icon icon="fa-solid fa-file-waveform" />
                 <span class="mx-2 text-sm font-medium">{{ $t('sidebar.systemLogs') }}</span>
               </RouterLink>
               <RouterLink
-                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
+                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-gray-100"
                 to="/setup?update=1">
                 <font-awesome-icon icon="fa-solid fa-wrench" />
                 <span class="mx-2 text-sm font-medium">{{ $t('sidebar.systemConfiguration') }}</span>
               </RouterLink>
-              <div
-                @click="systemRestart"
-                class="flex transform cursor-pointer items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700">
+              <button
+                type="button"
+                class="flex w-full transform cursor-pointer items-center rounded-lg px-3 py-2 text-left text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-gray-100"
+                @click="systemRestart">
                 <font-awesome-icon icon="fa-solid fa-power-off" />
                 <span class="mx-2 text-sm font-medium">{{ $t('sidebar.systemRestart') }}</span>
-              </div>
+              </button>
             </div>
           </template>
         </SideBarOption>
@@ -309,35 +323,37 @@ const startCountDown = () => {
           <template #content>
             <div class="space-y-2">
               <RouterLink
-                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
+                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-gray-100"
                 to="/plans">
                 <font-awesome-icon icon="fa-solid fa-tags" />
                 <span class="mx-2 text-sm font-medium">{{ $t('plans.title') }}</span>
               </RouterLink>
               <RouterLink
-                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
+                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-gray-100"
                 to="/users">
                 <font-awesome-icon icon="fa-solid fa-users" />
                 <span class="mx-2 text-sm font-medium">{{ $t('sidebar.manageUsers') }}</span>
               </RouterLink>
               <RouterLink
-                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
+                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-gray-100"
                 to="/testimonials">
                 <font-awesome-icon icon="fa-solid fa-quote-left" />
                 <span class="mx-2 text-sm font-medium">{{ $t('sidebar.testimonials') }}</span>
               </RouterLink>
-              <div
-                class="flex transform cursor-pointer items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
+              <button
+                type="button"
+                class="flex w-full transform cursor-pointer items-center rounded-lg px-3 py-2 text-left text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-gray-100"
                 @click="openChangePasswordModal">
                 <font-awesome-icon icon="fa-solid fa-key" />
                 <span class="mx-2 text-sm font-medium">{{ $t('sidebar.changePassword') }}</span>
-              </div>
-              <a
-                class="flex transform cursor-pointer items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
+              </button>
+              <button
+                type="button"
+                class="flex w-full transform cursor-pointer items-center rounded-lg px-3 py-2 text-left text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-gray-100"
                 @click="logoutWithConfirmation">
                 <font-awesome-icon icon="fa-solid fa-right-from-bracket" />
                 <span class="mx-2 text-sm font-medium">{{ $t('sidebar.logout') }}</span>
-              </a>
+              </button>
             </div>
           </template>
         </SideBarOption>
@@ -345,6 +361,7 @@ const startCountDown = () => {
     </div>
     <div class="flex items-center justify-between px-2 text-sm font-medium text-white">
       <LanguageSwitcher />
+      <ThemeToggle />
       <span> v{{ swVersion }}</span>
     </div>
     <div class="px-2 text-sm font-medium text-white">
@@ -355,7 +372,7 @@ const startCountDown = () => {
       <!-- Modal for restart system -->
       <ModalDialog :is-open="isSystemRestartModalOpen" non-cancelable>
         <template v-slot:header>
-          <span>🔌 Restarting System</span>
+          <span>Restarting System</span>
         </template>
         <template v-slot:body>
           <p class="mb-2">System restart has been requested.</p>
@@ -365,13 +382,27 @@ const startCountDown = () => {
         </template>
       </ModalDialog>
     </Teleport>
+
+    <!-- Confirm dialogs -->
+    <ConfirmDialog
+      :is-open="isLogoutConfirmOpen"
+      :message="logoutMessage"
+      :confirm-type="'danger'"
+      :on-confirm="onLogoutConfirm"
+      :on-cancel="onLogoutCancel" />
+    <ConfirmDialog
+      :is-open="isRestartConfirmOpen"
+      :message="restartMessage"
+      :confirm-type="'warning'"
+      :on-confirm="onRestartConfirm"
+      :on-cancel="onRestartCancel" />
   </aside>
 </template>
 
 <style scoped>
 @reference "../../assets/css/base.css";
 .router-link-exact-active {
-  @apply bg-gray-100 text-gray-700;
+  @apply bg-gray-100 text-gray-700 dark:bg-gray-600 dark:text-gray-100;
 }
 
 .scrollbox::-webkit-scrollbar {

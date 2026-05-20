@@ -73,110 +73,131 @@ const router = createRouter({
 
     {
       path: '/deploy',
+      meta: { breadcrumb: 'sidebar.deployApplication' },
       children: [
         {
           path: 'application',
           name: 'Deploy Application',
-          component: DeployApplicationPage
+          component: DeployApplicationPage,
+          meta: { breadcrumb: 'sidebar.deployApp' }
         },
         {
           path: 'stack',
           name: 'Deploy Stack',
-          component: DeployStackPage
+          component: DeployStackPage,
+          meta: { breadcrumb: 'sidebar.deployStack' }
         },
         {
           path: 'app-store',
           name: 'App Store',
-          component: AppStorePage
+          component: AppStorePage,
+          meta: { breadcrumb: 'sidebar.appStore' }
         },
         {
           path: 'app-store/install',
           name: 'Install from App Store',
-          component: AppInstallPage
+          component: AppInstallPage,
+          meta: { breadcrumb: 'sidebar.appStore' }
         }
       ]
     },
     {
       path: '/applications',
       name: 'Applications',
-      component: ApplicationsPage
+      component: ApplicationsPage,
+      meta: { breadcrumb: 'sidebar.applications' }
     },
     {
       path: '/application/:id',
       name: 'Application Details',
       component: ApplicationDetailsPage,
+      meta: { breadcrumb: 'applications.deployedServices' },
       children: [
         {
           path: 'deployments',
           name: 'Application Details Deployments',
-          component: ApplicationDetailsDeploymentListPage
+          component: ApplicationDetailsDeploymentListPage,
+          meta: { breadcrumb: 'applicationDetails.deployments' }
         },
         {
           path: 'deployment/:deployment_id',
           name: 'Application Deployment Details',
-          component: ApplicationDetailsDeploymentDetailsPage
+          component: ApplicationDetailsDeploymentDetailsPage,
+          meta: { breadcrumb: 'applicationDetails.deployments' }
         },
         {
           path: 'runtime_logs',
           name: 'Application Details Runtime Logs',
-          component: ApplicationDetailsRuntimeLogsPage
+          component: ApplicationDetailsRuntimeLogsPage,
+          meta: { breadcrumb: 'applicationDetails.logs' }
         },
         {
           path: 'ingress_rules',
           name: 'Application Details Ingress Rules',
-          component: ApplicationDetailsIngressRulesPage
+          component: ApplicationDetailsIngressRulesPage,
+          meta: { breadcrumb: 'ingressRules.title' }
         },
         {
           path: 'update_source',
           name: 'Application Details Update Source',
-          component: ApplicationDetailsUpdateSourcePage
+          component: ApplicationDetailsUpdateSourcePage,
+          meta: { breadcrumb: 'applicationDetails.updateSource' }
         },
         {
           path: 'environment_variables',
           name: 'Application Details Environment Variables',
-          component: ApplicationDetailsEnvironmentVariablesPage
+          component: ApplicationDetailsEnvironmentVariablesPage,
+          meta: { breadcrumb: 'deploy.environmentVariables' }
         },
         {
           path: 'persistent_volumes',
           name: 'Application Details Persistent Volumes',
-          component: ApplicationDetailsPersistentVolumesPage
+          component: ApplicationDetailsPersistentVolumesPage,
+          meta: { breadcrumb: 'persistentVolumes.title' }
         },
         {
           path: 'config_mounts',
           name: 'Application Details Config Mounts',
-          component: ApplicationDetailsConfigMountsPage
+          component: ApplicationDetailsConfigMountsPage,
+          meta: { breadcrumb: 'applicationDetails.configMounts' }
         },
         {
           path: 'deployment_config',
           name: 'Application Details Deployment Config',
-          component: ApplicationDetailsDeploymentConfigPage
+          component: ApplicationDetailsDeploymentConfigPage,
+          meta: { breadcrumb: 'deploy.dockerConfiguration' }
         },
         {
           path: 'danger_zone',
           name: 'Application Details Danger Zone',
-          component: ApplicationDetailsDangerZonePage
+          component: ApplicationDetailsDangerZonePage,
+          meta: { breadcrumb: 'applicationDetails.destroy' }
         },
         {
           path: 'manage',
           name: 'Application Details Manage',
-          component: ApplicationDetailsManagePage
+          component: ApplicationDetailsManagePage,
+          meta: { breadcrumb: 'common.actions' }
         },
         {
           path: 'webhook_ci',
           name: 'Application Details Webhook CI',
-          component: ApplicationDetailsWebhookCIPage
+          component: ApplicationDetailsWebhookCIPage,
+          meta: { breadcrumb: 'applicationDetails.webhook' }
         },
         {
           path: 'resource_stats',
           name: 'Application Details Resource Stats',
-          component: ApplicationDetailsResourceStatsPage
+          component: ApplicationDetailsResourceStatsPage,
+          meta: { breadcrumb: 'servers.analytics' }
         }
       ]
     },
     {
       path: '/application_group/:id',
       name: 'Application Group Details',
-      component: ApplicationGroupDetailsPage
+      component: ApplicationGroupDetailsPage,
+      meta: { breadcrumb: 'sidebar.applications' }
     },
     {
       path: '/app_auth',
@@ -184,74 +205,88 @@ const router = createRouter({
         {
           path: 'basic_authentication',
           name: 'Application Auth Basic ACL',
-          component: AppAuthBasicAccessControlList
+          component: AppAuthBasicAccessControlList,
+          meta: { breadcrumb: 'sidebar.basicAuthentication' }
         }
       ]
     },
     {
       path: '/persistent-volumes',
       name: 'Persistent Volumes',
-      component: PersistentVolumeManagementPage
+      component: PersistentVolumeManagementPage,
+      meta: { breadcrumb: 'sidebar.persistentVolumes' }
     },
     {
       path: '/users',
       name: 'Users',
-      component: UserManagementPage
+      component: UserManagementPage,
+      meta: { breadcrumb: 'sidebar.manageUsers' }
     },
     {
       path: '/git-credentials',
       name: 'Git Credentials',
-      component: GitCredentialManagementPage
+      component: GitCredentialManagementPage,
+      meta: { breadcrumb: 'sidebar.gitCredentials' }
     },
     {
       path: '/image-registry-credentials',
       name: 'Image Registry Credentials',
-      component: ImageRegistryCredentialManagementPage
+      component: ImageRegistryCredentialManagementPage,
+      meta: { breadcrumb: 'sidebar.imageRegCredentials' }
     },
     {
       path: '/domains',
       name: 'Domains',
-      component: DomainManagementPage
+      component: DomainManagementPage,
+      meta: { breadcrumb: 'sidebar.domains' }
     },
     {
       path: '/redirect-rules',
       name: 'Redirect Rules',
-      component: RedirectRuleManagementPage
+      component: RedirectRuleManagementPage,
+      meta: { breadcrumb: 'sidebar.redirectRules' }
     },
     {
       path: '/ingress-rules',
       name: 'Ingress Rules',
-      component: IngressRuleManagementPage
+      component: IngressRuleManagementPage,
+      meta: { breadcrumb: 'sidebar.ingressRules' }
     },
     {
       path: '/logs',
       name: 'System Logs',
-      component: SystemLogsPage
+      component: SystemLogsPage,
+      meta: { breadcrumb: 'sidebar.systemLogs' }
     },
     {
       path: '/plans',
       name: 'Plans',
-      component: PlanSelectionPage
+      component: PlanSelectionPage,
+      meta: { breadcrumb: 'plans.title' }
     },
     {
       path: '/billing',
       name: 'Billing',
-      component: BillingManagementPage
+      component: BillingManagementPage,
+      meta: { breadcrumb: 'billing.title' }
     },
     {
       path: '/usage',
       name: 'Usage',
-      component: UsageOverviewPage
+      component: UsageOverviewPage,
+      meta: { breadcrumb: 'sidebar.usage' }
     },
     {
       path: '/testimonial',
       name: 'Testimonial',
-      component: TestimonialSubmitPage
+      component: TestimonialSubmitPage,
+      meta: { breadcrumb: 'sidebar.shareFeedback' }
     },
     {
       path: '/testimonials',
       name: 'Testimonials',
-      component: TestimonialManagementPage
+      component: TestimonialManagementPage,
+      meta: { breadcrumb: 'sidebar.testimonials' }
     }
   ]
 })

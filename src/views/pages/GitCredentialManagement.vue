@@ -11,8 +11,11 @@ import GitCredentialListRow from '@/views/partials/GitCredentialListRow.vue'
 import TableMessage from '@/views/components/Table/TableMessage.vue'
 import CreateGitCredentialModal from '@/views/partials/CreateGitCredentialModal.vue'
 import { useI18n } from 'vue-i18n'
+import { useConfirmDialog } from '@/composables/useConfirmDialog.js'
+import ConfirmDialog from '@/views/components/ConfirmDialog.vue'
 
 const { t } = useI18n()
+const { isOpen: isDeleteGitCredConfirmOpen, message: deleteGitCredMessage, confirmType: deleteGitCredType, confirm: askDeleteGitCred, onConfirm: onDeleteGitCredConfirm, onCancel: onDeleteGitCredCancel } = useConfirmDialog()
 
 // Create Git Credential
 const createGitCredentialModalRef = ref(null)
@@ -45,12 +48,8 @@ onGitCredentialDeleteSuccess(() => {
   toast.success(t('gitCreds.deleteSuccess'))
 })
 
-const deleteGitCredentialWithConfirmation = (gitCredential) => {
-  if (
-    confirm(
-      t('gitCreds.deleteConfirm', { name: gitCredential.name })
-    )
-  ) {
+const deleteGitCredentialWithConfirmation = async (gitCredential) => {
+  if (await askDeleteGitCred(t('gitCreds.deleteConfirm', { name: gitCredential.name }), 'danger')) {
     deleteGitCredential({ id: gitCredential.id })
   }
 }
@@ -131,6 +130,7 @@ onGitCredentialListError((err) => {
       </template>
     </Table>
   </section>
+  <ConfirmDialog :is-open="isDeleteGitCredConfirmOpen" :message="deleteGitCredMessage" :confirm-type="deleteGitCredType" :on-confirm="onDeleteGitCredConfirm" :on-cancel="onDeleteGitCredCancel" />
 </template>
 
 <style scoped></style>

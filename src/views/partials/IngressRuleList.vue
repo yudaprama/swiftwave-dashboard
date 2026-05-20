@@ -12,8 +12,46 @@ import ModalDialog from '@/views/components/ModalDialog.vue'
 import FilledButton from '@/views/components/FilledButton.vue'
 import router from '@/router/index.js'
 import { useI18n } from 'vue-i18n'
+import { useConfirmDialog } from '@/composables/useConfirmDialog.js'
+import ConfirmDialog from '@/views/components/ConfirmDialog.vue'
 
 const { t } = useI18n()
+
+const {
+  isOpen: isDeleteIngressConfirmOpen,
+  message: deleteIngressMessage,
+  confirmType: deleteIngressConfirmType,
+  confirm: askDeleteIngressConfirm,
+  onConfirm: onDeleteIngressConfirm,
+  onCancel: onDeleteIngressCancel
+} = useConfirmDialog()
+
+const {
+  isOpen: isRecreateIngressConfirmOpen,
+  message: recreateIngressMessage,
+  confirmType: recreateIngressConfirmType,
+  confirm: askRecreateIngressConfirm,
+  onConfirm: onRecreateIngressConfirm,
+  onCancel: onRecreateIngressCancel
+} = useConfirmDialog()
+
+const {
+  isOpen: isSetupAuthConfirmOpen,
+  message: setupAuthMessage,
+  confirmType: setupAuthConfirmType,
+  confirm: askSetupAuthConfirm,
+  onConfirm: onSetupAuthConfirm,
+  onCancel: onSetupAuthCancel
+} = useConfirmDialog()
+
+const {
+  isOpen: isDisableAuthConfirmOpen,
+  message: disableAuthMessage,
+  confirmType: disableAuthConfirmType,
+  confirm: askDisableAuthConfirm,
+  onConfirm: onDisableAuthConfirm,
+  onCancel: onDisableAuthCancel
+} = useConfirmDialog()
 
 const props = defineProps({
   applicationId: {
@@ -113,8 +151,8 @@ const {
   }
 )
 
-const deleteIngressRulesWithConfirmation = (ingress_rule) => {
-  if (confirm(t('partials.ingressDeleteConfirm'))) {
+const deleteIngressRulesWithConfirmation = async (ingress_rule) => {
+  if (await askDeleteIngressConfirm(t('partials.ingressDeleteConfirm'), 'danger')) {
     deleteIngressRule({
       id: ingress_rule.id
     })
@@ -198,8 +236,8 @@ const {
   }
 `)
 
-const recreateIngressRuleWithConfirmation = (ingress_rule) => {
-  if (confirm(t('partials.recreateConfirm'))) {
+const recreateIngressRuleWithConfirmation = async (ingress_rule) => {
+  if (await askRecreateIngressConfirm(t('partials.recreateConfirm'), 'warning')) {
     recreateIngressRule({
       id: ingress_rule.id
     })
@@ -282,9 +320,9 @@ const {
   }
 `)
 
-const setupAuthentication = () => {
+const setupAuthentication = async () => {
   if (
-    !confirm(t('partials.setupAuthConfirm'))
+    !(await askSetupAuthConfirm(t('partials.setupAuthConfirm')))
   ) {
     return
   }
@@ -339,9 +377,9 @@ const {
   }
 `)
 
-const disableAuthentication = () => {
+const disableAuthentication = async () => {
   if (
-    !confirm(t('partials.setupAuthConfirm'))
+    !(await askDisableAuthConfirm(t('partials.setupAuthConfirm'), 'warning'))
   ) {
     return
   }
@@ -467,6 +505,10 @@ defineExpose({
         </FilledButton>
       </template>
     </ModalDialog>
+    <ConfirmDialog :is-open="isDeleteIngressConfirmOpen" :message="deleteIngressMessage" :confirm-type="deleteIngressConfirmType" :on-confirm="onDeleteIngressConfirm" :on-cancel="onDeleteIngressCancel" />
+    <ConfirmDialog :is-open="isRecreateIngressConfirmOpen" :message="recreateIngressMessage" :confirm-type="recreateIngressConfirmType" :on-confirm="onRecreateIngressConfirm" :on-cancel="onRecreateIngressCancel" />
+    <ConfirmDialog :is-open="isSetupAuthConfirmOpen" :message="setupAuthMessage" :confirm-type="setupAuthConfirmType" :on-confirm="onSetupAuthConfirm" :on-cancel="onSetupAuthCancel" />
+    <ConfirmDialog :is-open="isDisableAuthConfirmOpen" :message="disableAuthMessage" :confirm-type="disableAuthConfirmType" :on-confirm="onDisableAuthConfirm" :on-cancel="onDisableAuthCancel" />
   </div>
 </template>
 

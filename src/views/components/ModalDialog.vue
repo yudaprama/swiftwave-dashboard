@@ -42,7 +42,7 @@ const closeModalWithValidation = () => {
         leave="duration-200 ease-in"
         leave-from="opacity-100"
         leave-to="opacity-0">
-        <div class="fixed inset-0 bg-black/25" />
+        <div class="fixed inset-0 bg-black/25 dark:bg-black/50" />
       </TransitionChild>
       <div class="fixed inset-0 overflow-y-auto">
         <div class="flex min-h-full items-center justify-center p-4 text-center">
@@ -64,8 +64,8 @@ const closeModalWithValidation = () => {
                 'max-w-4xl': width === '4xl',
                 'max-w-6xl': width === '6xl'
               }"
-              class="w-full transform overflow-hidden rounded-2xl bg-white p-4 text-left align-middle shadow-xl transition-all">
-              <DialogTitle as="h3" class="text-lg font-semibold leading-6 text-gray-900">
+              class="w-full transform overflow-hidden rounded-2xl bg-white p-4 text-left align-middle shadow-xl transition-all dark:bg-secondary-800">
+              <DialogTitle as="h3" class="text-lg font-semibold leading-6 text-gray-900 dark:text-gray-100">
                 <slot name="header"></slot>
                 <!-- Close button -->
                 <button

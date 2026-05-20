@@ -45,6 +45,8 @@
     "cancel": "Batal",
     "delete": "Hapus",
     "confirm": "Konfirmasi",
+    "confirmAction": "Konfirmasi Tindakan",
+    "skipToContent": "Lewati ke konten utama",
     "close": "Tutup",
     "create": "Buat",
     "update": "Perbarui",
@@ -122,6 +124,37 @@
     "provide2fa": "Masukkan Kode 2FA",
     "signInHint": "Masuk atau buat akun dengan identitas GitHub Anda.",
     "continueWithGitHub": "Lanjutkan dengan GitHub"
+  },
+  "register": {
+    "heading1": "Buat",
+    "heading2": "akun",
+    "heading3": "Anda",
+    "email": "Email",
+    "password": "Kata Sandi",
+    "confirmPassword": "Konfirmasi Kata Sandi",
+    "emailPlaceholder": "Masukkan alamat email Anda",
+    "passwordPlaceholder": "Minimal 8 karakter",
+    "confirmPasswordPlaceholder": "Ulangi kata sandi Anda",
+    "createAccount": "Buat Akun",
+    "alreadyHaveAccount": "Sudah punya akun?",
+    "signIn": "Masuk",
+    "goToLogin": "Ke Halaman Login",
+    "passwordMismatch": "Kata sandi tidak cocok",
+    "passwordMinLength": "Kata sandi minimal 8 karakter"
+  },
+  "verifyEmail": {
+    "verifying": "Memverifikasi email Anda...",
+    "successTitle": "Email Terverifikasi!",
+    "failedTitle": "Verifikasi Gagal",
+    "goToLogin": "Ke Halaman Login",
+    "noToken": "Tautan verifikasi tidak valid. Token tidak ditemukan.",
+    "defaultSuccess": "Email berhasil diverifikasi! Anda sekarang dapat masuk.",
+    "defaultError": "Verifikasi email gagal. Tautan mungkin tidak valid atau sudah kedaluwarsa."
+  },
+  "authCallback": {
+    "completing": "Menyelesaikan login GitHub...",
+    "noToken": "Login GitHub tidak mengembalikan token akses.",
+    "backToLogin": "Kembali ke login"
   },
   "maintenance": {
     "title": "Sedang Dalam Pemeliharaan",

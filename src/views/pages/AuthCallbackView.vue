@@ -1,11 +1,13 @@
 <script setup>
 import { onMounted, reactive } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useAuthStore } from '@/store/auth.js'
 import router from '@/router/index.js'
 
+const { t } = useI18n()
 const authStore = useAuthStore()
 const status = reactive({
-  message: 'Completing GitHub login...',
+  message: t('authCallback.completing'),
   success: true
 })
 
@@ -25,7 +27,7 @@ onMounted(async () => {
 
   if (!token) {
     status.success = false
-    status.message = 'GitHub login did not return an access token.'
+    status.message = t('authCallback.noToken')
     return
   }
 
@@ -46,7 +48,7 @@ onMounted(async () => {
       role="alert">
       {{ status.message }}
       <div v-if="!status.success" class="mt-4">
-        <RouterLink to="/login" class="font-semibold text-primary-600 hover:text-primary-500">Back to login</RouterLink>
+        <RouterLink to="/login" class="font-semibold text-primary-600 hover:text-primary-500">{{ $t('authCallback.backToLogin') }}</RouterLink>
       </div>
     </div>
   </div>

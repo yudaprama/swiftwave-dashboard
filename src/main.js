@@ -91,10 +91,14 @@ import {
   faUserTie,
   faVault,
   faWrench,
-  faXmark
+  faXmark,
+  faSun,
+  faMoon,
+  faBars
 } from '@fortawesome/free-solid-svg-icons'
 
 import { useAuthStore } from '@/store/auth.js'
+import { useThemeStore } from '@/store/theme.js'
 import VueApexCharts from 'vue3-apexcharts'
 
 import i18n from './i18n/index.js'
@@ -198,7 +202,15 @@ library.add(
   faHeartCircleExclamation,
   faHeartCircleXmark,
   faPause,
-  faBoxesStacked
+  faBoxesStacked,
+  faSun,
+  faMoon,
+  faBars,
+  faSun,
+  faMoon,
+  faBars,
+  faSun,
+  faMoon
 )
 
 // Environment variables
@@ -280,6 +292,8 @@ app.use(pinia)
 app.use(i18n)
 app.use(VueApexCharts)
 app.directive('debounce', vueDebounce({ lock: true }))
+const themeStore = useThemeStore()
+themeStore.init()
 app.mount('#app')
 
 // Protect routes

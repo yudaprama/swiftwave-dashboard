@@ -11,8 +11,11 @@ import TableMessage from '@/views/components/Table/TableMessage.vue'
 import ImageRegistryCredentialListRow from '@/views/partials/ImageRegistryCredentialListRow.vue'
 import CreateImageRegistryCredentialModal from '@/views/partials/CreateImageRegistryCredentialModal.vue'
 import { useI18n } from 'vue-i18n'
+import { useConfirmDialog } from '@/composables/useConfirmDialog.js'
+import ConfirmDialog from '@/views/components/ConfirmDialog.vue'
 
 const { t } = useI18n()
+const { isOpen: isDeleteImageCredConfirmOpen, message: deleteImageCredMessage, confirmType: deleteImageCredType, confirm: askDeleteImageCred, onConfirm: onDeleteImageCredConfirm, onCancel: onDeleteImageCredCancel } = useConfirmDialog()
 
 // Create Image Registry Credential
 const createImageRegistryCredentialModalRef = ref(null)
@@ -47,12 +50,8 @@ onImageRegistryCredentialDeleteSuccess(() => {
   toast.success(t('registryCreds.deleteSuccess'))
 })
 
-const deleteImageRegistryCredentialWithConfirmation = (imageRegistryCredential) => {
-  if (
-    confirm(
-      t('registryCreds.deleteConfirm')
-    )
-  ) {
+const deleteImageRegistryCredentialWithConfirmation = async (imageRegistryCredential) => {
+  if (await askDeleteImageCred(t('registryCreds.deleteConfirm'), 'danger')) {
     deleteImageRegistryCredential({ id: imageRegistryCredential.id })
   }
 }
@@ -137,6 +136,7 @@ onImageRegistryCredentialListError((err) => {
       </template>
     </Table>
   </section>
+  <ConfirmDialog :is-open="isDeleteImageCredConfirmOpen" :message="deleteImageCredMessage" :confirm-type="deleteImageCredType" :on-confirm="onDeleteImageCredConfirm" :on-cancel="onDeleteImageCredCancel" />
 </template>
 
 <style scoped></style>

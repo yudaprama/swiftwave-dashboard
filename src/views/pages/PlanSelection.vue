@@ -4,11 +4,14 @@ import { useI18n } from 'vue-i18n'
 import { useBillingStore } from '@/store/billing.js'
 import { useAuthStore } from '@/store/auth.js'
 import { toast } from 'vue-sonner'
+import { useConfirmDialog } from '@/composables/useConfirmDialog.js'
+import ConfirmDialog from '@/views/components/ConfirmDialog.vue'
 
 const { t } = useI18n()
 const billingStore = useBillingStore()
 const authStore = useAuthStore()
 const upgrading = ref(false)
+const { isOpen: isUpgradeConfirmOpen, message: upgradeMessage, confirmType: upgradeType, confirm: askUpgrade, onConfirm: onUpgradeConfirm, onCancel: onUpgradeCancel } = useConfirmDialog()
 
 // Voucher state
 const voucherCode = ref('')
@@ -53,7 +56,7 @@ const clearVoucher = () => {
 
 const upgrade = async (plan) => {
   if (isCurrentPlan(plan)) return
-  if (!confirm(t('plans.upgradeConfirm', { name: plan.name }))) return
+  if (!await askUpgrade(t('plans.upgradeConfirm', { name: plan.name }), 'warning')) return
 
   const code = voucherStatus.value === 'valid' ? voucherCode.value.trim() : null
 
@@ -184,4 +187,5 @@ const upgrade = async (plan) => {
       </div>
     </div>
   </div>
+  <ConfirmDialog :is-open="isUpgradeConfirmOpen" :message="upgradeMessage" :confirm-type="upgradeType" :on-confirm="onUpgradeConfirm" :on-cancel="onUpgradeCancel" />
 </template>

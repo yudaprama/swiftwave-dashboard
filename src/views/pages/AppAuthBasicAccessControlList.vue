@@ -8,6 +8,7 @@ import { useI18n } from 'vue-i18n'
 import { computed, reactive, ref, watch } from 'vue'
 
 const { t } = useI18n()
+
 import Table from '@/views/components/Table/Table.vue'
 import TableHeader from '@/views/components/Table/TableHeader.vue'
 import TableMessage from '@/views/components/Table/TableMessage.vue'
@@ -15,6 +16,53 @@ import TableRow from '@/views/components/Table/TableRow.vue'
 import TextButton from '@/views/components/TextButton.vue'
 import ModalDialog from '@/views/components/ModalDialog.vue'
 import { preventSpaceInput } from '@/vendor/utils.js'
+import { useConfirmDialog } from '@/composables/useConfirmDialog.js'
+import ConfirmDialog from '@/views/components/ConfirmDialog.vue'
+
+const {
+  isOpen: isAddAclConfirmOpen,
+  message: addAclMessage,
+  confirmType: addAclConfirmType,
+  confirm: askAddAclConfirm,
+  onConfirm: onAddAclConfirm,
+  onCancel: onAddAclCancel
+} = useConfirmDialog()
+
+const {
+  isOpen: isDeleteAclConfirmOpen,
+  message: deleteAclMessage,
+  confirmType: deleteAclConfirmType,
+  confirm: askDeleteAclConfirm,
+  onConfirm: onDeleteAclConfirm,
+  onCancel: onDeleteAclCancel
+} = useConfirmDialog()
+
+const {
+  isOpen: isAddUserConfirmOpen,
+  message: addUserMessage,
+  confirmType: addUserConfirmType,
+  confirm: askAddUserConfirm,
+  onConfirm: onAddUserConfirm,
+  onCancel: onAddUserCancel
+} = useConfirmDialog()
+
+const {
+  isOpen: isDeleteUserConfirmOpen,
+  message: deleteUserMessage,
+  confirmType: deleteUserConfirmType,
+  confirm: askDeleteUserConfirm,
+  onConfirm: onDeleteUserConfirm,
+  onCancel: onDeleteUserCancel
+} = useConfirmDialog()
+
+const {
+  isOpen: isChangePasswordConfirmOpen,
+  message: changePasswordMessage,
+  confirmType: changePasswordConfirmType,
+  confirm: askChangePasswordConfirm,
+  onConfirm: onChangePasswordConfirm,
+  onCancel: onChangePasswordCancel
+} = useConfirmDialog()
 
 const {
   result: appBasicAuthAccessControlListsRaw,
@@ -78,10 +126,8 @@ const {
   }
 `)
 
-const addAccessControlList = () => {
-  if (
-    !confirm(t('appAuth.operationWaitConfirm'))
-  ) {
+const addAccessControlList = async () => {
+  if (!(await askAddAclConfirm(t('appAuth.operationWaitConfirm')))) {
     return
   }
   addAccessControlListRaw({
@@ -126,10 +172,8 @@ const {
   }
 `)
 
-const deleteAccessControlList = () => {
-  if (
-    !confirm(t('appAuth.operationWaitConfirm'))
-  ) {
+const deleteAccessControlList = async () => {
+  if (!(await askDeleteAclConfirm(t('appAuth.operationWaitConfirm'), 'danger'))) {
     return
   }
   deleteAccessControlListRaw({
@@ -190,14 +234,12 @@ const {
   }
 `)
 
-const addUser = () => {
+const addUser = async () => {
   if (addUserInfo.confirmPassword !== addUserInfo.password) {
     toast.error(t('appAuth.passwordMismatch'))
     return
   }
-  if (
-    !confirm(t('appAuth.operationWaitConfirm'))
-  ) {
+  if (!(await askAddUserConfirm(t('appAuth.operationWaitConfirm')))) {
     return
   }
   addUserRaw({
@@ -244,10 +286,8 @@ const {
   }
 `)
 
-const deleteUser = () => {
-  if (
-    !confirm(t('appAuth.operationWaitConfirm'))
-  ) {
+const deleteUser = async () => {
+  if (!(await askDeleteUserConfirm(t('appAuth.operationWaitConfirm'), 'danger'))) {
     return
   }
   deleteUserRaw({
@@ -303,14 +343,12 @@ const {
   }
 `)
 
-const changePassword = () => {
+const changePassword = async () => {
   if (changePasswordInfo.password !== changePasswordInfo.confirmPassword) {
     toast.error(t('appAuth.passwordMismatch'))
     return
   }
-  if (
-    !confirm(t('appAuth.operationWaitConfirm'))
-  ) {
+  if (!(await askChangePasswordConfirm(t('appAuth.operationWaitConfirm')))) {
     return
   }
   changePasswordRaw({
@@ -336,36 +374,34 @@ onChangePasswordDone((res) => {
 
 <template>
   <section class="mx-auto w-full max-w-7xl">
-    <!-- Top Page bar   -->
     <PageBar>
-      <template v-slot:title>Basic Authentication ACL</template>
-      <template v-slot:subtitle> Manage access control list for Basic Authentication</template>
+      <template v-slot:title>{{ $t('appAuth.aclTitle') }}</template>
+      <template v-slot:subtitle>{{ $t('appAuth.aclSubtitle') }}</template>
       <template v-slot:buttons>
         <FilledButton type="primary" :click="openAddAccessControlListModal">
           <font-awesome-icon icon="fa-solid fa-plus" class="mr-2" />
-          Add New ACL
+          {{ $t('appAuth.addNewAcl') }}
         </FilledButton>
         <FilledButton type="ghost" :click="refetchAppBasicAuthAccessControlLists">
           <font-awesome-icon
             icon="fa-solid fa-arrows-rotate"
             :class="{
               'animate-spin ': isAppBasicAuthAccessControlListsLoading
-            }" />&nbsp;&nbsp; Refresh List
+            }" />&nbsp;&nbsp; {{ $t('common.refreshList') }}
         </FilledButton>
       </template>
     </PageBar>
 
-    <!-- Table -->
     <Table class="mt-8">
       <template v-slot:header>
-        <TableHeader align="left">Name</TableHeader>
-        <TableHeader align="center">Registered Users</TableHeader>
-        <TableHeader align="right">Actions</TableHeader>
+        <TableHeader align="left">{{ $t('common.name') }}</TableHeader>
+        <TableHeader align="center">{{ $t('appAuth.registeredUsers') }}</TableHeader>
+        <TableHeader align="right">{{ $t('common.actions') }}</TableHeader>
       </template>
       <template v-if="appBasicAuthAccessControlLists.length === 0" v-slot:message>
         <TableMessage>
-          No Basic Authentication ACL found.<br />
-          Click on the <b>Add New ACL</b> to add ACL.
+          {{ $t('appAuth.noAclFound') }}<br />
+          <span v-html="$t('appAuth.clickAddAcl')"></span>
         </TableMessage>
       </template>
       <template v-slot:body>
@@ -382,7 +418,7 @@ onChangePasswordDone((res) => {
               <div>
                 <FilledButton type="primary" slim :click="() => openAddUserModal(appBasicAuthAccessControlList)">
                   <font-awesome-icon icon="fa-solid fa-plus" class="mr-2" />
-                  Add User
+                  {{ $t('appAuth.addUser') }}
                 </FilledButton>
               </div>
               <div
@@ -391,11 +427,11 @@ onChangePasswordDone((res) => {
                 class="flex w-min flex-row items-center justify-center gap-2.5 rounded-md border px-2 py-1 text-sm">
                 <p>{{ user.username }}</p>
                 <TextButton slim class="has-tooltip" :click="() => openChangePasswordModal(user)">
-                  <span class="tooltip">Change Password</span>
+                  <span class="tooltip">{{ $t('appAuth.changePassword') }}</span>
                   <font-awesome-icon icon="fa-solid fa-key" />
                 </TextButton>
                 <TextButton slim type="danger" class="has-tooltip" :click="() => openDeleteUserModal(user)">
-                  <span class="tooltip">Delete User</span>
+                  <span class="tooltip">{{ $t('appAuth.deleteUser') }}</span>
                   <font-awesome-icon icon="fa-solid fa-trash" />
                 </TextButton>
               </div>
@@ -403,29 +439,27 @@ onChangePasswordDone((res) => {
           </TableRow>
           <TableRow align="right">
             <TextButton type="danger" :click="() => openDeleteAccessControlListModal(appBasicAuthAccessControlList)">
-              Delete
+              {{ $t('appAuth.deleteAcl') }}
             </TextButton>
           </TableRow>
         </tr>
       </template>
     </Table>
 
-    <!--  Create new ACL modal  -->
     <ModalDialog :close-modal="closeAddAccessControlListModal" :is-open="isAddAccessControlListModalOpen">
-      <template v-slot:header>Create New User List</template>
+      <template v-slot:header>{{ $t('appAuth.createNewUserList') }}</template>
       <template v-slot:body>
-        Enter a name for the new user list. <br />Try to provide a unique name.
+        {{ $t('appAuth.newUserListHint') }} <br />{{ $t('appAuth.tryUniqueName') }}
         <form @submit.prevent="">
-          <!--  Name Field   -->
           <div class="mt-4">
-            <label class="block text-sm font-medium text-gray-700" for="name"> User List Name </label>
+            <label class="block text-sm font-medium text-gray-700" for="name">{{ $t('appAuth.userListName') }}</label>
             <div class="mt-1">
               <input
                 id="name"
                 v-model="newACLName"
                 autocomplete="off"
                 class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
-                placeholder="i.e. My Family Group"
+                :placeholder="$t('appAuth.userListNamePlaceholder')"
                 type="text" />
             </div>
           </div>
@@ -437,38 +471,35 @@ onChangePasswordDone((res) => {
           :loading="isAddAccessControlListLoading"
           :disabled="!newACLName"
           type="primary"
-          class="w-full"
-          >Confirm & Register
+          class="w-full">
+          {{ $t('appAuth.confirmRegister') }}
         </FilledButton>
       </template>
     </ModalDialog>
 
-    <!--  Delete ACL modal  -->
     <ModalDialog :close-modal="closeDeleteAccessControlListModal" :is-open="isDeleteAccessControlListModalOpen">
-      <template v-slot:header>Delete ACL User List</template>
+      <template v-slot:header>{{ $t('appAuth.deleteAclUserList') }}</template>
       <template v-slot:body>
-        Are you sure you want to delete <b>{{ selectedACLForDeletion?.name ?? '' }}</b> user list ?
+        {{ $t('appAuth.deleteAclConfirm') }} <b>{{ selectedACLForDeletion?.name ?? '' }}</b> {{ $t('appAuth.userListQuestion') }}
       </template>
       <template v-slot:footer>
         <FilledButton
           :click="deleteAccessControlList"
           :loading="isDeleteAccessControlListLoading"
           type="primary"
-          class="w-full"
-          >Confirm & Delete ACL
+          class="w-full">
+          {{ $t('appAuth.confirmDeleteAcl') }}
         </FilledButton>
       </template>
     </ModalDialog>
 
-    <!--  Add User modal  -->
     <ModalDialog :close-modal="closeAddUserModal" :is-open="isAddUserModalOpen">
-      <template v-slot:header>Add New User</template>
+      <template v-slot:header>{{ $t('appAuth.addNewUser') }}</template>
       <template v-slot:body>
-        Add a new user to the <b>{{ selectedACLForAddingUser?.name ?? '' }}</b> user list.
+        {{ $t('appAuth.addToUserList') }} <b>{{ selectedACLForAddingUser?.name ?? '' }}</b>
         <form @submit.prevent="" class="mt-2">
-          <!--  Name Field   -->
           <div class="mt-4">
-            <label class="block text-sm font-medium text-gray-700" for="name">Username</label>
+            <label class="block text-sm font-medium text-gray-700" for="name">{{ $t('appAuth.username') }}</label>
             <div class="mt-1">
               <input
                 id="name"
@@ -476,13 +507,12 @@ onChangePasswordDone((res) => {
                 @keydown="preventSpaceInput"
                 autocomplete="off"
                 class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
-                placeholder="Enter Username"
+                :placeholder="$t('appAuth.enterUsername')"
                 type="text" />
             </div>
           </div>
-          <!--    Password Field      -->
           <div class="mt-4">
-            <label class="block text-sm font-medium text-gray-700" for="password">Password</label>
+            <label class="block text-sm font-medium text-gray-700" for="password">{{ $t('appAuth.password') }}</label>
             <div class="mt-1">
               <input
                 id="password"
@@ -490,13 +520,12 @@ onChangePasswordDone((res) => {
                 @keydown="preventSpaceInput"
                 autocomplete="off"
                 class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
-                placeholder="Enter Password"
+                :placeholder="$t('appAuth.enterPassword')"
                 type="password" />
             </div>
           </div>
-          <!--    Confirm Password Field      -->
           <div class="mt-4">
-            <label class="block text-sm font-medium text-gray-700" for="confirmPassword">Confirm Password</label>
+            <label class="block text-sm font-medium text-gray-700" for="confirmPassword">{{ $t('appAuth.confirmPassword') }}</label>
             <div class="mt-1">
               <input
                 id="confirmPassword"
@@ -504,7 +533,7 @@ onChangePasswordDone((res) => {
                 @keydown="preventSpaceInput"
                 autocomplete="off"
                 class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
-                placeholder="Confirm Password"
+                :placeholder="$t('appAuth.confirmPassword')"
                 type="password" />
             </div>
           </div>
@@ -516,34 +545,31 @@ onChangePasswordDone((res) => {
           :loading="isAddUserLoading"
           :disabled="!addUserInfo.username || !addUserInfo.password || !addUserInfo.confirmPassword"
           type="primary"
-          class="w-full"
-          >Confirm & Register
+          class="w-full">
+          {{ $t('appAuth.confirmRegister') }}
         </FilledButton>
       </template>
     </ModalDialog>
 
-    <!--  Delete User modal  -->
     <ModalDialog :close-modal="closeDeleteUserModal" :is-open="isDeleteUserModalOpen">
-      <template v-slot:header>Delete User</template>
+      <template v-slot:header>{{ $t('appAuth.deleteUserTitle') }}</template>
       <template v-slot:body>
-        Are you sure you want to delete <b>{{ selectedUserForDeletion?.username ?? '' }}</b> user ?
+        {{ $t('appAuth.deleteUserConfirm') }} <b>{{ selectedUserForDeletion?.username ?? '' }}</b> {{ $t('appAuth.userQuestion') }}
       </template>
       <template v-slot:footer>
-        <FilledButton :click="deleteUser" :loading="isDeleteUserLoading" type="primary" class="w-full"
-          >Confirm & Delete User
+        <FilledButton :click="deleteUser" :loading="isDeleteUserLoading" type="primary" class="w-full">
+          {{ $t('appAuth.confirmDeleteUser') }}
         </FilledButton>
       </template>
     </ModalDialog>
 
-    <!--  Change Password modal  -->
     <ModalDialog :close-modal="closeChangePasswordModal" :is-open="isChangePasswordModalOpen">
-      <template v-slot:header>Change Password</template>
+      <template v-slot:header>{{ $t('appAuth.changePasswordTitle') }}</template>
       <template v-slot:body>
-        Change the password for <b>{{ selectedUserForChangePassword?.username ?? '' }}</b> user.
+        {{ $t('appAuth.changePasswordHint') }} <b>{{ selectedUserForChangePassword?.username ?? '' }}</b> {{ $t('appAuth.userLabel') }}
         <form @submit.prevent="" class="mt-2">
-          <!--    Password Field      -->
           <div class="mt-4">
-            <label class="block text-sm font-medium text-gray-700" for="password">Password</label>
+            <label class="block text-sm font-medium text-gray-700" for="password">{{ $t('appAuth.password') }}</label>
             <div class="mt-1">
               <input
                 id="password"
@@ -551,13 +577,12 @@ onChangePasswordDone((res) => {
                 @keydown="preventSpaceInput"
                 autocomplete="off"
                 class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
-                placeholder="Enter Password"
+                :placeholder="$t('appAuth.enterPassword')"
                 type="password" />
             </div>
           </div>
-          <!--    Confirm Password Field      -->
           <div class="mt-4">
-            <label class="block text-sm font-medium text-gray-700" for="confirmPassword">Confirm Password</label>
+            <label class="block text-sm font-medium text-gray-700" for="confirmPassword">{{ $t('appAuth.confirmPassword') }}</label>
             <div class="mt-1">
               <input
                 id="confirmPassword"
@@ -565,7 +590,7 @@ onChangePasswordDone((res) => {
                 @keydown="preventSpaceInput"
                 autocomplete="off"
                 class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
-                placeholder="Confirm Password"
+                :placeholder="$t('appAuth.confirmPassword')"
                 type="password" />
             </div>
           </div>
@@ -577,11 +602,17 @@ onChangePasswordDone((res) => {
           :loading="isChangePasswordLoading"
           :disabled="!changePasswordInfo.password || !changePasswordInfo.confirmPassword"
           type="primary"
-          class="w-full"
-          >Confirm & Change Password
+          class="w-full">
+          {{ $t('appAuth.confirmChangePassword') }}
         </FilledButton>
       </template>
     </ModalDialog>
+
+    <ConfirmDialog :is-open="isAddAclConfirmOpen" :message="addAclMessage" :confirm-type="addAclConfirmType" :on-confirm="onAddAclConfirm" :on-cancel="onAddAclCancel" />
+    <ConfirmDialog :is-open="isDeleteAclConfirmOpen" :message="deleteAclMessage" :confirm-type="deleteAclConfirmType" :on-confirm="onDeleteAclConfirm" :on-cancel="onDeleteAclCancel" />
+    <ConfirmDialog :is-open="isAddUserConfirmOpen" :message="addUserMessage" :confirm-type="addUserConfirmType" :on-confirm="onAddUserConfirm" :on-cancel="onAddUserCancel" />
+    <ConfirmDialog :is-open="isDeleteUserConfirmOpen" :message="deleteUserMessage" :confirm-type="deleteUserConfirmType" :on-confirm="onDeleteUserConfirm" :on-cancel="onDeleteUserCancel" />
+    <ConfirmDialog :is-open="isChangePasswordConfirmOpen" :message="changePasswordMessage" :confirm-type="changePasswordConfirmType" :on-confirm="onChangePasswordConfirm" :on-cancel="onChangePasswordCancel" />
   </section>
 </template>
 

@@ -6,10 +6,21 @@ import { computed } from 'vue'
 import { toast } from 'vue-sonner'
 import FilledButton from '@/views/components/FilledButton.vue'
 import { useI18n } from 'vue-i18n'
+import { useConfirmDialog } from '@/composables/useConfirmDialog.js'
+import ConfirmDialog from '@/views/components/ConfirmDialog.vue'
 
 const { t } = useI18n()
 const router = useRouter()
 const applicationId = router.currentRoute.value.params.id
+
+const {
+  isOpen: isRegenerateWebhookConfirmOpen,
+  message: regenerateWebhookMessage,
+  confirmType: regenerateWebhookConfirmType,
+  confirm: askRegenerateWebhookConfirm,
+  onConfirm: onRegenerateWebhookConfirm,
+  onCancel: onRegenerateWebhookCancel
+} = useConfirmDialog()
 
 const {
   result: applicationDetailsRaw,
@@ -79,10 +90,8 @@ regenerateWebhookTokenDone((result) => {
   }
 })
 
-const regenerateWebhookTokenWithConfirmation = () => {
-  if (
-    confirm(t('applicationDetails.regenerateWebhookConfirm'))
-  ) {
+const regenerateWebhookTokenWithConfirmation = async () => {
+  if (await askRegenerateWebhookConfirm(t('applicationDetails.regenerateWebhookConfirm'), 'warning')) {
     regenerateWebhookToken({
       id: applicationId
     })
@@ -131,6 +140,8 @@ const regenerateWebhookTokenWithConfirmation = () => {
       {{ $t('applicationDetails.regenerateToken') }}
     </FilledButton>
   </div>
+
+  <ConfirmDialog :is-open="isRegenerateWebhookConfirmOpen" :message="regenerateWebhookMessage" :confirm-type="regenerateWebhookConfirmType" :on-confirm="onRegenerateWebhookConfirm" :on-cancel="onRegenerateWebhookCancel" />
 </template>
 
 <style scoped></style>

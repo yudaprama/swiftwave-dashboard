@@ -14,8 +14,28 @@ import UptimeChart from '@/views/components/UptimeChart.vue'
 import UpdateApplicationGroupModal from '@/views/partials/UpdateApplicationGroupModal.vue'
 import { camelCaseToSpacedCapitalized } from '@/vendor/utils.js'
 import { useI18n } from 'vue-i18n'
+import { useConfirmDialog } from '@/composables/useConfirmDialog.js'
+import ConfirmDialog from '@/views/components/ConfirmDialog.vue'
 
 const { t } = useI18n()
+
+const {
+  isOpen: isRestartConfirmOpen,
+  message: restartMessage,
+  confirmType: restartConfirmType,
+  confirm: askRestartConfirm,
+  onConfirm: onRestartConfirm,
+  onCancel: onRestartCancel
+} = useConfirmDialog()
+
+const {
+  isOpen: isRebuildConfirmOpen,
+  message: rebuildMessage,
+  confirmType: rebuildConfirmType,
+  confirm: askRebuildConfirm,
+  onConfirm: onRebuildConfirm,
+  onCancel: onRebuildCancel
+} = useConfirmDialog()
 
 // Get the application ID from the URL
 const router = useRouter()
@@ -179,9 +199,8 @@ restartApplicationError((error) => {
   toast.error(error.message)
 })
 
-const restartApplicationWithConfirmation = () => {
-  const confirmation = confirm(t('applicationDetails.restartConfirm'))
-  if (confirmation) {
+const restartApplicationWithConfirmation = async () => {
+  if (await askRestartConfirm(t('applicationDetails.restartConfirm'), 'warning')) {
     restartApplication()
   }
 }
@@ -223,9 +242,8 @@ rebuildApplicationError((error) => {
   toast.error(error.message)
 })
 
-const rebuildApplicationWithConfirmation = () => {
-  const confirmation = confirm(t('applicationDetails.rebuildConfirm'))
-  if (confirmation) {
+const rebuildApplicationWithConfirmation = async () => {
+  if (await askRebuildConfirm(t('applicationDetails.rebuildConfirm'), 'warning')) {
     rebuildApplication()
   }
 }
@@ -484,6 +502,9 @@ const openApplicationGroupUpdateModal = () => {
         </div>
       </div>
     </div>
+
+    <ConfirmDialog :is-open="isRestartConfirmOpen" :message="restartMessage" :confirm-type="restartConfirmType" :on-confirm="onRestartConfirm" :on-cancel="onRestartCancel" />
+    <ConfirmDialog :is-open="isRebuildConfirmOpen" :message="rebuildMessage" :confirm-type="rebuildConfirmType" :on-confirm="onRebuildConfirm" :on-cancel="onRebuildCancel" />
   </section>
 </template>
 

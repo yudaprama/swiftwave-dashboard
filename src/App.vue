@@ -1,15 +1,22 @@
 <script setup>
 import { RouterView, useRouter } from 'vue-router'
-import { computed, onBeforeMount, onMounted } from 'vue'
+import { computed, onBeforeMount, onMounted, ref } from 'vue'
 import { useAuthStore } from '@/store/auth.js'
+import { useThemeStore } from '@/store/theme.js'
 import SideBar from '@/views/partials/SideBar.vue'
+import MobileSidebarDrawer from '@/views/partials/MobileSidebarDrawer.vue'
+import Breadcrumb from '@/views/components/Breadcrumb.vue'
 import LoadingPage from '@/views/pages/LoadingPage.vue'
-import NotAvailableOnMobile from '@/views/pages/NotAvailableOnMobile.vue'
 import GlobalWarning from '@/views/partials/GlobalWarning.vue'
 import { Toaster } from 'vue-sonner'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const authStore = useAuthStore()
+const themeStore = useThemeStore()
 const router = useRouter()
+
+const isMobileSidebarOpen = ref(false)
 
 onBeforeMount(() => {
   const token = localStorage.getItem('token')
@@ -25,32 +32,80 @@ onMounted(() => {
 })
 
 const isLoginPage = computed(() => router.currentRoute.value.name === 'Login')
+const isShowSideBar = computed(() => {
+  if (!authStore.IsLoggedIn) {
+    return false
+  } else {
+    return !['Download Persistent Volume Backup', 'Maintenance', 'Setup'].includes(router.currentRoute.value.name)
+  }
+})
 </script>
 
 <template>
-  <Toaster position="top-center" theme="light" richColors />
+  <Toaster position="top-center" :theme="themeStore.isDark ? 'dark' : 'light'" richColors />
   <LoadingPage :show="authStore.IsLoggingInProgress" />
+
+  <!-- Skip to content link for keyboard users -->
+  <a
+    href="#main-content"
+    class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-primary-600 focus:px-4 focus:py-2 focus:text-white focus:shadow-lg">
+    {{ t('common.skipToContent') }}
+  </a>
+
   <div class="app">
-    <SideBar class="w-80" />
-    <div
+    <!-- Mobile top bar -->
+    <header
+      v-if="isShowSideBar"
+      class="flex h-14 items-center justify-between border-b bg-white px-4 dark:border-gray-700 dark:bg-secondary-800 md:hidden">
+      <button
+        type="button"
+        class="rounded-md p-2 text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
+        aria-label="Open menu"
+        @click="isMobileSidebarOpen = true">
+        <font-awesome-icon icon="fa-solid fa-bars" class="text-lg" />
+      </button>
+      <RouterLink to="/">
+        <img src="@/assets/images/logo.png" alt="SwiftWave" class="h-8" />
+      </RouterLink>
+      <div class="w-10" />
+    </header>
+
+    <!-- Mobile sidebar drawer -->
+    <MobileSidebarDrawer :open="isMobileSidebarOpen" @close="isMobileSidebarOpen = false">
+      <SideBar @navigate="isMobileSidebarOpen = false" />
+    </MobileSidebarDrawer>
+
+    <!-- Desktop sidebar -->
+    <SideBar v-if="isShowSideBar" class="hidden md:flex" />
+
+    <!-- Main content -->
+    <main
+      id="main-content"
+      tabindex="-1"
       class="scrollbox flex max-h-screen w-full flex-col items-center overflow-y-auto"
       :class="{
         'p-4': !isLoginPage
       }">
+      <Breadcrumb class="mb-4" />
       <RouterView />
-    </div>
+    </main>
     <GlobalWarning />
   </div>
-  <NotAvailableOnMobile />
 </template>
 
 <style>
 @reference "./assets/css/base.css";
 .app {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   height: 100vh;
   width: 100vw;
+}
+
+@media (min-width: 768px) {
+  .app {
+    flex-direction: row;
+  }
 }
 
 .scrollbox::-webkit-scrollbar {
@@ -59,7 +114,7 @@ const isLoginPage = computed(() => router.currentRoute.value.name === 'Login')
 }
 
 .scrollbox::-webkit-scrollbar-track {
-  @apply rounded-full bg-gray-200;
+  @apply rounded-full bg-gray-200 dark:bg-gray-700;
 }
 
 .scrollbox::-webkit-scrollbar-thumb {
@@ -82,7 +137,7 @@ const isLoginPage = computed(() => router.currentRoute.value.name === 'Login')
 }
 
 .xterm-viewport::-webkit-scrollbar-track {
-  @apply rounded-full bg-gray-200;
+  @apply rounded-full bg-gray-200 dark:bg-gray-700;
 }
 
 .xterm-viewport::-webkit-scrollbar-thumb {

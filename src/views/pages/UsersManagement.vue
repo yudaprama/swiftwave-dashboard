@@ -8,6 +8,8 @@ import PageBar from '@/views/components/PageBar.vue'
 import { toast } from 'vue-sonner'
 import VueQrcode from 'vue-qrcode'
 import { useI18n } from 'vue-i18n'
+import { useConfirmDialog } from '@/composables/useConfirmDialog.js'
+import ConfirmDialog from '@/views/components/ConfirmDialog.vue'
 
 const { t } = useI18n()
 
@@ -17,6 +19,33 @@ import UserListRow from '@/views/partials/UserListRow.vue'
 import TableMessage from '@/views/components/Table/TableMessage.vue'
 import Code from '@/views/components/Code.vue'
 import Divider from '@/views/components/Divider.vue'
+
+const {
+  isOpen: isDeleteUserConfirmOpen,
+  message: deleteUserMessage,
+  confirmType: deleteUserConfirmType,
+  confirm: askDeleteUserConfirm,
+  onConfirm: onDeleteUserConfirm,
+  onCancel: onDeleteUserCancel
+} = useConfirmDialog()
+
+const {
+  isOpen: isEnableTotpConfirmOpen,
+  message: enableTotpMessage,
+  confirmType: enableTotpConfirmType,
+  confirm: askEnableTotpConfirm,
+  onConfirm: onEnableTotpConfirm,
+  onCancel: onEnableTotpCancel
+} = useConfirmDialog()
+
+const {
+  isOpen: isDisableTotpConfirmOpen,
+  message: disableTotpMessage,
+  confirmType: disableTotpConfirmType,
+  confirm: askDisableTotpConfirm,
+  onConfirm: onDisableTotpConfirm,
+  onCancel: onDisableTotpCancel
+} = useConfirmDialog()
 
 const isModalOpen = ref(false)
 const openModal = () => {
@@ -77,8 +106,8 @@ const {
   }
 `)
 
-const deleteUserWithConfirmation = (user) => {
-  if (confirm(t('users.deleteConfirm', { email: user.email }))) {
+const deleteUserWithConfirmation = async (user) => {
+  if (await askDeleteUserConfirm(t('users.deleteConfirm', { email: user.email }), 'danger')) {
     deleteUser({ id: user.id })
   }
 }
@@ -159,8 +188,8 @@ onRequestEnableTotpError((err) => {
   toast.error(err.message)
 })
 
-const requestEnableTotpWithConfirmation = () => {
-  if (confirm(t('users.enableTotpConfirm'))) {
+const requestEnableTotpWithConfirmation = async () => {
+  if (await askEnableTotpConfirm(t('users.enableTotpConfirm'))) {
     resetTotpRequest()
     requestEnableTotp()
   }
@@ -204,8 +233,8 @@ const {
   }
 `)
 
-const disableTotpWithConfirmation = () => {
-  if (confirm(t('users.disableTotpConfirm'))) {
+const disableTotpWithConfirmation = async () => {
+  if (await askDisableTotpConfirm(t('users.disableTotpConfirm'), 'warning')) {
     disableTotpRaw()
   }
 }
@@ -348,5 +377,9 @@ onDisableTotpError((err) => {
           :disable-totp-current-user="disableTotpWithConfirmation" />
       </template>
     </Table>
+
+    <ConfirmDialog :is-open="isDeleteUserConfirmOpen" :message="deleteUserMessage" :confirm-type="deleteUserConfirmType" :on-confirm="onDeleteUserConfirm" :on-cancel="onDeleteUserCancel" />
+    <ConfirmDialog :is-open="isEnableTotpConfirmOpen" :message="enableTotpMessage" :confirm-type="enableTotpConfirmType" :on-confirm="onEnableTotpConfirm" :on-cancel="onEnableTotpCancel" />
+    <ConfirmDialog :is-open="isDisableTotpConfirmOpen" :message="disableTotpMessage" :confirm-type="disableTotpConfirmType" :on-confirm="onDisableTotpConfirm" :on-cancel="onDisableTotpCancel" />
   </section>
 </template>

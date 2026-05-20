@@ -14,8 +14,11 @@ import ModalDialog from '@/views/components/ModalDialog.vue'
 import Badge from '@/views/components/Badge.vue'
 import CreateDomainModal from '@/views/partials/CreateDomainModal.vue'
 import { useI18n } from 'vue-i18n'
+import { useConfirmDialog } from '@/composables/useConfirmDialog.js'
+import ConfirmDialog from '@/views/components/ConfirmDialog.vue'
 
 const { t } = useI18n()
+const { isOpen: isDeleteRedirectConfirmOpen, message: deleteRedirectMessage, confirmType: deleteRedirectType, confirm: askDeleteRedirect, onConfirm: onDeleteRedirectConfirm, onCancel: onDeleteRedirectCancel } = useConfirmDialog()
 
 const isModalOpen = ref(false)
 const openModal = () => {
@@ -97,8 +100,8 @@ const {
   }
 )
 
-const deleteRedirectRulesWithConfirmation = (redirect_rules) => {
-  if (confirm(t('redirectRules.deleteConfirm'))) {
+const deleteRedirectRulesWithConfirmation = async (redirect_rules) => {
+  if (await askDeleteRedirect(t('redirectRules.deleteConfirm'), 'danger')) {
     deleteRedirectRule({
       id: redirect_rules.id
     })
@@ -284,6 +287,7 @@ const openRedirectRuleRegistrationModal = () => {
       </template>
     </Table>
   </section>
+  <ConfirmDialog :is-open="isDeleteRedirectConfirmOpen" :message="deleteRedirectMessage" :confirm-type="deleteRedirectType" :on-confirm="onDeleteRedirectConfirm" :on-cancel="onDeleteRedirectCancel" />
 </template>
 
 <style scoped></style>

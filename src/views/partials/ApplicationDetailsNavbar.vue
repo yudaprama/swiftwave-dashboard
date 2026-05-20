@@ -91,7 +91,7 @@
       {{ $t('common.actions') }}
     </RouterLink>
     <RouterLink
-      class="nav-element text-red-500!"
+      class="nav-element text-red-500! dark:text-red-400!"
       :to="{
         name: 'Application Details Danger Zone',
         params: { id: $route.params.id }
@@ -104,14 +104,14 @@
 <style scoped>
 @reference "../../assets/css/base.css";
 .navbar {
-  @apply flex h-min select-none flex-col flex-wrap gap-1 rounded-lg border border-secondary-200 p-1.5;
+  @apply flex select-none gap-1 overflow-x-auto rounded-lg border border-secondary-200 p-1.5 dark:border-gray-700;
 }
 
 .nav-element {
-  @apply min-w-max rounded-md px-3 py-2 text-sm text-secondary-700 hover:bg-secondary-100;
+  @apply min-w-max rounded-md px-3 py-2 text-sm text-secondary-700 hover:bg-secondary-100 dark:text-gray-300 dark:hover:bg-gray-700;
 }
 
 .router-link-exact-active {
-  @apply bg-secondary-100 font-medium text-black;
+  @apply bg-secondary-100 font-medium text-black dark:bg-gray-600 dark:text-gray-100;
 }
 </style>

@@ -6,6 +6,8 @@ import gql from 'graphql-tag';
 import { computed, ref } from 'vue';
 import { toast } from 'vue-sonner'
 import { useI18n } from 'vue-i18n'
+import { useConfirmDialog } from '@/composables/useConfirmDialog.js'
+import ConfirmDialog from '@/views/components/ConfirmDialog.vue'
 import TableMessage from '@/views/components/Table/TableMessage.vue';
 import Table from '@/views/components/Table/Table.vue';
 import TableHeader from '@/views/components/Table/TableHeader.vue';
@@ -17,6 +19,7 @@ import CreateDomainModal from '@/views/partials/CreateDomainModal.vue';
 import DomainIssueSSLModal from '../partials/DomainIssueSSLModal.vue';
 
 const { t } = useI18n()
+const { isOpen: isDeleteDomainConfirmOpen, message: deleteDomainMessage, confirmType: deleteDomainType, confirm: askDeleteDomain, onConfirm: onDeleteDomainConfirm, onCancel: onDeleteDomainCancel } = useConfirmDialog()
 
 const isDetailsModalOpen = ref(false);
 const openDetailsModal = () => {
@@ -67,7 +70,7 @@ const {
 `);
 
 const deleteDomainWithConfirmation = async (domain) => {
-    if (confirm(t('domains.deleteConfirm'))) {
+    if (await askDeleteDomain(t('domains.deleteConfirm'), 'danger')) {
         deleteDomain({ id: domain.id });
     }
 };
@@ -256,6 +259,7 @@ const openIssueSSLModal = computed(() => issueSSLModal.value?.openModal ?? (() =
             </template>
         </Table>
     </section>
+    <ConfirmDialog :is-open="isDeleteDomainConfirmOpen" :message="deleteDomainMessage" :confirm-type="deleteDomainType" :on-confirm="onDeleteDomainConfirm" :on-cancel="onDeleteDomainCancel" />
 </template>
 
 <style scoped>

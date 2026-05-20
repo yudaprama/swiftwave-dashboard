@@ -1,8 +1,10 @@
 <script setup>
 import { onMounted, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import axios from 'axios'
 import { getHttpBaseUrl } from '@/vendor/utils.js'
 
+const { t } = useI18n()
 const status = ref('loading') // loading, success, error
 const message = ref('')
 
@@ -10,7 +12,7 @@ onMounted(async () => {
   const token = new URLSearchParams(window.location.search).get('token')
   if (!token) {
     status.value = 'error'
-    message.value = 'Invalid verification link. No token provided.'
+    message.value = t('verifyEmail.noToken')
     return
   }
 
@@ -18,13 +20,13 @@ onMounted(async () => {
     const HTTP_BASE_URL = getHttpBaseUrl()
     const res = await axios.get(`${HTTP_BASE_URL}/auth/verify-email?token=${token}`)
     status.value = 'success'
-    message.value = res.data.message || 'Email verified successfully! You can now log in.'
+    message.value = res.data.message || t('verifyEmail.defaultSuccess')
   } catch (e) {
     status.value = 'error'
     if (e.response && e.response.data && e.response.data.message) {
       message.value = e.response.data.message
     } else {
-      message.value = 'Email verification failed. The link may be invalid or expired.'
+      message.value = t('verifyEmail.defaultError')
     }
   }
 })
@@ -35,24 +37,24 @@ onMounted(async () => {
     <div class="w-full max-w-md rounded-lg bg-white p-8 shadow-lg">
       <div class="mb-6 text-center">
         <img src="@/assets/images/logo.png" class="mx-auto mb-4 w-14" alt="swiftwave logo" />
-        <h1 class="font-prompt text-2xl">swiftwave</h1>
+        <h1 class="font-prompt text-2xl">{{ $t('login.title') }}</h1>
       </div>
 
       <div v-if="status === 'loading'" class="text-center">
         <div class="mx-auto mb-4 h-8 w-8 animate-spin rounded-full border-b-2 border-primary-600"></div>
-        <p class="text-gray-600">Verifying your email...</p>
+        <p class="text-gray-600">{{ $t('verifyEmail.verifying') }}</p>
       </div>
 
       <div v-else-if="status === 'success'" class="text-center">
         <div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
           <font-awesome-icon icon="fa-solid fa-check" class="text-2xl text-green-600" />
         </div>
-        <h2 class="mb-2 text-xl font-semibold text-gray-900">Email Verified!</h2>
+        <h2 class="mb-2 text-xl font-semibold text-gray-900">{{ $t('verifyEmail.successTitle') }}</h2>
         <p class="mb-6 text-gray-600">{{ message }}</p>
         <RouterLink
           to="/login"
           class="inline-block w-full rounded-md bg-primary-600 px-4 py-2 text-center text-white hover:bg-primary-700">
-          Go to Login
+          {{ $t('verifyEmail.goToLogin') }}
         </RouterLink>
       </div>
 
@@ -60,12 +62,12 @@ onMounted(async () => {
         <div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-100">
           <font-awesome-icon icon="fa-solid fa-xmark" class="text-2xl text-red-600" />
         </div>
-        <h2 class="mb-2 text-xl font-semibold text-gray-900">Verification Failed</h2>
+        <h2 class="mb-2 text-xl font-semibold text-gray-900">{{ $t('verifyEmail.failedTitle') }}</h2>
         <p class="mb-6 text-gray-600">{{ message }}</p>
         <RouterLink
           to="/login"
           class="inline-block w-full rounded-md bg-primary-600 px-4 py-2 text-center text-white hover:bg-primary-700">
-          Go to Login
+          {{ $t('verifyEmail.goToLogin') }}
         </RouterLink>
       </div>
     </div>
