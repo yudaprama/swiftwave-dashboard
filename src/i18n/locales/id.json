@@ -39,7 +39,8 @@
     "billing": "Penagihan",
     "usage": "Penggunaan",
     "shareFeedback": "Bagikan Feedback",
-    "testimonials": "Testimonial"
+    "testimonials": "Testimonial",
+    "backends": "Backend"
   },
   "common": {
     "save": "Simpan",
@@ -105,6 +106,21 @@
     "en": "English",
     "id": "Bahasa Indonesia",
     "switchLanguage": "Ganti Bahasa"
+  },
+  "backends": {
+    "title": "Layanan Backend",
+    "subtitle": "Instance PocketBase terkelola untuk aplikasi Anda",
+    "create": "Buat Backend",
+    "creating": "Membuat...",
+    "name": "Nama Backend",
+    "nameHint": "Gunakan huruf kecil, angka, dan tanda hubung saja",
+    "collections": "Collection",
+    "storage": "Storage",
+    "records": "Record",
+    "utilities": "Utilitas",
+    "openAdmin": "Buka Admin",
+    "restart": "Mulai Ulang",
+    "empty": "Belum ada layanan backend. Buat satu untuk memulai."
   },
   "login": {
     "title": "swiftwave",

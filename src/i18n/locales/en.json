@@ -39,7 +39,8 @@
     "billing": "Billing",
     "usage": "Usage",
     "shareFeedback": "Share Feedback",
-    "testimonials": "Testimonials"
+    "testimonials": "Testimonials",
+    "backends": "Backends"
   },
   "common": {
     "save": "Save",
@@ -106,6 +107,21 @@
     "en": "English",
     "id": "Bahasa Indonesia",
     "switchLanguage": "Switch Language"
+  },
+  "backends": {
+    "title": "Backend Services",
+    "subtitle": "Managed PocketBase instances for your apps",
+    "create": "Create Backend",
+    "creating": "Creating...",
+    "name": "Backend Name",
+    "nameHint": "Lowercase letters, numbers, and hyphens only",
+    "collections": "Collections",
+    "storage": "Storage",
+    "records": "Records",
+    "utilities": "Utilities",
+    "openAdmin": "Open Admin",
+    "restart": "Restart",
+    "empty": "No backend services yet. Create one to get started."
   },
   "login": {
     "title": "swiftwave",

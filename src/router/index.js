@@ -35,6 +35,10 @@ import BillingManagementPage from '@/views/pages/BillingManagement.vue'
 import UsageOverviewPage from '@/views/pages/UsageOverview.vue'
 import TestimonialSubmitPage from '@/views/pages/TestimonialSubmit.vue'
 import TestimonialManagementPage from '@/views/pages/TestimonialManagement.vue'
+import BackendServiceManagementPage from '@/views/pages/BackendServiceManagement.vue'
+import BackendCollectionsPage from '@/views/pages/BackendCollections.vue'
+import BackendRecordsPage from '@/views/pages/BackendRecords.vue'
+import BackendUtilitiesPage from '@/views/pages/BackendUtilities.vue'
 
 import SystemLogsPage from '@/views/pages/SystemLogs.vue'
 import AppAuthBasicAccessControlList from '@/views/pages/AppAuthBasicAccessControlList.vue'
@@ -294,6 +298,30 @@ const router = createRouter({
       name: 'Testimonials',
       component: TestimonialManagementPage,
       meta: { breadcrumb: 'sidebar.testimonials' }
+    },
+    {
+      path: '/backends',
+      name: 'Backend Services',
+      component: BackendServiceManagementPage,
+      meta: { breadcrumb: 'sidebar.backends' }
+    },
+    {
+      path: '/backend/:id/collections',
+      name: 'Backend Collections',
+      component: BackendCollectionsPage,
+      meta: { breadcrumb: 'backends.collections' }
+    },
+    {
+      path: '/backend/:id/collections/:collectionName/records',
+      name: 'Backend Records',
+      component: BackendRecordsPage,
+      meta: { breadcrumb: 'backends.records' }
+    },
+    {
+      path: '/backend/:id/utilities',
+      name: 'Backend Utilities',
+      component: BackendUtilitiesPage,
+      meta: { breadcrumb: 'backends.utilities' }
     }
   ]
 })
