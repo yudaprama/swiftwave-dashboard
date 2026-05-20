@@ -1,7 +1,7 @@
 <script setup>
-import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue'
-import { useRouter } from 'vue-router'
-import { ref, watch } from 'vue'
+import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/vue';
+import { useRouter } from 'vue-router';
+import { ref, watch } from 'vue';
 
 const props = defineProps({
   activeUrls: {
@@ -11,20 +11,24 @@ const props = defineProps({
   collapsed: {
     type: Boolean,
     default: false
+  },
+  label: {
+    type: String,
+    default: ''
   }
-})
-const router = useRouter()
-const isOpen = ref(false)
+});
+const router = useRouter();
+const isOpen = ref(false);
 
 watch(
   () => router.currentRoute.value,
   (currentRoute) => {
     if (props.activeUrls.includes(currentRoute.name)) {
-      isOpen.value = true
+      isOpen.value = true;
     }
   },
   { immediate: true }
-)
+);
 </script>
 
 <template>
@@ -32,7 +36,9 @@ watch(
     <Disclosure v-model:open="isOpen">
       <DisclosureButton
         as="button"
-        class="flex w-full items-center justify-between rounded-lg bg-gray-200 bg-opacity-20 px-3 py-1.5 text-gray-200 backdrop-blur-xs backdrop-filter dark:bg-gray-700/30 dark:text-gray-300">
+        :aria-label="collapsed ? label : undefined"
+        :title="collapsed ? label : undefined"
+        class="bg-opacity-20 flex w-full items-center justify-between rounded-lg bg-gray-200 px-3 py-1.5 text-gray-200 backdrop-blur-xs backdrop-filter dark:bg-gray-700/30 dark:text-gray-300">
         <div class="flex items-center">
           <slot name="icon"></slot>
           <span v-if="!collapsed" class="mx-2 text-sm font-medium">
@@ -57,7 +63,7 @@ watch(
           leave-from-class="transform opacity-100"
           leave-to-class="transform opacity-0">
           <DisclosurePanel class="mt-0">
-            <div class="ml-4 mr-0 mt-0 transition-all">
+            <div class="mt-0 mr-0 ml-4 transition-all">
               <slot name="content"></slot>
             </div>
           </DisclosurePanel>

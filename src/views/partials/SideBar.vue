@@ -1,80 +1,87 @@
 <script setup>
-import { useAuthStore } from '@/store/auth.js'
-import { RouterLink, useRouter } from 'vue-router'
-import Logo from '@/assets/images/logo-full-inverse-subtitle.png'
-import ChangePasswordModal from '@/views/partials/ChangePasswordModal.vue'
-import { computed, onMounted, ref } from 'vue'
-import SideBarOption from '@/views/partials/SideBarOption.vue'
-import { useMutation } from '@vue/apollo-composable'
-import gql from 'graphql-tag'
-import { toast } from 'vue-sonner'
-import ModalDialog from '@/views/components/ModalDialog.vue'
-import LanguageSwitcher from '@/views/components/LanguageSwitcher.vue'
-import ThemeToggle from '@/views/components/ThemeToggle.vue'
-import { useI18n } from 'vue-i18n'
-import { useConfirmDialog } from '@/composables/useConfirmDialog.js'
-import ConfirmDialog from '@/views/components/ConfirmDialog.vue'
+import { useAuthStore } from '@/store/auth.js';
+import { RouterLink, useRouter } from 'vue-router';
+import Logo from '@/assets/images/logo-full-inverse-subtitle.png';
+import ChangePasswordModal from '@/views/partials/ChangePasswordModal.vue';
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
+import SideBarOption from '@/views/partials/SideBarOption.vue';
+import { useMutation } from '@vue/apollo-composable';
+import gql from 'graphql-tag';
+import { toast } from 'vue-sonner';
+import ModalDialog from '@/views/components/ModalDialog.vue';
+import LanguageSwitcher from '@/views/components/LanguageSwitcher.vue';
+import ThemeToggle from '@/views/components/ThemeToggle.vue';
+import { useI18n } from 'vue-i18n';
+import { useConfirmDialog } from '@/composables/useConfirmDialog.js';
+import ConfirmDialog from '@/views/components/ConfirmDialog.vue';
 
-const { t } = useI18n()
-const emit = defineEmits(['navigate'])
+const { t } = useI18n();
+const emit = defineEmits(['navigate']);
 const props = defineProps({
   collapsed: {
     type: Boolean,
     default: false
   }
-})
-const authStore = useAuthStore()
-const router = useRouter()
+});
+const authStore = useAuthStore();
+const router = useRouter();
 
-const isChangePasswordModalOpen = ref(false)
-const swVersion = ref('')
+const isChangePasswordModalOpen = ref(false);
+const swVersion = ref('');
 const openChangePasswordModal = () => {
-  isChangePasswordModalOpen.value = true
-}
+  isChangePasswordModalOpen.value = true;
+};
 const closeChangePasswordModal = () => {
-  isChangePasswordModalOpen.value = false
-}
+  isChangePasswordModalOpen.value = false;
+};
 const isShowSideBar = computed(() => {
   if (!authStore.IsLoggedIn) {
-    return false
+    return false;
   } else {
-    return !['Download Persistent Volume Backup', 'Maintenance', 'Setup'].includes(router.currentRoute.value.name)
+    return !['Download Persistent Volume Backup', 'Maintenance', 'Setup'].includes(router.currentRoute.value.name);
   }
-})
+});
 
-const { isOpen: isLogoutConfirmOpen, message: logoutMessage, confirm: askLogout, onConfirm: onLogoutConfirm, onCancel: onLogoutCancel } = useConfirmDialog()
+const {
+  isOpen: isLogoutConfirmOpen,
+  message: logoutMessage,
+  confirmType: logoutConfirmType,
+  confirm: askLogout,
+  onConfirm: onLogoutConfirm,
+  onCancel: onLogoutCancel
+} = useConfirmDialog();
 
 const logoutWithConfirmation = async () => {
-  if (await askLogout(t('sidebar.logoutConfirm'))) {
-    authStore.Logout()
+  if (await askLogout(t('sidebar.logoutConfirm'), 'danger')) {
+    authStore.Logout();
   }
-}
+};
 
 const fetchSWVersion = () => {
   if (authStore.IsLoggedIn) {
     authStore.fetchSWVersion().then((v) => {
-      swVersion.value = v
-    })
+      swVersion.value = v;
+    });
   }
-}
+};
 
 onMounted(() => {
-  fetchSWVersion()
+  fetchSWVersion();
   const intervalId = setInterval(() => {
     if (authStore.IsLoggedIn) {
       if (swVersion.value === '') {
-        fetchSWVersion()
+        fetchSWVersion();
       } else {
-        clearInterval(intervalId)
+        clearInterval(intervalId);
       }
     }
-  }, 2000)
-})
+  }, 2000);
+});
 
 // Restart system
-const timeCount = ref(5)
+const timeCount = ref(5);
 
-const isSystemRestartModalOpen = ref(false)
+const isSystemRestartModalOpen = ref(false);
 const {
   mutate: restartSystem,
   onDone: onRestartSystemDone,
@@ -83,51 +90,62 @@ const {
   mutation {
     restartSystem
   }
-`)
+`);
 
 onRestartSystemError((error) => {
-  toast.error(error.message)
-})
+  toast.error(error.message);
+});
 
 onRestartSystemDone((val) => {
   if (val.data.restartSystem) {
-    toast.success(t('sidebar.restartRequested'))
-    isSystemRestartModalOpen.value = true
-    startCountDown()
+    toast.success(t('sidebar.restartRequested'));
+    isSystemRestartModalOpen.value = true;
+    startCountDown();
   } else {
-    toast.error(t('sidebar.restartFailed'))
+    toast.error(t('sidebar.restartFailed'));
   }
-})
+});
 
-const { isOpen: isRestartConfirmOpen, message: restartMessage, confirm: askRestart, onConfirm: onRestartConfirm, onCancel: onRestartCancel } = useConfirmDialog()
+const {
+  isOpen: isRestartConfirmOpen,
+  message: restartMessage,
+  confirmType: restartConfirmType,
+  confirm: askRestart,
+  onConfirm: onRestartConfirm,
+  onCancel: onRestartCancel
+} = useConfirmDialog();
 
 const systemRestart = async () => {
   if (await askRestart(t('sidebar.restartConfirm'), 'warning')) {
-    restartSystem()
+    restartSystem();
   }
-}
+};
 
 const startCountDown = () => {
   const interval = setInterval(() => {
-    timeCount.value--
+    timeCount.value--;
     if (timeCount.value === 0) {
-      clearInterval(interval)
-      isSystemRestartModalOpen.value = false
-      router.push({ name: 'Maintenance', query: { redirect: router.currentRoute.value.path } })
+      clearInterval(interval);
+      isSystemRestartModalOpen.value = false;
+      router.push({ name: 'Maintenance', query: { redirect: router.currentRoute.value.path } });
     }
-  }, 1000)
-}
+  }, 1000);
+};
 
 // Emit navigate event when clicking any router link (for mobile drawer close)
-router.afterEach(() => {
-  emit('navigate')
-})
+const removeAfterEachHook = router.afterEach(() => {
+  emit('navigate');
+});
+
+onBeforeUnmount(() => {
+  removeAfterEachHook();
+});
 </script>
 
 <template>
   <aside
     v-if="isShowSideBar"
-    class="scrollbox flex h-screen flex-col overflow-y-auto border-r bg-primary-600 px-2 pb-2 pt-6 transition-all duration-300 dark:border-gray-700 dark:bg-secondary-900"
+    class="scrollbox bg-primary-600 dark:bg-secondary-900 flex h-screen flex-col overflow-y-auto border-r px-2 pt-6 pb-2 transition-all duration-300 dark:border-gray-700"
     :class="collapsed ? 'w-16 items-center' : 'w-80'">
     <div :class="collapsed ? 'px-0' : 'px-3'">
       <RouterLink to="/" class="flex items-center justify-center">
@@ -137,7 +155,10 @@ router.afterEach(() => {
     </div>
     <div class="mt-6 flex flex-1 flex-col justify-between">
       <nav>
-        <SideBarOption :collapsed="collapsed" :active-urls="['Deploy Application', 'Deploy Stack', 'App Store', 'Install from App Store']">
+        <SideBarOption
+          :collapsed="collapsed"
+          :label="$t('sidebar.deployApplication')"
+          :active-urls="['Deploy Application', 'Deploy Stack', 'App Store', 'Install from App Store']">
           <template #icon>
             <font-awesome-icon icon="fa-solid fa-hammer" />
           </template>
@@ -166,7 +187,10 @@ router.afterEach(() => {
           </template>
         </SideBarOption>
 
-        <SideBarOption :collapsed="collapsed" :active-urls="['Applications', 'Persistent Volumes']">
+        <SideBarOption
+          :collapsed="collapsed"
+          :label="$t('sidebar.applicationsVolumes')"
+          :active-urls="['Applications', 'Persistent Volumes']">
           <template #icon>
             <font-awesome-icon icon="fa-solid fa-box" />
           </template>
@@ -189,7 +213,10 @@ router.afterEach(() => {
           </template>
         </SideBarOption>
 
-        <SideBarOption :collapsed="collapsed" :active-urls="['Domains', 'Redirect Rules', 'Ingress Rules']">
+        <SideBarOption
+          :collapsed="collapsed"
+          :label="$t('sidebar.manageRouting')"
+          :active-urls="['Domains', 'Redirect Rules', 'Ingress Rules']">
           <template #icon>
             <font-awesome-icon icon="fa-solid fa-route" />
           </template>
@@ -218,7 +245,10 @@ router.afterEach(() => {
           </template>
         </SideBarOption>
 
-        <SideBarOption :collapsed="collapsed" :active-urls="['Git Credentials', 'Image Registry Credentials']">
+        <SideBarOption
+          :collapsed="collapsed"
+          :label="$t('sidebar.manageCredentials')"
+          :active-urls="['Git Credentials', 'Image Registry Credentials']">
           <template #icon>
             <font-awesome-icon icon="fa-solid fa-vault" />
           </template>
@@ -241,7 +271,10 @@ router.afterEach(() => {
           </template>
         </SideBarOption>
 
-        <SideBarOption :collapsed="collapsed" :active-urls="['Application Auth Basic ACL']">
+        <SideBarOption
+          :collapsed="collapsed"
+          :label="$t('sidebar.protectApplication')"
+          :active-urls="['Application Auth Basic ACL']">
           <template #icon>
             <font-awesome-icon icon="fa-solid fa-shield-halved" />
           </template>
@@ -258,7 +291,11 @@ router.afterEach(() => {
           </template>
         </SideBarOption>
 
-        <SideBarOption v-if="!authStore.isAdmin" :collapsed="collapsed" :active-urls="['Plans', 'Billing', 'Usage']">
+        <SideBarOption
+          v-if="!authStore.isAdmin"
+          :collapsed="collapsed"
+          :label="$t('sidebar.billing')"
+          :active-urls="['Plans', 'Billing', 'Usage']">
           <template #icon>
             <font-awesome-icon icon="fa-solid fa-credit-card" />
           </template>
@@ -293,7 +330,11 @@ router.afterEach(() => {
           </template>
         </SideBarOption>
 
-        <SideBarOption v-if="authStore.isAdmin" :collapsed="collapsed" :active-urls="['System Logs']">
+        <SideBarOption
+          v-if="authStore.isAdmin"
+          :collapsed="collapsed"
+          :label="$t('sidebar.manageSystem')"
+          :active-urls="['System Logs']">
           <template #icon>
             <font-awesome-icon icon="fa-solid fa-gear" />
           </template>
@@ -323,7 +364,11 @@ router.afterEach(() => {
           </template>
         </SideBarOption>
 
-        <SideBarOption v-if="authStore.isAdmin" :collapsed="collapsed" :active-urls="['Users']">
+        <SideBarOption
+          v-if="authStore.isAdmin"
+          :collapsed="collapsed"
+          :label="$t('sidebar.administration')"
+          :active-urls="['Users']">
           <template #icon>
             <font-awesome-icon icon="fa-solid fa-user-tie" />
           </template>
@@ -398,13 +443,13 @@ router.afterEach(() => {
     <ConfirmDialog
       :is-open="isLogoutConfirmOpen"
       :message="logoutMessage"
-      :confirm-type="'danger'"
+      :confirm-type="logoutConfirmType"
       :on-confirm="onLogoutConfirm"
       :on-cancel="onLogoutCancel" />
     <ConfirmDialog
       :is-open="isRestartConfirmOpen"
       :message="restartMessage"
-      :confirm-type="'warning'"
+      :confirm-type="restartConfirmType"
       :on-confirm="onRestartConfirm"
       :on-cancel="onRestartCancel" />
   </aside>
