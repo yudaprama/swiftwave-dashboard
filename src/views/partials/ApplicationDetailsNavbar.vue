@@ -104,11 +104,11 @@
 <style scoped>
 @reference "../../assets/css/base.css";
 .navbar {
-  @apply flex select-none gap-1 overflow-x-auto rounded-lg border border-secondary-200 p-1.5 dark:border-gray-700;
+  @apply border-secondary-200 flex w-full gap-1 overflow-x-auto rounded-lg border p-1.5 select-none md:w-auto md:flex-col md:overflow-x-visible dark:border-gray-700;
 }
 
 .nav-element {
-  @apply min-w-max rounded-md px-3 py-2 text-sm text-secondary-700 hover:bg-secondary-100 dark:text-gray-300 dark:hover:bg-gray-700;
+  @apply text-secondary-700 hover:bg-secondary-100 min-w-max rounded-md px-3 py-2 text-sm md:min-w-44 dark:text-gray-300 dark:hover:bg-gray-700;
 }
 
 .router-link-exact-active {

@@ -5,18 +5,19 @@ defineProps({
     required: false,
     default: true
   }
-})
+});
 </script>
 <template>
-  <div class="scrollbox max-h-[80vh] overflow-y-auto overflow-x-auto border border-gray-200 rounded-lg dark:border-gray-700">
-    <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-      <thead class="bg-gray-50 dark:bg-secondary-800">
+  <div
+    class="scrollbox w-full max-w-full overflow-x-auto overflow-y-auto rounded-lg border border-gray-200 md:max-h-[80vh] dark:border-gray-700">
+    <table class="w-full min-w-max divide-y divide-gray-200 dark:divide-gray-700">
+      <thead class="dark:bg-secondary-800 bg-gray-50">
         <tr>
           <slot name="header"></slot>
         </tr>
       </thead>
       <tbody
-        class="bg-white dark:bg-secondary-800"
+        class="dark:bg-secondary-800 bg-white"
         :class="{
           'divide-y-0': dividerBetweenRows,
           'divide-y divide-gray-200 dark:divide-gray-700': dividerBetweenRows

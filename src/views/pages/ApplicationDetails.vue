@@ -267,12 +267,12 @@ const openApplicationGroupUpdateModal = () => {
   <div v-if="applicationDetailsLoading">
     <p>{{ $t('common.loading') }}</p>
   </div>
-  <section v-else class="mx-auto w-full max-w-7xl px-2 md:px-0">
+  <section v-else class="mx-auto w-full max-w-7xl px-4 md:px-6 xl:px-0">
     <!--  First line  -->
-    <div class="flex w-full flex-row items-center justify-between">
+    <div class="flex w-full flex-col gap-3 md:flex-row md:items-center md:justify-between">
       <!--   App name     -->
       <div class="flex items-center gap-2">
-        <div class="flex flex-row items-center gap-2 overflow-hidden">
+        <div class="flex flex-row flex-wrap items-center gap-2 overflow-hidden">
           <div
             @click="openApplicationGroupUpdateModal"
             class="bg-secondary-600 hover:bg-secondary-700 flex cursor-pointer items-center justify-center rounded-full px-3 py-1 text-sm font-medium text-white">
@@ -308,12 +308,14 @@ const openApplicationGroupUpdateModal = () => {
         </div>
       </div>
       <!--     Status   -->
-      <div class="text-center font-medium text-gray-800 dark:text-gray-200">
+      <div class="text-left font-medium text-gray-800 md:text-center dark:text-gray-200">
         <p v-if="applicationDetails.isSleeping" class="w-full pe-[5vw] text-center text-sm text-blue-600">
           <font-awesome-icon icon="fa-solid fa-bed" />
           {{ $t('applicationDetails.sleeping') }}
         </p>
-        <div v-else-if="realtimeInfo.InfoFound" class="flex flex-row items-center gap-5 px-3 text-center">
+        <div
+          v-else-if="realtimeInfo.InfoFound"
+          class="flex flex-row flex-wrap items-center gap-3 text-left md:gap-5 md:px-3 md:text-center">
           <div
             v-if="applicationDetails.realtimeInfo.HealthStatus === 'healthy'"
             class="flex flex-row items-center text-sm text-gray-700 dark:text-gray-300">
@@ -348,11 +350,11 @@ const openApplicationGroupUpdateModal = () => {
       </div>
     </div>
     <!--  Second line  -->
-    <div class="mt-3.5 flex w-full flex-row items-center justify-between">
+    <div class="mt-3.5 flex w-full flex-col gap-3 md:flex-row md:items-center md:justify-between">
       <!--   Deployment info   -->
-      <div class="flex gap-2">
-        <div class="flex items-center gap-2 text-gray-800 dark:text-gray-200">
-          <div v-if="applicationDetails.latestDeployment.upstreamType === 'git'" class="flex gap-2">
+      <div class="flex min-w-0 gap-2">
+        <div class="flex min-w-0 flex-wrap items-center gap-2 text-gray-800 dark:text-gray-200">
+          <div v-if="applicationDetails.latestDeployment.upstreamType === 'git'" class="flex min-w-0 flex-wrap gap-2">
             <div class="deployment-head">
               <font-awesome-icon icon="fa-brands fa-github" />
               {{ applicationDetails.latestDeployment.repositoryOwner }}/{{
@@ -405,7 +407,7 @@ const openApplicationGroupUpdateModal = () => {
         <div class="flex items-center gap-2 text-gray-800 dark:text-gray-200">
           <div
             v-if="isIngressRulesAvailable"
-            class="deployment-head max-w-[40vw]"
+            class="deployment-head max-w-full flex-wrap md:max-w-[40vw]"
             :class="{
               'pr-0.5!': applicationDetails.ingressRules.length > 0
             }">
@@ -475,18 +477,18 @@ const openApplicationGroupUpdateModal = () => {
         </button>
       </div>
     </div>
-    <div class="mt-8 flex w-full flex-row gap-5">
+    <div class="mt-8 flex w-full flex-col gap-5 md:flex-row">
       <!--  Vertical navbar for links    -->
       <ApplicationDetailsNavbar />
 
-      <div class="w-full">
+      <div class="w-full min-w-0">
         <!--  Nested Router View  -->
         <RouterView />
         <!--  Update Config Notify bar  -->
         <div
           v-if="applicationUpdater.isConfigurationUpdated"
-          class="mt-4 flex flex-row items-center justify-end gap-2 rounded-md border border-gray-300 p-2 dark:border-gray-600">
-          <span class="mr-4 font-medium">{{ $t('applicationDetails.configUpdated') }}</span>
+          class="mt-4 flex flex-col items-stretch gap-2 rounded-md border border-gray-300 p-2 sm:flex-row sm:items-center sm:justify-end dark:border-gray-600">
+          <span class="font-medium sm:mr-4">{{ $t('applicationDetails.configUpdated') }}</span>
           <FilledButton
             :click="applicationUpdater.applyConfigurationChanges"
             :loading="applicationUpdater.isDeployRequestSubmitting"
@@ -521,18 +523,18 @@ const openApplicationGroupUpdateModal = () => {
 <style scoped>
 @reference "../../assets/css/base.css";
 .deployment-head {
-  @apply border-secondary-300 relative flex items-center justify-center gap-2.5 rounded-full border px-2 py-1 text-sm font-normal dark:border-gray-600;
+  @apply border-secondary-300 relative flex min-w-0 items-center justify-center gap-2.5 rounded-full border px-2 py-1 text-sm font-normal dark:border-gray-600;
 }
 
 .quick-actions {
-  @apply border-secondary-300 text-secondary-700 flex overflow-hidden rounded-full border text-sm dark:border-gray-600 dark:text-gray-300;
+  @apply border-secondary-300 text-secondary-700 flex w-full flex-wrap overflow-hidden rounded-lg border text-sm md:w-auto md:rounded-full dark:border-gray-600 dark:text-gray-300;
 
   .button {
-    @apply hover:bg-secondary-200 focus-visible:bg-secondary-200 focus-visible:outline-primary-600 dark:focus-visible:outline-primary-400 cursor-pointer px-2.5 py-1 focus-visible:outline-2 focus-visible:outline-offset-2 dark:hover:bg-gray-700 dark:focus-visible:bg-gray-700;
+    @apply hover:bg-secondary-200 focus-visible:bg-secondary-200 focus-visible:outline-primary-600 dark:focus-visible:outline-primary-400 min-h-10 flex-1 cursor-pointer px-2.5 py-1 focus-visible:outline-2 focus-visible:outline-offset-2 md:min-h-0 md:flex-none dark:hover:bg-gray-700 dark:focus-visible:bg-gray-700;
   }
 
   .divider {
-    @apply bg-secondary-300 h-auto w-px;
+    @apply bg-secondary-300 hidden h-auto w-px md:block;
   }
 }
 </style>

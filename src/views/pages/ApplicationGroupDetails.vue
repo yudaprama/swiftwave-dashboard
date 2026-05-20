@@ -458,7 +458,7 @@ const applyChanges = async () => {
   <div v-if="applicationGroupDetailsLoading">
     <p>{{ t('common.loading') }}</p>
   </div>
-  <section v-else class="mx-auto w-full max-w-7xl px-2 md:px-0">
+  <section v-else class="mx-auto w-full max-w-7xl px-4 md:px-6 xl:px-0">
     <!--  Modals  -->
     <DeleteApplicationsModal ref="deleteApplicationsModal" :application-ids="applicationIds" />
     <RestartApplicationsModal
@@ -470,10 +470,10 @@ const applyChanges = async () => {
       :application-ids="applicationIds"
       :on-done="refetchGroupApplicationDetails" />
     <!--  First line  -->
-    <div class="flex w-full flex-row items-center justify-between">
+    <div class="flex w-full flex-col gap-3 md:flex-row md:items-center md:justify-between">
       <!--   App name     -->
       <div class="flex items-center gap-2">
-        <div class="flex flex-row items-center gap-2 overflow-hidden">
+        <div class="flex flex-row flex-wrap items-center gap-2 overflow-hidden">
           <div class="flex items-center justify-center gap-2 font-medium">
             <img
               v-if="applicationGroupDetails.logo"
@@ -485,8 +485,8 @@ const applyChanges = async () => {
         </div>
       </div>
       <!--     Status   -->
-      <div class="text-center font-medium text-gray-800 dark:text-gray-200">
-        <div class="flex flex-row items-center gap-5 px-3 text-center">
+      <div class="text-left font-medium text-gray-800 md:text-center dark:text-gray-200">
+        <div class="flex flex-row flex-wrap items-center gap-3 text-left md:gap-5 md:px-3 md:text-center">
           <div class="flex flex-row items-center text-sm text-gray-700 dark:text-gray-300">
             <font-awesome-icon icon="fa-solid fa-boxes-stacked" class="text-info-500 me-1" />
             {{ totalServiceCount }}&nbsp;{{ t('groups.services', totalServiceCount) }}
@@ -503,12 +503,12 @@ const applyChanges = async () => {
       </div>
     </div>
     <!--  Second line  -->
-    <div class="mt-3.5 flex w-full flex-row items-center justify-between">
-      <div class="flex gap-2">
-        <div class="flex items-center gap-2 text-gray-800 dark:text-gray-200">
+    <div class="mt-3.5 flex w-full flex-col gap-3 md:flex-row md:items-center md:justify-between">
+      <div class="flex min-w-0 gap-2">
+        <div class="flex min-w-0 flex-wrap items-center gap-2 text-gray-800 dark:text-gray-200">
           <div
             v-if="ingressRules.length > 0"
-            class="deployment-head max-w-[40vw]"
+            class="deployment-head max-w-full flex-wrap md:max-w-[40vw]"
             :class="{
               'pr-0.5!': ingressRules.length > 0
             }">
@@ -567,7 +567,7 @@ const applyChanges = async () => {
       </div>
     </div>
     <!--  main section  -->
-    <div class="mt-8 flex w-full flex-row gap-5">
+    <div class="mt-8 flex w-full flex-col gap-5 md:flex-row">
       <!--   navbar   -->
       <div class="navbar">
         <div
@@ -598,7 +598,7 @@ const applyChanges = async () => {
         </div>
       </div>
 
-      <div class="w-full">
+      <div class="w-full min-w-0">
         <!--    Deployed Apps  -->
         <div class="w-full" v-if="pageName === 'deployed-apps'">
           <Table>
@@ -719,8 +719,8 @@ const applyChanges = async () => {
         <!--  Update Config Notify bar  -->
         <div
           v-if="isAnyAppInfoChanged"
-          class="mt-4 flex flex-row items-center justify-end gap-2 rounded-md border border-gray-300 p-2 dark:border-gray-600">
-          <span class="mr-4 font-medium">{{ t('groups.configUpdated') }}</span>
+          class="mt-4 flex flex-col items-stretch gap-2 rounded-md border border-gray-300 p-2 sm:flex-row sm:items-center sm:justify-end dark:border-gray-600">
+          <span class="font-medium sm:mr-4">{{ t('groups.configUpdated') }}</span>
           <FilledButton type="primary" :click="applyChanges" :loading="isApplyingChanges">{{
             t('groups.applyChanges')
           }}</FilledButton>
@@ -734,27 +734,27 @@ const applyChanges = async () => {
 <style scoped>
 @reference "../../assets/css/base.css";
 .deployment-head {
-  @apply border-secondary-300 relative flex items-center justify-center gap-2.5 rounded-full border px-2 py-1 text-sm font-normal;
+  @apply border-secondary-300 relative flex min-w-0 items-center justify-center gap-2.5 rounded-full border px-2 py-1 text-sm font-normal;
 }
 
 .quick-actions {
-  @apply border-secondary-300 text-secondary-700 flex overflow-hidden rounded-full border text-sm;
+  @apply border-secondary-300 text-secondary-700 flex w-full flex-wrap overflow-hidden rounded-lg border text-sm md:w-auto md:rounded-full;
 
   .button {
-    @apply hover:bg-secondary-200 focus-visible:bg-secondary-200 focus-visible:outline-primary-600 dark:focus-visible:outline-primary-400 cursor-pointer px-2.5 py-1 focus-visible:outline-2 focus-visible:outline-offset-2 dark:hover:bg-gray-700 dark:focus-visible:bg-gray-700;
+    @apply hover:bg-secondary-200 focus-visible:bg-secondary-200 focus-visible:outline-primary-600 dark:focus-visible:outline-primary-400 min-h-10 flex-1 cursor-pointer px-2.5 py-1 focus-visible:outline-2 focus-visible:outline-offset-2 md:min-h-0 md:flex-none dark:hover:bg-gray-700 dark:focus-visible:bg-gray-700;
   }
 
   .divider {
-    @apply bg-secondary-300 h-auto w-px;
+    @apply bg-secondary-300 hidden h-auto w-px md:block;
   }
 }
 
 .navbar {
-  @apply border-secondary-200 flex h-min flex-col flex-wrap gap-1 rounded-lg border p-1.5 select-none;
+  @apply border-secondary-200 flex h-min w-full gap-1 overflow-x-auto rounded-lg border p-1.5 select-none md:w-auto md:flex-col md:overflow-x-visible;
 }
 
 .nav-element {
-  @apply text-secondary-700 hover:bg-secondary-100 min-w-max cursor-pointer rounded-md px-3 py-2 text-sm;
+  @apply text-secondary-700 hover:bg-secondary-100 min-w-max cursor-pointer rounded-md px-3 py-2 text-sm md:min-w-44;
 }
 
 .router-link-exact-active {

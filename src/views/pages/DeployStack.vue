@@ -1,19 +1,19 @@
 <script setup>
-import * as monaco from 'monaco-editor/esm/vs/editor/editor.api'
-import 'monaco-editor/esm/vs/basic-languages/yaml/yaml.contribution.js'
-import { computed, onMounted, reactive, ref, shallowRef } from 'vue'
-import FilledButton from '@/views/components/FilledButton.vue'
-import ModalDialog from '@/views/components/ModalDialog.vue'
-import { useMutation } from '@vue/apollo-composable'
-import gql from 'graphql-tag'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { toast } from 'vue-sonner'
-import { useI18n } from 'vue-i18n'
+import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
+import 'monaco-editor/esm/vs/basic-languages/yaml/yaml.contribution.js';
+import { computed, onMounted, reactive, ref, shallowRef } from 'vue';
+import FilledButton from '@/views/components/FilledButton.vue';
+import ModalDialog from '@/views/components/ModalDialog.vue';
+import { useMutation } from '@vue/apollo-composable';
+import gql from 'graphql-tag';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { toast } from 'vue-sonner';
+import { useI18n } from 'vue-i18n';
 
-const { t } = useI18n()
+const { t } = useI18n();
 
-const editor = ref()
-const editorInstance = shallowRef()
+const editor = ref();
+const editorInstance = shallowRef();
 const stateRef = reactive({
   stackName: '',
   stackConfig: '',
@@ -21,7 +21,7 @@ const stateRef = reactive({
   message: '',
   error: '',
   deployedApplicationsResult: []
-})
+});
 
 onMounted(() => {
   editorInstance.value = monaco.editor.create(editor.value, {
@@ -31,8 +31,8 @@ onMounted(() => {
     },
     lineNumbersMinChars: 2,
     tabSize: 2
-  })
-})
+  });
+});
 
 const {
   mutate: cleanupStack,
@@ -43,20 +43,20 @@ const {
   mutation CleanupStack($input: StackInput!) {
     cleanupStack(input: $input)
   }
-`)
+`);
 
 onCleanupStackDone((res) => {
-  let val = res?.data?.cleanupStack ?? ''
+  let val = res?.data?.cleanupStack ?? '';
   if (val) {
-    editorInstance.value.setValue(val)
-    verifyStackConfigHelper()
+    editorInstance.value.setValue(val);
+    verifyStackConfigHelper();
   }
-})
+});
 
 onCleanupStackError((err) => {
-  stateRef.error = err.message
-  stateRef.message = ''
-})
+  stateRef.error = err.message;
+  stateRef.message = '';
+});
 
 const {
   mutate: verifyStack,
@@ -71,23 +71,23 @@ const {
       error
     }
   }
-`)
+`);
 
 onVerifyStackDone((res) => {
-  if (!res?.data?.verifyStack) return
-  stateRef.verificationStatus = res?.data?.verifyStack?.success ? 1 : 0
-  stateRef.message = res?.data?.verifyStack?.message ?? ''
-  stateRef.error = res?.data?.verifyStack?.error ?? ''
-})
+  if (!res?.data?.verifyStack) return;
+  stateRef.verificationStatus = res?.data?.verifyStack?.success ? 1 : 0;
+  stateRef.message = res?.data?.verifyStack?.message ?? '';
+  stateRef.error = res?.data?.verifyStack?.error ?? '';
+});
 
 onVerifyStackError((err) => {
-  stateRef.verificationStatus = 0
-  stateRef.error = err.message
-  stateRef.message = ''
-})
+  stateRef.verificationStatus = 0;
+  stateRef.error = err.message;
+  stateRef.message = '';
+});
 
 const cleanupStackConfigHelper = () => {
-  stateRef.stackConfig = editorInstance.value.getValue()
+  stateRef.stackConfig = editorInstance.value.getValue();
   cleanupStack({
     input: {
       content: stateRef.stackConfig,
@@ -98,11 +98,11 @@ const cleanupStackConfigHelper = () => {
         }
       ]
     }
-  })
-}
+  });
+};
 
 const verifyStackConfigHelper = () => {
-  stateRef.stackConfig = editorInstance.value.getValue()
+  stateRef.stackConfig = editorInstance.value.getValue();
   verifyStack({
     input: {
       content: stateRef.stackConfig,
@@ -113,12 +113,12 @@ const verifyStackConfigHelper = () => {
         }
       ]
     }
-  })
-}
+  });
+};
 
 const isCleanupAndVerifyStackConfigLoading = computed(() => {
-  return cleanupStackLoading.value || verifyStackLoading.value
-})
+  return cleanupStackLoading.value || verifyStackLoading.value;
+});
 
 // Deploy Stack
 const {
@@ -137,17 +137,17 @@ const {
       }
     }
   }
-`)
+`);
 
 onDeployStackDone((res) => {
-  if (!res?.data?.deployStack) return
-  stateRef.deployedApplicationsResult = res?.data?.deployStack ?? []
-  isModalOpen.value = true
-})
+  if (!res?.data?.deployStack) return;
+  stateRef.deployedApplicationsResult = res?.data?.deployStack ?? [];
+  isModalOpen.value = true;
+});
 
 onDeployStackError((err) => {
-  toast.error(err.message)
-})
+  toast.error(err.message);
+});
 
 const deployStackHelper = () => {
   deployStack({
@@ -160,31 +160,33 @@ const deployStackHelper = () => {
         }
       ]
     }
-  })
-}
+  });
+};
 
 // Result modal
-const isModalOpen = ref(false)
+const isModalOpen = ref(false);
 const openUrlInNewPage = (url) => {
-  window.open(url)
-}
+  window.open(url);
+};
 </script>
 
 <template>
   <p class="text-xl font-semibold">
-    <font-awesome-icon icon="fa-solid fa-cubes-stacked" class="mr-2 text-primary-600" />
+    <font-awesome-icon icon="fa-solid fa-cubes-stacked" class="text-primary-600 mr-2" />
     {{ $t('deploy.deployStack') }}
   </p>
-  <section class="mx-auto mt-8 flex h-full w-full max-w-7xl space-x-8 px-2 md:px-0">
-    <div class="h-full w-1/2">
+  <section class="mx-auto mt-8 flex h-full w-full max-w-7xl flex-col gap-8 px-4 md:px-6 lg:flex-row xl:px-0">
+    <div class="h-[65dvh] w-full lg:h-full lg:w-1/2">
       <!--  Stack Name  -->
       <div>
-        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">{{ $t('deploy.stackName') }}<span class="text-red-600"> *</span></label>
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+          >{{ $t('deploy.stackName') }}<span class="text-red-600"> *</span></label
+        >
         <div class="mt-1">
           <input
             autocomplete="off"
             v-model="stateRef.stackName"
-            class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-secondary-700 dark:text-gray-200 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+            class="dark:bg-secondary-700 focus:border-primary-500 focus:ring-primary-500 block w-full rounded-md border-gray-300 shadow-xs sm:text-sm dark:border-gray-600 dark:text-gray-200"
             :placeholder="$t('deploy.enterStackName')"
             type="text" />
         </div>
@@ -194,11 +196,11 @@ const openUrlInNewPage = (url) => {
         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300"
           >{{ $t('deploy.stackConfigYaml') }}<span class="text-red-600"> *</span></label
         >
-        <div ref="editor" class="mt-1 h-full w-full overflow-hidden rounded-md border-2 border-primary-300" />
+        <div ref="editor" class="border-primary-300 mt-1 h-full w-full overflow-hidden rounded-md border-2" />
       </div>
     </div>
-    <div class="w-1/2 pt-4">
-      <p class="select-none text-base font-semibold">{{ '\u2699\uFE0F' }} {{ $t('deploy.actions') }}</p>
+    <div class="w-full pt-4 lg:w-1/2">
+      <p class="text-base font-semibold select-none">{{ '\u2699\uFE0F' }} {{ $t('deploy.actions') }}</p>
       <FilledButton
         class="mt-4 w-full"
         type="primary"
@@ -211,21 +213,21 @@ const openUrlInNewPage = (url) => {
         <font-awesome-icon
           v-if="stateRef.verificationStatus === 1"
           icon="fa-solid fa-circle-check"
-          class="mr-1 text-xl text-success-500" />
+          class="text-success-500 mr-1 text-xl" />
         <font-awesome-icon
           v-else-if="stateRef.verificationStatus === 0"
           icon="fa-solid fa-circle-xmark"
-          class="mr-1 text-xl text-danger-500" />
+          class="text-danger-500 mr-1 text-xl" />
         {{ stateRef.verificationStatus === 1 ? $t('deploy.verified') : $t('deploy.verificationFailed') }}
       </div>
       <!--    Verification Result  -->
       <div
-        class="mt-2 whitespace-pre-line rounded-md border-2 border-danger-300 bg-danger-50 p-3"
+        class="border-danger-300 bg-danger-50 mt-2 rounded-md border-2 p-3 whitespace-pre-line"
         v-if="stateRef.error !== ''">
         {{ stateRef.error }}
       </div>
       <div
-        class="mt-2 whitespace-pre-line rounded-md border-2 border-success-300 bg-success-50 p-3"
+        class="border-success-300 bg-success-50 mt-2 rounded-md border-2 p-3 whitespace-pre-line"
         v-if="stateRef.message !== ''">
         {{ stateRef.message }}
       </div>
@@ -251,8 +253,8 @@ const openUrlInNewPage = (url) => {
               <font-awesome-icon
                 v-if="result.success"
                 icon="fa-solid fa-circle-check"
-                class="text-base text-success-500" />
-              <font-awesome-icon v-else icon="fa-solid fa-circle-xmark" class="text-base text-danger-500" />
+                class="text-success-500 text-base" />
+              <font-awesome-icon v-else icon="fa-solid fa-circle-xmark" class="text-danger-500 text-base" />
               <p>
                 {{ result.application?.name ?? 'N/A' }}
                 <span v-if="result.message !== '' && !result.success"> - {{ result.message }}</span>
@@ -273,7 +275,9 @@ const openUrlInNewPage = (url) => {
                 {{ $t('deploy.view') }}
               </FilledButton>
             </div>
-            <div v-if="stateRef.deployedApplicationsResult.length === 0" class="text-center text-gray-500 dark:text-gray-400">
+            <div
+              v-if="stateRef.deployedApplicationsResult.length === 0"
+              class="text-center text-gray-500 dark:text-gray-400">
               {{ $t('deploy.noApplicationsDeployed') }}
             </div>
           </div>
