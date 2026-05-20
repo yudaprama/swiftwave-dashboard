@@ -16,14 +16,14 @@ defineProps({
     type: String,
     default: 'success',
     validator: (value) => {
-      return ['primary', 'secondary', 'success', 'danger', 'warning'].includes(value)
+      return ['primary', 'secondary', 'success', 'danger', 'warning'].includes(value);
     }
   },
   showBody: {
     type: Boolean,
     default: true
   }
-})
+});
 </script>
 
 <template>
@@ -40,11 +40,11 @@ defineProps({
       {{ prefixText }}
     </div>
     <div class="flex flex-col">
-      <div class="text-base font-medium text-gray-900">{{ title }}</div>
-      <div class="text-sm text-gray-500">{{ subTitle }}</div>
+      <div class="text-base font-medium text-gray-900 dark:text-gray-100">{{ title }}</div>
+      <div class="text-sm text-gray-500 dark:text-gray-400">{{ subTitle }}</div>
     </div>
   </div>
-  <div class="ml-16 mt-4" v-if="showBody">
+  <div class="mt-4 ml-16" v-if="showBody">
     <slot></slot>
   </div>
 </template>

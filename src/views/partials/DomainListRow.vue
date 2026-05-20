@@ -1,10 +1,10 @@
 <script setup>
-import Badge from '@/views/components/Badge.vue'
-import TableRow from '@/views/components/Table/TableRow.vue'
-import FilledButton from '@/views/components/FilledButton.vue'
-import TextButton from '@/views/components/TextButton.vue'
-import { toast } from 'vue-sonner'
-import { ref } from 'vue'
+import Badge from '@/views/components/Badge.vue';
+import TableRow from '@/views/components/Table/TableRow.vue';
+import FilledButton from '@/views/components/FilledButton.vue';
+import TextButton from '@/views/components/TextButton.vue';
+import { toast } from 'vue-sonner';
+import { ref } from 'vue';
 
 const props = defineProps({
   domain: {
@@ -27,42 +27,41 @@ const props = defineProps({
     type: Function,
     required: true
   }
-})
+});
 
-const verifyingDns = ref(false)
+const verifyingDns = ref(false);
 
 const verifyDnsPointing = async () => {
-  verifyingDns.value = true
+  verifyingDns.value = true;
 
-  const verifyPromise = new Promise(function(resolve, reject) {
-    props.verifyDns(props.domain.name)
-    .then((isVerified) => {
+  const verifyPromise = new Promise(function (resolve, reject) {
+    props.verifyDns(props.domain.name).then((isVerified) => {
       if (isVerified) {
-        resolve()
+        resolve();
       } else {
-        reject()
+        reject();
       }
-    })
-  })
+    });
+  });
 
   toast.promise(verifyPromise, {
     loading: `Verifying DNS for ${props.domain.name}`,
     success: (_) => {
-      verifyingDns.value = false
-      return `DNS for ${props.domain.name} is pointed correctly`
+      verifyingDns.value = false;
+      return `DNS for ${props.domain.name} is pointed correctly`;
     },
     error: (_) => {
-      verifyingDns.value = false
-      return `DNS for ${props.domain.name} is not pointed correctly`
+      verifyingDns.value = false;
+      return `DNS for ${props.domain.name} is not pointed correctly`;
     }
   });
-}
+};
 </script>
 
 <template>
   <tr>
     <TableRow align="left">
-      <div class="text-sm font-medium text-gray-900">{{ domain.name }}</div>
+      <div class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ domain.name }}</div>
     </TableRow>
     <TableRow align="center">
       <Badge v-if="domain.sslStatus === 'none'" type="secondary">N/A</Badge>
@@ -76,7 +75,7 @@ const verifyDnsPointing = async () => {
       </FilledButton>
     </TableRow>
     <TableRow align="center">
-      <div class="text-sm text-gray-900">
+      <div class="text-sm text-gray-900 dark:text-gray-100">
         {{ domain.sslIssuer !== '' ? domain.sslIssuer : '---' }}
       </div>
     </TableRow>

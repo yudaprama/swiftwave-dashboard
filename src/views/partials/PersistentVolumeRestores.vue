@@ -1,38 +1,38 @@
 <script setup>
-import Drawer from '@/views/components/Drawer.vue'
-import { ref, watch } from 'vue'
-import { useLazyQuery } from '@vue/apollo-composable'
-import gql from 'graphql-tag'
-import { toast } from 'vue-sonner'
-import Badge from '@/views/components/Badge.vue'
-import FilledButton from '@/views/components/FilledButton.vue'
-import DotLoader from '@/views/components/DotLoader.vue'
+import Drawer from '@/views/components/Drawer.vue';
+import { ref, watch } from 'vue';
+import { useLazyQuery } from '@vue/apollo-composable';
+import gql from 'graphql-tag';
+import { toast } from 'vue-sonner';
+import Badge from '@/views/components/Badge.vue';
+import FilledButton from '@/views/components/FilledButton.vue';
+import DotLoader from '@/views/components/DotLoader.vue';
 
 const props = defineProps({
   isDrawerOpen: Boolean,
   closeDrawer: Function,
   persistentVolumeId: Number,
   persistentVolumeName: String
-})
+});
 
-const persistentVolumeNameRef = ref(props.persistentVolumeName)
-const restores = ref([])
+const persistentVolumeNameRef = ref(props.persistentVolumeName);
+const restores = ref([]);
 
 watch(
   () => props.persistentVolumeName,
   (newValue) => {
-    persistentVolumeNameRef.value = newValue
+    persistentVolumeNameRef.value = newValue;
   }
-)
+);
 watch(
   () => props.isDrawerOpen,
   (newValue) => {
     if (newValue) {
-      restores.value = []
-      fetchPersistentVolumeRestores()
+      restores.value = [];
+      fetchPersistentVolumeRestores();
     }
   }
-)
+);
 
 // Fetch Persistent Volume Restores
 const {
@@ -61,22 +61,22 @@ const {
     fetchPolicy: 'no-cache',
     nextFetchPolicy: 'no-cache'
   }
-)
+);
 
 const fetchPersistentVolumeRestores = async () => {
-  persistentVolumeRestoresVariables.value = { id: props.persistentVolumeId }
+  persistentVolumeRestoresVariables.value = { id: props.persistentVolumeId };
   if (!(await loadPersistentVolumeRestores())) {
-    await refetchPersistentVolumeRestores()
+    await refetchPersistentVolumeRestores();
   }
-}
+};
 
 onPersistentVolumeRestoresResult((result) => {
-  restores.value = result.data.persistentVolume.restores
-})
+  restores.value = result.data.persistentVolume.restores;
+});
 
 onPersistentVolumeRestoresError((err) => {
-  toast.error(err.message)
-})
+  toast.error(err.message);
+});
 </script>
 
 <template>
@@ -88,17 +88,22 @@ onPersistentVolumeRestoresError((err) => {
         <font-awesome-icon icon="fa-solid fa-rotate-right" class="mr-2" />
         Refresh List
       </FilledButton>
-      <div class="mb-2 text-sm text-gray-500">{{ restores.length }} restores found for this volume</div>
+      <div class="mb-2 text-sm text-gray-500 dark:text-gray-400">
+        {{ restores.length }} restores found for this volume
+      </div>
       <div class="my-4 flex justify-center" v-if="isPersistentVolumeRestoresLoading">
         <DotLoader />
       </div>
       <div class="flex flex-col space-y-2" v-if="!isPersistentVolumeRestoresLoading">
-        <div v-for="restore in restores" :key="restore.id" class="rounded-md border-2 border-gray-200 p-2 text-sm">
+        <div
+          v-for="restore in restores"
+          :key="restore.id"
+          class="rounded-md border-2 border-gray-200 p-2 text-sm dark:border-gray-700 dark:text-gray-200">
           <p>
             <Badge v-if="restore.status === 'pending'" type="warning">Pending</Badge>
             <Badge v-if="restore.status === 'failed'" type="danger">Failed</Badge>
             <Badge v-if="restore.status === 'success'" type="success">Success</Badge>
-            <span class="ml-2 mr-1"><b>Initiated at</b> {{ new Date(restore.createdAt).toLocaleString() }}</span>
+            <span class="mr-1 ml-2"><b>Initiated at</b> {{ new Date(restore.createdAt).toLocaleString() }}</span>
           </p>
           <div v-if="restore.status === 'success'" class="mt-1">
             Completed at {{ new Date(restore.completedAt).toLocaleString() }}

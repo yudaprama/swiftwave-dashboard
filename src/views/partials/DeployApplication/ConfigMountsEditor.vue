@@ -1,17 +1,17 @@
 <script setup>
-import TableHeader from '@/views/components/Table/TableHeader.vue'
-import Table from '@/views/components/Table/Table.vue'
-import TableMessage from '@/views/components/Table/TableMessage.vue'
-import TextButton from '@/views/components/TextButton.vue'
-import TableRow from '@/views/components/Table/TableRow.vue'
-import FilledButton from '@/views/components/FilledButton.vue'
-import { ref } from 'vue'
-import { useI18n } from 'vue-i18n'
-import ModalDialog from '@/views/components/ModalDialog.vue'
-import Code from '@/views/components/Code.vue'
-import CreateConfigMountModal from '@/views/partials/CreateConfigMountModal.vue'
+import TableHeader from '@/views/components/Table/TableHeader.vue';
+import Table from '@/views/components/Table/Table.vue';
+import TableMessage from '@/views/components/Table/TableMessage.vue';
+import TextButton from '@/views/components/TextButton.vue';
+import TableRow from '@/views/components/Table/TableRow.vue';
+import FilledButton from '@/views/components/FilledButton.vue';
+import { ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+import ModalDialog from '@/views/components/ModalDialog.vue';
+import Code from '@/views/components/Code.vue';
+import CreateConfigMountModal from '@/views/partials/CreateConfigMountModal.vue';
 
-const { t } = useI18n()
+const { t } = useI18n();
 
 defineProps({
   configMountsKeys: {
@@ -34,30 +34,30 @@ defineProps({
     type: Function,
     required: true
   }
-})
-const selectedConfigId = ref(null)
-const isConfigViewModalOpen = ref(false)
+});
+const selectedConfigId = ref(null);
+const isConfigViewModalOpen = ref(false);
 const closeConfigModal = () => {
-  isConfigViewModalOpen.value = false
-  selectedConfigId.value = null
-}
+  isConfigViewModalOpen.value = false;
+  selectedConfigId.value = null;
+};
 const openConfigModal = (configId) => {
-  selectedConfigId.value = configId
-  isConfigViewModalOpen.value = true
-}
-const isEditConfigModalOpen = ref(false)
+  selectedConfigId.value = configId;
+  isConfigViewModalOpen.value = true;
+};
+const isEditConfigModalOpen = ref(false);
 const closeEditConfigModal = () => {
-  isEditConfigModalOpen.value = false
-}
+  isEditConfigModalOpen.value = false;
+};
 const openEditConfigModal = (configId) => {
-  selectedConfigId.value = configId
-  isEditConfigModalOpen.value = true
-}
-const createConfigMountModalRef = ref(null)
+  selectedConfigId.value = configId;
+  isEditConfigModalOpen.value = true;
+};
+const createConfigMountModalRef = ref(null);
 const openCreateConfigMountModal = () => {
-  if (!createConfigMountModalRef.value) return
-  createConfigMountModalRef.value.openModal()
-}
+  if (!createConfigMountModalRef.value) return;
+  createConfigMountModalRef.value.openModal();
+};
 </script>
 
 <template>
@@ -79,7 +79,7 @@ const openCreateConfigMountModal = () => {
         <p v-if="selectedConfigId === null" class="italic">{{ t('partials.noConfigSelected') }}</p>
         <textarea
           rows="20"
-          class="mt-2 w-full rounded-lg border-gray-300 align-top shadow-xs focus:border-primary-500 focus:ring-primary-500"
+          class="focus:border-primary-500 focus:ring-primary-500 mt-2 w-full rounded-lg border-gray-300 align-top shadow-xs"
           :value="configMountsMap[selectedConfigId].content"
           @input="(e) => onConfigContentChange(selectedConfigId, e.target.value)"></textarea>
       </div>
@@ -103,18 +103,20 @@ const openCreateConfigMountModal = () => {
     <template v-slot:body>
       <tr v-for="configMountKey in configMountsKeys" :key="configMountKey">
         <TableRow align="left">
-          <div class="text-sm font-medium text-gray-900">
+          <div class="text-sm font-medium text-gray-900 dark:text-gray-100">
             {{ configMountsMap[configMountKey].mountingPath }}
           </div>
         </TableRow>
         <TableRow align="center">
-          <div class="text-sm text-gray-900">{{ configMountsMap[configMountKey].uid }}</div>
+          <div class="text-sm text-gray-900 dark:text-gray-100">{{ configMountsMap[configMountKey].uid }}</div>
         </TableRow>
         <TableRow align="center">
-          <div class="text-sm text-gray-900">{{ configMountsMap[configMountKey].gid }}</div>
+          <div class="text-sm text-gray-900 dark:text-gray-100">{{ configMountsMap[configMountKey].gid }}</div>
         </TableRow>
         <TableRow align="center" flex>
-          <FilledButton type="primary" slim :click="() => openConfigModal(configMountKey)">{{ t('partials.viewConfig') }}</FilledButton>
+          <FilledButton type="primary" slim :click="() => openConfigModal(configMountKey)">{{
+            t('partials.viewConfig')
+          }}</FilledButton>
         </TableRow>
         <TableRow align="center" flex>
           <FilledButton type="primary" slim :click="() => openEditConfigModal(configMountKey)"
@@ -122,7 +124,9 @@ const openCreateConfigMountModal = () => {
           </FilledButton>
         </TableRow>
         <TableRow align="right">
-          <TextButton type="danger" @click="() => deleteConfigMount(configMountKey)">{{ t('common.delete') }}</TextButton>
+          <TextButton type="danger" @click="() => deleteConfigMount(configMountKey)">{{
+            t('common.delete')
+          }}</TextButton>
         </TableRow>
       </tr>
     </template>
@@ -130,7 +134,9 @@ const openCreateConfigMountModal = () => {
   <!-- More actions  -->
   <div class="mt-4 flex items-center justify-center gap-3 text-sm">
     {{ t('partials.needStaticConfig') }}
-    <FilledButton slim type="primary" :click="openCreateConfigMountModal">{{ t('partials.addConfigMountBtn') }}</FilledButton>
+    <FilledButton slim type="primary" :click="openCreateConfigMountModal">{{
+      t('partials.addConfigMountBtn')
+    }}</FilledButton>
   </div>
 </template>
 

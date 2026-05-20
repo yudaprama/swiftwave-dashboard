@@ -3,7 +3,7 @@
 import { useRoute, useRouter } from 'vue-router';
 import { computed, onMounted, reactive, ref, shallowRef, toRaw } from 'vue';
 import { parse } from 'yaml';
-import { toast } from 'vue-sonner'
+import { toast } from 'vue-sonner';
 import DotLoader from '@/views/components/DotLoader.vue';
 import MarkdownRenderer from '@/views/components/MarkdownRenderer.vue';
 import FilledButton from '@/views/components/FilledButton.vue';
@@ -17,12 +17,19 @@ import Divider from '@/views/components/Divider.vue';
 import CreateDomainModal from '@/views/partials/CreateDomainModal.vue';
 import OutlinedButton from '@/views/components/OutlinedButton.vue';
 import ServerSelector from '@/views/partials/ServerSelector.vue';
-import { useI18n } from 'vue-i18n'
-import { useConfirmDialog } from '@/composables/useConfirmDialog.js'
-import ConfirmDialog from '@/views/components/ConfirmDialog.vue'
+import { useI18n } from 'vue-i18n';
+import { useConfirmDialog } from '@/composables/useConfirmDialog.js';
+import ConfirmDialog from '@/views/components/ConfirmDialog.vue';
 
-const { t } = useI18n()
-const { isOpen: isCancelInstallConfirmOpen, message: cancelInstallMessage, confirmType: cancelInstallType, confirm: askCancelInstall, onConfirm: onCancelInstallConfirm, onCancel: onCancelInstallCancel } = useConfirmDialog()
+const { t } = useI18n();
+const {
+  isOpen: isCancelInstallConfirmOpen,
+  message: cancelInstallMessage,
+  confirmType: cancelInstallType,
+  confirm: askCancelInstall,
+  onConfirm: onCancelInstallConfirm,
+  onCancel: onCancelInstallCancel
+} = useConfirmDialog();
 
 const route = useRoute();
 const router = useRouter();
@@ -305,7 +312,7 @@ const deployStackHelper = async () => {
   // verify ingress rules
   const isValid = await validateIngressRules();
   if (!isValid) {
-    toast.error(t('deploy.fixIngressRules'))
+    toast.error(t('deploy.fixIngressRules'));
     return;
   }
   let variablesForSubmission = [];
@@ -479,12 +486,14 @@ const noOfBlankFields = computed(() => {
   <div v-if="isLoadingStack" class="flex h-full w-full items-center justify-center">
     <DotLoader />
   </div>
-  <section v-else class="relative mx-auto mt-2 flex h-full w-full max-w-7xl flex-col items-center overflow-hidden px-2 md:px-0">
+  <section
+    v-else
+    class="relative mx-auto mt-2 flex h-full w-full max-w-7xl flex-col items-center overflow-hidden px-2 md:px-0">
     <div class="scrollbox h-full w-full overflow-y-auto">
       <!--  Header  -->
       <div class="flex w-full flex-row gap-5">
         <!--      Logo -->
-        <div class="h-14 w-14 rounded-md border border-primary-500 p-1.5">
+        <div class="border-primary-500 h-14 w-14 rounded-md border p-1.5">
           <img :src="stackDetails.docs.logo_url" class="h-full w-full" :alt="stackDetails.docs.name" />
         </div>
         <!--    Title and description    -->
@@ -503,11 +512,11 @@ const noOfBlankFields = computed(() => {
         <MarkdownRenderer :source="stackDetails.docs.readme_description" />
       </div>
       <div v-else class="mt-12 w-full">
-        <p class="italic text-gray-800 dark:text-gray-200">{{ $t('deploy.noDetailsAvailable') }}</p>
+        <p class="text-gray-800 italic dark:text-gray-200">{{ $t('deploy.noDetailsAvailable') }}</p>
       </div>
     </div>
     <!--  Installation Options  -->
-    <div class="absolute bottom-0 right-0">
+    <div class="absolute right-0 bottom-0">
       <div class="flex flex-row items-center justify-center gap-2 pr-20">
         <FilledButton type="primary" :click="openInstallNowModal">
           <font-awesome-icon icon="fa-solid fa-hammer" class="mr-2" />
@@ -540,7 +549,7 @@ const noOfBlankFields = computed(() => {
             <div class="mt-1">
               <input
                 v-model="formStateRef.STACK_NAME"
-                class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                class="focus:border-primary-500 focus:ring-primary-500 dark:bg-secondary-700 block w-full rounded-md border-gray-300 shadow-xs sm:text-sm dark:border-gray-600 dark:text-gray-100"
                 type="text"
                 @keydown="preventSpaceInput"
                 :placeholder="$t('deploy.anythingYouLike')" />
@@ -573,13 +582,13 @@ const noOfBlankFields = computed(() => {
                 :key="key"
                 v-if="stackDetails.docs.variables[key].type === 'text'"
                 v-model="formStateRef[key]"
-                class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                class="focus:border-primary-500 focus:ring-primary-500 dark:bg-secondary-700 block w-full rounded-md border-gray-300 shadow-xs sm:text-sm dark:border-gray-600 dark:text-gray-100"
                 type="text" />
               <select
                 :key="key"
                 v-if="stackDetails.docs.variables[key].type === 'options'"
                 v-model="formStateRef[key]"
-                class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
+                class="focus:border-primary-500 focus:ring-primary-500 dark:bg-secondary-700 block w-full rounded-md border-gray-300 shadow-xs sm:text-sm dark:border-gray-600 dark:text-gray-100">
                 <option v-for="op in stackDetails.docs.variables[key].options" :key="op.value" :value="op.value">
                   {{ op.title }}
                 </option>
@@ -600,7 +609,7 @@ const noOfBlankFields = computed(() => {
           </div>
 
           <div v-for="i in noOfBlankFields" :key="i">
-            <label class="block text-base font-medium text-gray-700">
+            <label class="block text-base font-medium text-gray-700 dark:text-gray-300">
               <p class="text-transparent">dummy</p>
               <p class="text-sm font-normal text-transparent">dummy</p>
             </label>
@@ -621,13 +630,13 @@ const noOfBlankFields = computed(() => {
               <!--     Progress          -->
               <div class="h-1.5 w-full rounded-full bg-gray-200 dark:bg-gray-700">
                 <div
-                  class="h-full rounded-full bg-primary-500 transition-all duration-300"
+                  class="bg-primary-500 h-full rounded-full transition-all duration-300"
                   :style="{
                     width: `${pagePercentage}%`
                   }"></div>
               </div>
               <!--    Text          -->
-              <p class="w-[50px] text-right text-sm font-medium text-secondary-600">
+              <p class="text-secondary-600 w-[50px] text-right text-sm font-medium">
                 {{ currentPage }} / {{ noOfPages }}
               </p>
             </div>
@@ -643,9 +652,9 @@ const noOfBlankFields = computed(() => {
           </p>
           <p class="flex items-center text-sm">
             {{ $t('deploy.needToAddDomain') }}
-            <a @click="openNewDomainModal" class="ml-1.5 cursor-pointer font-bold text-primary-600"
-              >{{ $t('deploy.clickHereToRegisterDomain') }}</a
-            >
+            <a @click="openNewDomainModal" class="text-primary-600 ml-1.5 cursor-pointer font-bold">{{
+              $t('deploy.clickHereToRegisterDomain')
+            }}</a>
           </p>
           <div
             v-for="(ingressRules, serviceName) in configuredIngressRules"
@@ -670,7 +679,7 @@ const noOfBlankFields = computed(() => {
                     <div class="mt-2 flex flex-row items-center gap-2">
                       <!--   Choose protocol   -->
                       <select
-                        class="block w-5/12 rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                        class="focus:border-primary-500 focus:ring-primary-500 block w-5/12 rounded-md border-gray-300 shadow-xs sm:text-sm"
                         v-model="config.info.protocol"
                         @change="() => onChangeProtocol(serviceName, ingressRuleName)">
                         <option :value="protocol" v-for="protocol in config.info.availableProtocols">
@@ -681,17 +690,19 @@ const noOfBlankFields = computed(() => {
                       <select
                         v-if="config.info.protocol === 'http' || config.info.protocol === 'https'"
                         v-model="config.info.domainId"
-                        class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
+                        class="focus:border-primary-500 focus:ring-primary-500 block w-full rounded-md border-gray-300 shadow-xs sm:text-sm">
                         <option value="0">{{ $t('deploy.selectDomain') }}</option>
                         <option :value="domain.id" v-for="domain in domainList">
                           {{ domain.name }}
                         </option>
                       </select>
-                      <div v-else class="block w-full text-end text-sm italic">{{ $t('deploy.useProxyIpWithPort') }}</div>
+                      <div v-else class="block w-full text-end text-sm italic">
+                        {{ $t('deploy.useProxyIpWithPort') }}
+                      </div>
                       <!--   Port -->
                       <input
                         v-model="config.info.port"
-                        class="block w-5/12 rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+                        class="focus:border-primary-500 focus:ring-primary-500 block w-5/12 rounded-md border-gray-300 shadow-xs sm:text-sm"
                         :placeholder="$t('deploy.port')"
                         type="number"
                         :readonly="!config.info.allowPortSelection" />
@@ -749,7 +760,9 @@ const noOfBlankFields = computed(() => {
     </template>
     <template v-slot:footer>
       <div class="mt-4 flex w-full flex-row justify-between gap-2">
-        <FilledButton type="danger" :click="closeModal" :disabled="deployStackLoading">{{ $t('common.cancel') }}</FilledButton>
+        <FilledButton type="danger" :click="closeModal" :disabled="deployStackLoading">{{
+          $t('common.cancel')
+        }}</FilledButton>
         <FilledButton type="primary" :loading="deployStackLoading" :disabled="!isFormFilled" :click="deployStackHelper"
           >{{ $t('deploy.startInstallation') }}
         </FilledButton>
@@ -766,8 +779,8 @@ const noOfBlankFields = computed(() => {
           class="flex items-center space-x-2"
           v-for="result in deployedApplicationsResult"
           :key="result.application.id">
-          <font-awesome-icon v-if="result.success" icon="fa-solid fa-circle-check" class="text-base text-success-500" />
-          <font-awesome-icon v-else icon="fa-solid fa-circle-xmark" class="text-base text-danger-500" />
+          <font-awesome-icon v-if="result.success" icon="fa-solid fa-circle-check" class="text-success-500 text-base" />
+          <font-awesome-icon v-else icon="fa-solid fa-circle-xmark" class="text-danger-500 text-base" />
           <p>
             {{ result.application?.name ?? 'N/A' }}
             <span v-if="result.message !== '' && !result.success"> - {{ result.message }}</span>
@@ -804,15 +817,15 @@ const noOfBlankFields = computed(() => {
               <font-awesome-icon
                 v-if="config.info.status === 'pending'"
                 icon="fa-solid fa-circle-notch"
-                class="animate-spin text-base text-warning-500" />
+                class="text-warning-500 animate-spin text-base" />
               <font-awesome-icon
                 v-else-if="config.info.status === 'success'"
                 icon="fa-solid fa-circle-check"
-                class="text-base text-success-500" />
+                class="text-success-500 text-base" />
               <font-awesome-icon
                 v-else-if="config.info.status === 'failed'"
                 icon="fa-solid fa-circle-xmark"
-                class="text-base text-danger-500" />
+                class="text-danger-500 text-base" />
               <p>
                 {{ config.info.protocol }}://{{
                   config.info.protocol === 'http' || config.info.protocol === 'https'
@@ -838,7 +851,12 @@ const noOfBlankFields = computed(() => {
     </template>
   </ModalDialog>
 
-  <ConfirmDialog :is-open="isCancelInstallConfirmOpen" :message="cancelInstallMessage" :confirm-type="cancelInstallType" :on-confirm="onCancelInstallConfirm" :on-cancel="onCancelInstallCancel" />
+  <ConfirmDialog
+    :is-open="isCancelInstallConfirmOpen"
+    :message="cancelInstallMessage"
+    :confirm-type="cancelInstallType"
+    :on-confirm="onCancelInstallConfirm"
+    :on-cancel="onCancelInstallCancel" />
 </template>
 
 <style scoped></style>

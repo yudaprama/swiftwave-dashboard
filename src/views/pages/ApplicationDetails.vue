@@ -341,7 +341,9 @@ const openApplicationGroupUpdateModal = () => {
             v-if="!isNaN(realtimeReplicaCountPercentage) && deploymentMode === 'replicated'"
             :percentage="realtimeReplicaCountPercentage"
             :label="`(${realtimeInfo.RunningReplicas ?? 0} / ${applicationDetails.replicas})`" />
-          <p v-else-if="deploymentMode === 'global'" class="text-secondary-700 w-full text-center text-sm">
+          <p
+            v-else-if="deploymentMode === 'global'"
+            class="text-secondary-700 w-full text-center text-sm dark:text-gray-300">
             {{ $t('applicationDetails.instanceRunning', { count: realtimeInfo.RunningReplicas ?? 0 }) }}
           </p>
           <p v-else class="text-warning-600">{{ $t('applicationDetails.notAvailable') }}</p>

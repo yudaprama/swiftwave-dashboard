@@ -109,7 +109,7 @@ const regenerateWebhookTokenWithConfirmation = async () => {
   </div>
 
   <p class="inline-flex items-center gap-2 text-lg font-medium">{{ $t('applicationDetails.webhookBasedCI') }}</p>
-  <p class="text-secondary-700 text-sm">
+  <p class="text-secondary-700 text-sm dark:text-gray-300">
     {{ $t('applicationDetails.webhookCIHint') }}
   </p>
 
@@ -129,7 +129,7 @@ const regenerateWebhookTokenWithConfirmation = async () => {
         <font-awesome-icon icon="fa-solid fa-copy" aria-hidden="true" />
       </button>
     </div>
-    <p class="text-secondary-700 mt-2 text-sm">
+    <p class="text-secondary-700 mt-2 text-sm dark:text-gray-300">
       {{ $t('applicationDetails.copyWebhookHint') }}
     </p>
   </div>
@@ -140,7 +140,9 @@ const regenerateWebhookTokenWithConfirmation = async () => {
       <p class="inline-flex items-center gap-2 text-lg font-medium">
         {{ $t('applicationDetails.regenerateWebhookTokenTitle') }}
       </p>
-      <p class="text-secondary-700 text-sm">{{ $t('applicationDetails.regenerateWebhookTokenHint') }}</p>
+      <p class="text-secondary-700 text-sm dark:text-gray-300">
+        {{ $t('applicationDetails.regenerateWebhookTokenHint') }}
+      </p>
     </div>
     <FilledButton
       type="primary"

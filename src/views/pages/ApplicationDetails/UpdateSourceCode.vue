@@ -1,34 +1,34 @@
 <script setup>
-import { computed, onMounted, reactive, ref, watch } from 'vue'
-import axios from 'axios'
-import { useAuthStore } from '@/store/auth.js'
-import { useLazyQuery, useQuery } from '@vue/apollo-composable'
-import gql from 'graphql-tag'
-import { toast } from 'vue-sonner'
-import FilledButton from '@/views/components/FilledButton.vue'
-import createTar from '@swiftwave/tartplus'
-import DockerfileEditor from '@/views/partials/DeployApplication/DockerfileEditor.vue'
-import BuildArgInput from '@/views/partials/BuildArgInput.vue'
-import { getHttpBaseUrl } from '@/vendor/utils.js'
-import newApplicationUpdater from '@/store/applicationUpdater.js'
-import { useRouter } from 'vue-router'
-import CreateImageRegistryCredentialModal from '@/views/partials/CreateImageRegistryCredentialModal.vue'
-import ChooseOtherDockerConfigurationModal from '@/views/partials/ChooseOtherDockerConfigurationModal.vue'
-import { useI18n } from 'vue-i18n'
+import { computed, onMounted, reactive, ref, watch } from 'vue';
+import axios from 'axios';
+import { useAuthStore } from '@/store/auth.js';
+import { useLazyQuery, useQuery } from '@vue/apollo-composable';
+import gql from 'graphql-tag';
+import { toast } from 'vue-sonner';
+import FilledButton from '@/views/components/FilledButton.vue';
+import createTar from '@swiftwave/tartplus';
+import DockerfileEditor from '@/views/partials/DeployApplication/DockerfileEditor.vue';
+import BuildArgInput from '@/views/partials/BuildArgInput.vue';
+import { getHttpBaseUrl } from '@/vendor/utils.js';
+import newApplicationUpdater from '@/store/applicationUpdater.js';
+import { useRouter } from 'vue-router';
+import CreateImageRegistryCredentialModal from '@/views/partials/CreateImageRegistryCredentialModal.vue';
+import ChooseOtherDockerConfigurationModal from '@/views/partials/ChooseOtherDockerConfigurationModal.vue';
+import { useI18n } from 'vue-i18n';
 
-const { t } = useI18n()
-const router = useRouter()
-const authStore = useAuthStore()
-const applicationUpdater = newApplicationUpdater(router.currentRoute.value.params.id)()
+const { t } = useI18n();
+const router = useRouter();
+const authStore = useAuthStore();
+const applicationUpdater = newApplicationUpdater(router.currentRoute.value.params.id)();
 
 const applicationSourceType = computed(() => {
   if (applicationExistingDetailsResult.value) {
-    return applicationExistingDetailsResult.value?.application?.latestDeployment?.upstreamType ?? ''
+    return applicationExistingDetailsResult.value?.application?.latestDeployment?.upstreamType ?? '';
   } else {
-    return null
+    return null;
   }
-})
-const sourceCodeCompressedFileFieldRef = ref(null)
+});
+const sourceCodeCompressedFileFieldRef = ref(null);
 const stateRef = reactive({
   sourceCodeCompressedFileName: '',
   githubAppInstallationID: 0,
@@ -47,29 +47,29 @@ const stateRef = reactive({
   buildArgs: {},
   isDockerFileEditorOpen: false,
   isDockerConfigurationGenerated: false
-})
-const availableGitBranches = ref([])
+});
+const availableGitBranches = ref([]);
 
 watch(
   stateRef,
   () => {
-    applicationUpdater.updateApplicationSource(stateRef)
+    applicationUpdater.updateApplicationSource(stateRef);
   },
   { deep: true }
-)
+);
 
 watch(
   () => applicationUpdater.isConfigurationUpdated,
   (updateStatus) => {
     if (updateStatus === false) {
-      prefillDetails()
+      prefillDetails();
     }
   }
-)
+);
 
 const applicationExistingDetailsResult = computed(() => {
-  return applicationUpdater.applicationExistingDetailsResult ?? {}
-})
+  return applicationUpdater.applicationExistingDetailsResult ?? {};
+});
 
 // Fetch git branches
 const {
@@ -90,102 +90,103 @@ const {
     fetchPolicy: 'no-cache',
     nextFetchPolicy: 'no-cache'
   }
-)
+);
 
 const fetchGitBranches = () => {
-  const repo = githubRepositories.value.find((item) => item.id.toString() === stateRef.githubRepositoryID.toString())
+  const repo = githubRepositories.value.find((item) => item.id.toString() === stateRef.githubRepositoryID.toString());
   if (!repo || stateRef.githubAppInstallationID === 0) {
-    return
+    return;
   }
-  stateRef.repositoryOwner = repo.owner
-  stateRef.repositoryName = repo.name
+  stateRef.repositoryOwner = repo.owner;
+  stateRef.repositoryName = repo.name;
   fetchGitBranchesVariables.value = {
     input: {
       githubAppInstallationID: parseInt(stateRef.githubAppInstallationID.toString()),
       repositoryOwner: repo.owner,
       repositoryName: repo.name
     }
-  }
+  };
   if (fetchGitBranchesRaw() === false) {
-    refetchGitBranchesRaw()
+    refetchGitBranchesRaw();
   }
-}
+};
 
 onFetchGitBranchesResult((d) => {
   if (d.data && d.data.gitBranches) {
-    availableGitBranches.value = d.data.gitBranches
-    toast.success(t('applicationDetails.availableBranchesFetched'))
+    availableGitBranches.value = d.data.gitBranches;
+    toast.success(t('applicationDetails.availableBranchesFetched'));
   }
-})
+});
 onFetchGitBranchesError((err) => {
-  toast.error(err.message)
-  availableGitBranches.value = []
-  stateRef.gitBranch = ''
-})
+  toast.error(err.message);
+  availableGitBranches.value = [];
+  stateRef.gitBranch = '';
+});
 
 function prefillDetails() {
   if (applicationExistingDetailsResult.value && applicationExistingDetailsResult.value.application) {
-    stateRef.command = applicationExistingDetailsResult.value.application.command
+    stateRef.command = applicationExistingDetailsResult.value.application.command;
     if (applicationExistingDetailsResult.value.application.latestDeployment.upstreamType === 'git') {
       stateRef.githubAppInstallationID =
-        applicationExistingDetailsResult.value.application.latestDeployment.githubAppInstallationID
-      stateRef.githubRepositoryID = applicationExistingDetailsResult.value.application.latestDeployment.githubRepositoryID
-      stateRef.repositoryOwner = applicationExistingDetailsResult.value.application.latestDeployment.repositoryOwner
-      stateRef.repositoryName = applicationExistingDetailsResult.value.application.latestDeployment.repositoryName
-      stateRef.gitBranch = applicationExistingDetailsResult.value.application.latestDeployment.repositoryBranch
-      stateRef.codePath = applicationExistingDetailsResult.value.application.latestDeployment.codePath
-      fetchGithubRepositories()
+        applicationExistingDetailsResult.value.application.latestDeployment.githubAppInstallationID;
+      stateRef.githubRepositoryID =
+        applicationExistingDetailsResult.value.application.latestDeployment.githubRepositoryID;
+      stateRef.repositoryOwner = applicationExistingDetailsResult.value.application.latestDeployment.repositoryOwner;
+      stateRef.repositoryName = applicationExistingDetailsResult.value.application.latestDeployment.repositoryName;
+      stateRef.gitBranch = applicationExistingDetailsResult.value.application.latestDeployment.repositoryBranch;
+      stateRef.codePath = applicationExistingDetailsResult.value.application.latestDeployment.codePath;
+      fetchGithubRepositories();
     }
-    stateRef.isDockerConfigurationGenerated = true
-    stateRef.detectedServiceName = t('applicationDetails.takenFromExistingDeployment')
-    stateRef.dockerFile = applicationExistingDetailsResult.value.application.latestDeployment.dockerfile
-    const buildArgs = applicationExistingDetailsResult.value.application.latestDeployment.buildArgs
-    stateRef.buildArgs = {}
-    stateRef.dockerBuildArgs = []
+    stateRef.isDockerConfigurationGenerated = true;
+    stateRef.detectedServiceName = t('applicationDetails.takenFromExistingDeployment');
+    stateRef.dockerFile = applicationExistingDetailsResult.value.application.latestDeployment.dockerfile;
+    const buildArgs = applicationExistingDetailsResult.value.application.latestDeployment.buildArgs;
+    stateRef.buildArgs = {};
+    stateRef.dockerBuildArgs = [];
     for (const buildArg of buildArgs) {
-      stateRef.buildArgs[buildArg.key] = buildArg.value
+      stateRef.buildArgs[buildArg.key] = buildArg.value;
       stateRef.dockerBuildArgs.push({
         key: buildArg.key,
         description: '',
         value: buildArg.value
-      })
+      });
     }
     stateRef.sourceCodeCompressedFileName =
-      applicationExistingDetailsResult.value.application.latestDeployment.sourceCodeCompressedFileName
-    stateRef.dockerImage = applicationExistingDetailsResult.value.application.latestDeployment.dockerImage
+      applicationExistingDetailsResult.value.application.latestDeployment.sourceCodeCompressedFileName;
+    stateRef.dockerImage = applicationExistingDetailsResult.value.application.latestDeployment.dockerImage;
     stateRef.imageRegistryCredentialID =
-      applicationExistingDetailsResult.value.application.latestDeployment.imageRegistryCredentialID
+      applicationExistingDetailsResult.value.application.latestDeployment.imageRegistryCredentialID;
   }
 }
 
 watch(applicationExistingDetailsResult, () => {
-  prefillDetails()
-})
+  prefillDetails();
+});
 
 onMounted(() => {
-  prefillDetails()
-  fetchGitBranches()
-})
+  prefillDetails();
+  fetchGitBranches();
+});
 
 const openDockerFileEditor = () => {
-  stateRef.isDockerFileEditorOpen = true
-}
+  stateRef.isDockerFileEditorOpen = true;
+};
 
 const closeDockerFileEditor = () => {
-  stateRef.isDockerFileEditorOpen = false
-}
+  stateRef.isDockerFileEditorOpen = false;
+};
 
 const enableGenerateConfigurationButton = computed(() => {
   if (applicationSourceType.value === 'git') {
-    return stateRef.githubAppInstallationID !== 0 && stateRef.githubRepositoryID !== 0 && stateRef.gitBranch !== ''
+    return stateRef.githubAppInstallationID !== 0 && stateRef.githubRepositoryID !== 0 && stateRef.gitBranch !== '';
   } else if (applicationSourceType.value === 'sourceCode') {
-    return stateRef.sourceCodeCompressedFileName !== ''
+    return stateRef.sourceCodeCompressedFileName !== '';
   } else if (applicationSourceType.value === 'image') {
-    return stateRef.dockerImage !== ''
+    return stateRef.dockerImage !== '';
   } else {
-    return false
+    return false;
   }
-})
+});
 
 // List Image Registry Credentials query
 const {
@@ -206,15 +207,12 @@ const {
   {
     pollInterval: 10000
   }
-)
-const imageRegistryCredentials = computed(() => imageRegistryCredentialList.value?.imageRegistryCredentials ?? [])
+);
+const imageRegistryCredentials = computed(() => imageRegistryCredentialList.value?.imageRegistryCredentials ?? []);
 
-onImageRegistryCredentialListError((err) => toast.error(err.message))
+onImageRegistryCredentialListError((err) => toast.error(err.message));
 // Fetch GitHub App installations
-const {
-  result: githubAppInstallationList,
-  onError: onGithubAppInstallationListError
-} = useQuery(
+const { result: githubAppInstallationList, onError: onGithubAppInstallationListError } = useQuery(
   gql`
     query {
       githubAppInstallations {
@@ -229,10 +227,10 @@ const {
   {
     pollInterval: 10000
   }
-)
-const githubAppInstallations = computed(() => githubAppInstallationList.value?.githubAppInstallations ?? [])
+);
+const githubAppInstallations = computed(() => githubAppInstallationList.value?.githubAppInstallations ?? []);
 
-onGithubAppInstallationListError((err) => toast.error(err.message))
+onGithubAppInstallationListError((err) => toast.error(err.message));
 
 const {
   load: fetchGithubRepositoriesRaw,
@@ -258,43 +256,43 @@ const {
     fetchPolicy: 'no-cache',
     nextFetchPolicy: 'no-cache'
   }
-)
+);
 
-const githubRepositories = ref([])
+const githubRepositories = ref([]);
 
 const fetchGithubRepositories = () => {
-  availableGitBranches.value = []
-  stateRef.gitBranch = ''
+  availableGitBranches.value = [];
+  stateRef.gitBranch = '';
   if (stateRef.githubAppInstallationID === 0) {
-    githubRepositories.value = []
-    return
+    githubRepositories.value = [];
+    return;
   }
   fetchGithubRepositoriesVariables.value = {
     installationID: parseInt(stateRef.githubAppInstallationID.toString())
-  }
+  };
   if (fetchGithubRepositoriesRaw() === false) {
-    refetchGithubRepositoriesRaw()
+    refetchGithubRepositoriesRaw();
   }
-}
+};
 
 onFetchGithubRepositoriesResult((d) => {
-  githubRepositories.value = d.data?.githubAppRepositories ?? []
+  githubRepositories.value = d.data?.githubAppRepositories ?? [];
   if (stateRef.githubRepositoryID !== 0) {
-    fetchGitBranches()
+    fetchGitBranches();
   }
-})
+});
 
 onFetchGithubRepositoriesError((err) => {
-  toast.error(err.message)
-  githubRepositories.value = []
-})
+  toast.error(err.message);
+  githubRepositories.value = [];
+});
 
-const HTTP_BASE_URL = getHttpBaseUrl()
+const HTTP_BASE_URL = getHttpBaseUrl();
 
 async function uploadTarFile(fileblob) {
   try {
-    var data = new FormData()
-    data.append('file', fileblob, 'file.tar')
+    var data = new FormData();
+    data.append('file', fileblob, 'file.tar');
     const res = await axios({
       method: 'post',
       url: `${HTTP_BASE_URL}/upload/code`,
@@ -303,37 +301,37 @@ async function uploadTarFile(fileblob) {
         Authorization: authStore.FetchBearerToken()
       },
       data: data
-    })
+    });
     return {
       success: true,
       message: res.data.message,
       file: res.data.file
-    }
+    };
   } catch (error) {
     return {
       success: false,
       message: error.response.data.message,
       file: null
-    }
+    };
   }
 }
 
 const uploadSourceCode = async () => {
-  stateRef.isUploadingSourceCode = true
+  stateRef.isUploadingSourceCode = true;
   try {
-    const file = await createTar(sourceCodeCompressedFileFieldRef.value.files, ['.gitignore'])
-    const res = await uploadTarFile(file)
+    const file = await createTar(sourceCodeCompressedFileFieldRef.value.files, ['.gitignore']);
+    const res = await uploadTarFile(file);
     if (res.success) {
-      stateRef.sourceCodeCompressedFileName = res.file
-      toast.success(res.message)
+      stateRef.sourceCodeCompressedFileName = res.file;
+      toast.success(res.message);
     } else {
-      toast.error(res.message)
+      toast.error(res.message);
     }
   } catch (e) {
-    toast.error(t('applicationDetails.failedToUploadSourceCode'))
+    toast.error(t('applicationDetails.failedToUploadSourceCode'));
   }
-  stateRef.isUploadingSourceCode = false
-}
+  stateRef.isUploadingSourceCode = false;
+};
 
 // Generate Configuration
 const {
@@ -364,42 +362,42 @@ const {
     fetchPolicy: 'no-cache',
     nextFetchPolicy: 'no-cache'
   }
-)
+);
 
-onGenerateConfigurationError((err) => toast.error(err.message))
+onGenerateConfigurationError((err) => toast.error(err.message));
 
 onGenerateConfigurationSuccess((res) => {
   if (res.data && res.data.dockerConfigGenerator) {
-    updateDockerConfiguration(res.data.dockerConfigGenerator)
-    closeDockerFileEditor()
+    updateDockerConfiguration(res.data.dockerConfigGenerator);
+    closeDockerFileEditor();
   }
-})
+});
 
 const updateDockerConfiguration = (dockerConfig) => {
-  stateRef.detectedServiceName = dockerConfig.detectedServiceName
-  stateRef.dockerFile = dockerConfig.dockerFile
-  stateRef.dockerBuildArgs = dockerConfig.dockerBuildArgs
+  stateRef.detectedServiceName = dockerConfig.detectedServiceName;
+  stateRef.dockerFile = dockerConfig.dockerFile;
+  stateRef.dockerBuildArgs = dockerConfig.dockerBuildArgs;
   // set default build args if not set
   for (const buildArg of stateRef.dockerBuildArgs) {
-    stateRef.buildArgs[buildArg.key] = buildArg.defaultValue
+    stateRef.buildArgs[buildArg.key] = buildArg.defaultValue;
   }
   // delete build args if not present in dockerBuildArgs
   for (const buildArgKey in stateRef.buildArgs) {
     if (!stateRef.dockerBuildArgs.some((buildArg) => buildArg.key === buildArgKey)) {
-      delete stateRef.buildArgs[buildArgKey]
+      delete stateRef.buildArgs[buildArgKey];
     }
   }
-  stateRef.isDockerConfigurationGenerated = true
-}
+  stateRef.isDockerConfigurationGenerated = true;
+};
 
 const updateBuildArg = (key, value) => {
-  stateRef.buildArgs[key] = value
-}
+  stateRef.buildArgs[key] = value;
+};
 
 const generateConfiguration = () => {
   if (applicationSourceType.value === 'image') {
-    stateRef.detectedServiceName = t('applicationDetails.noConfigNeededForImage')
-    stateRef.isDockerConfigurationGenerated = true
+    stateRef.detectedServiceName = t('applicationDetails.noConfigNeededForImage');
+    stateRef.isDockerConfigurationGenerated = true;
   } else {
     generateConfigurationVariables.value.input = {
       sourceType: applicationSourceType.value,
@@ -412,12 +410,12 @@ const generateConfiguration = () => {
       customDockerFile: '',
       sourceCodeCompressedFileName:
         stateRef.sourceCodeCompressedFileName === '' ? null : stateRef.sourceCodeCompressedFileName
-    }
+    };
     if (generateConfigurationLoad() === false) {
-      generateConfigurationRefetch()
+      generateConfigurationRefetch();
     }
   }
-}
+};
 
 const generateConfigurationForCustomDockerFile = (customDockerFile) => {
   generateConfigurationVariables.value.input = {
@@ -429,23 +427,23 @@ const generateConfigurationForCustomDockerFile = (customDockerFile) => {
     codePath: null,
     customDockerFile: customDockerFile,
     sourceCodeCompressedFileName: null
-  }
+  };
   if (generateConfigurationLoad() === false) {
-    generateConfigurationRefetch()
+    generateConfigurationRefetch();
   }
-}
+};
 
 // Create Image Registry Credential
-const createImageRegistryCredentialModalRef = ref(null)
+const createImageRegistryCredentialModalRef = ref(null);
 const openCreateImageRegistryCredentialModal = computed(
   () => createImageRegistryCredentialModalRef.value?.openModal ?? (() => {})
-)
+);
 
 // Chose Other Docker Configuration
-const chooseOtherDockerConfigurationModalRef = ref(null)
+const chooseOtherDockerConfigurationModalRef = ref(null);
 const openChooseOtherDockerConfigurationModal = computed(
   () => chooseOtherDockerConfigurationModalRef.value?.openModal ?? (() => {})
-)
+);
 </script>
 
 <template>
@@ -465,13 +463,15 @@ const openChooseOtherDockerConfigurationModal = computed(
 
         <!-- GitHub App Installation -->
         <div class="mt-6">
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300" for="github_installation">GitHub App Installation</label>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300" for="github_installation"
+            >GitHub App Installation</label
+          >
           <div class="mt-1">
             <select
               id="github_installation"
               v-model="stateRef.githubAppInstallationID"
               @change="fetchGithubRepositories"
-              class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
+              class="focus:border-primary-500 focus:ring-primary-500 block w-full rounded-md border-gray-300 shadow-xs sm:text-sm">
               <option selected value="0">Select installation</option>
               <option v-for="installation in githubAppInstallations" :key="installation.id" :value="installation.id">
                 {{ installation.accountLogin }} [{{ installation.accountType }}]
@@ -485,7 +485,9 @@ const openChooseOtherDockerConfigurationModal = computed(
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300" for="github_repository">
             GitHub Repository
             <span class="ml-2 italic" v-if="fetchingGithubRepositories"
-              ><font-awesome-icon icon="fa-solid fa-spinner" class="animate-spin" />&nbsp;&nbsp;{{ $t('applicationDetails.fetching') }}</span
+              ><font-awesome-icon icon="fa-solid fa-spinner" class="animate-spin" />&nbsp;&nbsp;{{
+                $t('applicationDetails.fetching')
+              }}</span
             >
           </label>
           <div class="mt-1">
@@ -493,7 +495,7 @@ const openChooseOtherDockerConfigurationModal = computed(
               id="github_repository"
               v-model="stateRef.githubRepositoryID"
               @change="fetchGitBranches"
-              class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+              class="focus:border-primary-500 focus:ring-primary-500 block w-full rounded-md border-gray-300 shadow-xs sm:text-sm"
               :disabled="stateRef.githubAppInstallationID === 0">
               <option selected disabled value="0">Select repository</option>
               <option v-for="repo in githubRepositories" :key="repo.id" :value="repo.id">{{ repo.fullName }}</option>
@@ -506,14 +508,16 @@ const openChooseOtherDockerConfigurationModal = computed(
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-300" for="name"
             >{{ $t('applicationDetails.gitBranch') }}
             <span class="ml-2 italic" v-if="fetchingGitBranches"
-              ><font-awesome-icon icon="fa-solid fa-spinner" class="animate-spin" />&nbsp;&nbsp;{{ $t('applicationDetails.fetching') }}</span
+              ><font-awesome-icon icon="fa-solid fa-spinner" class="animate-spin" />&nbsp;&nbsp;{{
+                $t('applicationDetails.fetching')
+              }}</span
             ></label
           >
           <div class="mt-1">
             <select
               id="git_credential"
               v-model="stateRef.gitBranch"
-              class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
+              class="focus:border-primary-500 focus:ring-primary-500 block w-full rounded-md border-gray-300 shadow-xs sm:text-sm">
               <option selected disabled value="">{{ $t('applicationDetails.selectBranch') }}</option>
               <option v-for="branch in availableGitBranches" :key="branch" :value="branch">
                 {{ branch }}
@@ -524,13 +528,15 @@ const openChooseOtherDockerConfigurationModal = computed(
 
         <!-- Code Path -->
         <div class="mt-4">
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300" for="name">{{ $t('applicationDetails.codePath') }}</label>
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300" for="name">{{
+            $t('applicationDetails.codePath')
+          }}</label>
           <div class="mt-1">
             <input
               id="name"
               v-model="stateRef.codePath"
               autocomplete="off"
-              class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+              class="focus:border-primary-500 focus:ring-primary-500 block w-full rounded-md border-gray-300 shadow-xs sm:text-sm"
               name="name"
               :placeholder="$t('applicationDetails.codePathHint')"
               type="text" />
@@ -546,13 +552,13 @@ const openChooseOtherDockerConfigurationModal = computed(
         <p class="text-xl font-medium">{{ $t('applicationDetails.uploadSourceCodeTitle') }}</p>
         <!--    Source Code -->
         <div class="mt-4">
-          <label class="mb-2 block text-sm font-medium text-gray-900 dark:text-white" for="source_code"
-            >{{ $t('applicationDetails.selectFolder') }}</label
-          >
+          <label class="mb-2 block text-sm font-medium text-gray-900 dark:text-white" for="source_code">{{
+            $t('applicationDetails.selectFolder')
+          }}</label>
           <div class="mx-auto max-w-md space-y-8">
             <input
               ref="sourceCodeCompressedFileFieldRef"
-              class="w-full cursor-pointer rounded-md bg-gray-100 text-sm text-black file:mr-4 file:cursor-pointer file:border-0 file:bg-gray-800 file:px-4 file:py-2 file:text-white file:hover:bg-gray-700 focus:outline-hidden"
+              class="dark:bg-secondary-800 w-full cursor-pointer rounded-md bg-gray-100 text-sm text-black file:mr-4 file:cursor-pointer file:border-0 file:bg-gray-800 file:px-4 file:py-2 file:text-white file:hover:bg-gray-700 focus:outline-hidden dark:text-gray-100"
               directory
               multiple
               type="file"
@@ -581,7 +587,7 @@ const openChooseOtherDockerConfigurationModal = computed(
               id="docker_image"
               v-model="stateRef.dockerImage"
               autocomplete="off"
-              class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+              class="focus:border-primary-500 focus:ring-primary-500 block w-full rounded-md border-gray-300 shadow-xs sm:text-sm"
               name="name"
               :placeholder="$t('applicationDetails.enterDockerImageUrl')"
               type="text" />
@@ -596,7 +602,7 @@ const openChooseOtherDockerConfigurationModal = computed(
             <select
               id="image_registry_credential"
               v-model="stateRef.imageRegistryCredentialID"
-              class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm">
+              class="focus:border-primary-500 focus:ring-primary-500 block w-full rounded-md border-gray-300 shadow-xs sm:text-sm">
               <option selected value="0">{{ $t('applicationDetails.noCredential') }}</option>
               <option v-for="credential in imageRegistryCredentials" :key="credential.id" :value="credential.id">
                 {{ credential.username }} - {{ credential.url }}
@@ -605,7 +611,9 @@ const openChooseOtherDockerConfigurationModal = computed(
           </div>
           <p class="mt-2 flex items-center text-sm">
             {{ $t('applicationDetails.needCredentialForPrivateRegistry') }}
-            <a @click="openCreateImageRegistryCredentialModal" class="ml-1.5 cursor-pointer font-bold text-primary-600"
+            <a
+              @click="openCreateImageRegistryCredentialModal"
+              class="text-primary-600 ml-1.5 cursor-pointer font-bold"
               >{{ $t('applicationDetails.clickHere') }}</a
             >
           </p>
@@ -637,7 +645,7 @@ const openChooseOtherDockerConfigurationModal = computed(
       </FilledButton>
       <p class="mt-4 font-medium text-gray-700 dark:text-gray-300">
         {{ $t('applicationDetails.detectedServiceName') }}
-        <span class="font-normal text-primary-600">{{ stateRef.detectedServiceName }}</span>
+        <span class="text-primary-600 font-normal">{{ stateRef.detectedServiceName }}</span>
       </p>
       <FilledButton v-if="applicationSourceType !== 'image'" class="mt-4 w-full" @click="openDockerFileEditor"
         >{{ $t('applicationDetails.viewModifyDockerfile') }}
@@ -652,7 +660,7 @@ const openChooseOtherDockerConfigurationModal = computed(
             id="docker_command"
             v-model="stateRef.command"
             autocomplete="off"
-            class="block w-full rounded-md border-gray-300 shadow-xs focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
+            class="focus:border-primary-500 focus:ring-primary-500 block w-full rounded-md border-gray-300 shadow-xs sm:text-sm"
             name="docker_command"
             :placeholder="$t('applicationDetails.enterDockerCommand')"
             type="text" />
@@ -660,7 +668,9 @@ const openChooseOtherDockerConfigurationModal = computed(
         </div>
       </div>
       <div v-if="stateRef.dockerBuildArgs.length !== 0">
-        <p class="mt-4 font-medium text-gray-700 dark:text-gray-300">{{ $t('applicationDetails.dockerBuildArgsLabel') }}</p>
+        <p class="mt-4 font-medium text-gray-700 dark:text-gray-300">
+          {{ $t('applicationDetails.dockerBuildArgsLabel') }}
+        </p>
         <div class="w-full">
           <BuildArgInput
             v-for="buildArg in stateRef.dockerBuildArgs"
