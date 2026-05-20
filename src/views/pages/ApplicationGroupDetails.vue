@@ -1,29 +1,29 @@
 <script setup>
 // Toast
-import { useMutation, useQuery } from '@vue/apollo-composable'
-import { useRouter } from 'vue-router'
-import { toast } from 'vue-sonner'
-import gql from 'graphql-tag'
-import { computed, reactive, ref } from 'vue'
-import { useI18n } from 'vue-i18n'
-const { t } = useI18n()
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import Table from '@/views/components/Table/Table.vue'
-import TableHeader from '@/views/components/Table/TableHeader.vue'
-import TableMessage from '@/views/components/Table/TableMessage.vue'
-import ApplicationListRow from '@/views/partials/ApplicationListRow.vue'
-import DeleteApplicationsModal from '@/views/partials/DeleteApplicationsModal.vue'
-import RestartApplicationsModal from '@/views/partials/RestartApplicationsModal.vue'
-import RebuildApplicationsModal from '@/views/partials/RebuildApplicationsModal.vue'
-import EnvironmentVariablesEditor from '@/views/partials/DeployApplication/EnvironmentVariablesEditor.vue'
-import { v4 as uuidv4 } from 'uuid'
-import PersistentVolumeBindingEditor from '@/views/partials/DeployApplication/PersistentVolumeBindingEditor.vue'
-import ConfigMountsEditor from '@/views/partials/DeployApplication/ConfigMountsEditor.vue'
-import FilledButton from '@/views/components/FilledButton.vue'
+import { useMutation, useQuery } from '@vue/apollo-composable';
+import { useRouter } from 'vue-router';
+import { toast } from 'vue-sonner';
+import gql from 'graphql-tag';
+import { computed, reactive, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+const { t } = useI18n();
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import Table from '@/views/components/Table/Table.vue';
+import TableHeader from '@/views/components/Table/TableHeader.vue';
+import TableMessage from '@/views/components/Table/TableMessage.vue';
+import ApplicationListRow from '@/views/partials/ApplicationListRow.vue';
+import DeleteApplicationsModal from '@/views/partials/DeleteApplicationsModal.vue';
+import RestartApplicationsModal from '@/views/partials/RestartApplicationsModal.vue';
+import RebuildApplicationsModal from '@/views/partials/RebuildApplicationsModal.vue';
+import EnvironmentVariablesEditor from '@/views/partials/DeployApplication/EnvironmentVariablesEditor.vue';
+import { v4 as uuidv4 } from 'uuid';
+import PersistentVolumeBindingEditor from '@/views/partials/DeployApplication/PersistentVolumeBindingEditor.vue';
+import ConfigMountsEditor from '@/views/partials/DeployApplication/ConfigMountsEditor.vue';
+import FilledButton from '@/views/components/FilledButton.vue';
 
 // Get the application ID from the URL
-const router = useRouter()
-const applicationGroupId = router.currentRoute.value.params.id
+const router = useRouter();
+const applicationGroupId = router.currentRoute.value.params.id;
 
 // Fetch the application details
 const {
@@ -151,227 +151,227 @@ const {
   {
     pollInterval: 30000
   }
-)
+);
 
 onErrorGroupApplicationDetails(() => {
-  toast.error(t('groups.fetchError'))
-})
+  toast.error(t('groups.fetchError'));
+});
 
 onResultGroupApplicationDetails(() => {
   for (const application of applications.value) {
-    let envVariablesMap = {}
+    let envVariablesMap = {};
     application.environmentVariables.forEach((variable) => {
-      const z = uuidv4()
+      const z = uuidv4();
       envVariablesMap[z] = {
         name: variable.key,
         value: variable.value
-      }
-    })
+      };
+    });
     environmentVariableDetails[application.id] = {
       keys: Object.keys(envVariablesMap),
       map: envVariablesMap
-    }
-    let persistentVolumeBindingsMap = {}
+    };
+    let persistentVolumeBindingsMap = {};
     application.persistentVolumeBindings.forEach((binding) => {
-      const z = uuidv4()
+      const z = uuidv4();
       persistentVolumeBindingsMap[z] = {
         persistentVolumeID: binding.persistentVolumeID,
         mountingPath: binding.mountingPath
-      }
-    })
+      };
+    });
     persistentVolumeBindingDetails[application.id] = {
       keys: Object.keys(persistentVolumeBindingsMap),
       map: persistentVolumeBindingsMap
-    }
-    let configMountsMap = {}
+    };
+    let configMountsMap = {};
     application.configMounts.forEach((configMount) => {
-      const z = uuidv4()
+      const z = uuidv4();
       configMountsMap[z] = {
         content: configMount.content,
         mountingPath: configMount.mountingPath,
         uid: configMount.uid,
         gid: configMount.gid
-      }
-    })
+      };
+    });
     configMountDetails[application.id] = {
       keys: Object.keys(configMountsMap),
       map: configMountsMap
-    }
-    isAppInfoChanged[application.id] = false
+    };
+    isAppInfoChanged[application.id] = false;
   }
   if (applications.value.length > 0 && pageInfo.currentSelectedEnvironmentVariableApplicationId === '') {
-    pageInfo.currentSelectedEnvironmentVariableApplicationId = applications.value[0].id
-    pageInfo.currentSelectedPersistentVolumeApplicationId = applications.value[0].id
-    pageInfo.currentSelectedConfigMountApplicationId = applications.value[0].id
+    pageInfo.currentSelectedEnvironmentVariableApplicationId = applications.value[0].id;
+    pageInfo.currentSelectedPersistentVolumeApplicationId = applications.value[0].id;
+    pageInfo.currentSelectedConfigMountApplicationId = applications.value[0].id;
   }
-})
+});
 
-const persistentVolumeBindingDetails = reactive({})
-const environmentVariableDetails = reactive({})
-const configMountDetails = reactive({})
+const persistentVolumeBindingDetails = reactive({});
+const environmentVariableDetails = reactive({});
+const configMountDetails = reactive({});
 
-const applicationGroupDetails = computed(() => applicationGroupDetailsRaw.value?.applicationGroup ?? {})
-const applications = computed(() => applicationGroupDetailsRaw.value?.applicationGroup?.applications ?? [])
+const applicationGroupDetails = computed(() => applicationGroupDetailsRaw.value?.applicationGroup ?? {});
+const applications = computed(() => applicationGroupDetailsRaw.value?.applicationGroup?.applications ?? []);
 const ingressRules = computed(() => {
-  let records = []
+  let records = [];
   for (const application of applications.value) {
-    records.push(...application.ingressRules)
+    records.push(...application.ingressRules);
   }
-  return records
-})
+  return records;
+});
 
 const totalServiceCount = computed(() => {
   if (applicationGroupDetails.value.applications.length === 0) {
-    return 0
+    return 0;
   }
-  return applicationGroupDetails.value.applications.length
-})
+  return applicationGroupDetails.value.applications.length;
+});
 
 const healthyServiceCount = computed(() => {
   if (applicationGroupDetails.value.applications.length === 0) {
-    return 0
+    return 0;
   }
-  return applicationGroupDetails.value.applications.filter((app) => app.realtimeInfo.HealthStatus === 'healthy').length
-})
+  return applicationGroupDetails.value.applications.filter((app) => app.realtimeInfo.HealthStatus === 'healthy').length;
+});
 
 const unhealthyServiceCount = computed(() => {
   if (applicationGroupDetails.value.applications.length === 0) {
-    return 0
+    return 0;
   }
   return applicationGroupDetails.value.applications.filter((app) => app.realtimeInfo.HealthStatus === 'unhealthy')
-    .length
-})
+    .length;
+});
 
 const applicationIds = computed(() => {
-  return applicationGroupDetails.value.applications.map((app) => app.id)
-})
+  return applicationGroupDetails.value.applications.map((app) => app.id);
+});
 
-const deleteApplicationsModal = ref(null)
-const restartApplicationsModal = ref(null)
-const rebuildApplicationsModal = ref(null)
+const deleteApplicationsModal = ref(null);
+const restartApplicationsModal = ref(null);
+const rebuildApplicationsModal = ref(null);
 
 function deleteApplications() {
   if (deleteApplicationsModal.value) {
-    deleteApplicationsModal.value.openModal()
+    deleteApplicationsModal.value.openModal();
   }
 }
 
 function restartApplications() {
   if (restartApplicationsModal.value) {
-    restartApplicationsModal.value.openModal()
+    restartApplicationsModal.value.openModal();
   }
 }
 
 function rebuildApplications() {
   if (rebuildApplicationsModal.value) {
-    rebuildApplicationsModal.value.openModal()
+    rebuildApplicationsModal.value.openModal();
   }
 }
 
 // page
-const pageName = ref('deployed-apps')
+const pageName = ref('deployed-apps');
 const pageInfo = reactive({
   currentSelectedPersistentVolumeApplicationId: '',
   currentSelectedEnvironmentVariableApplicationId: '',
   currentSelectedConfigMountApplicationId: ''
-})
-const isAppInfoChanged = reactive({})
+});
+const isAppInfoChanged = reactive({});
 const isAnyAppInfoChanged = computed(() => {
   for (const app of applications.value) {
     if (isAppInfoChanged[app.id]) {
-      return true
+      return true;
     }
   }
-  return false
-})
+  return false;
+});
 
 // Environment Variables Editor Related
 const environmentVariableKeys = (app) => {
-  console.log(environmentVariableDetails)
-  return environmentVariableDetails[app.id].keys
-}
+  console.log(environmentVariableDetails);
+  return environmentVariableDetails[app.id].keys;
+};
 const environmentVariableMap = (app) => {
-  return environmentVariableDetails[app.id].map
-}
+  return environmentVariableDetails[app.id].map;
+};
 const addEnvironmentVariable = (app) => {
-  const key = uuidv4()
+  const key = uuidv4();
   environmentVariableDetails[app.id].map[key] = {
     name: '',
     value: ''
-  }
-  environmentVariableDetails[app.id].keys.push(key)
-  isAppInfoChanged[app.id] = true
-}
+  };
+  environmentVariableDetails[app.id].keys.push(key);
+  isAppInfoChanged[app.id] = true;
+};
 const deleteEnvironmentVariable = (app, key) => {
-  delete environmentVariableDetails[app.id].map[key]
-  environmentVariableDetails[app.id].keys = environmentVariableDetails[app.id].keys.filter((k) => k !== key)
-  isAppInfoChanged[app.id] = true
-}
+  delete environmentVariableDetails[app.id].map[key];
+  environmentVariableDetails[app.id].keys = environmentVariableDetails[app.id].keys.filter((k) => k !== key);
+  isAppInfoChanged[app.id] = true;
+};
 const onEnvironmentVariableValueChange = (app, key, value) => {
-  environmentVariableDetails[app.id].map[key].value = value
-  isAppInfoChanged[app.id] = true
-}
+  environmentVariableDetails[app.id].map[key].value = value;
+  isAppInfoChanged[app.id] = true;
+};
 const onEnvironmentVariableNameChange = (app, key, name) => {
-  environmentVariableDetails[app.id].map[key].name = name
-  isAppInfoChanged[app.id] = true
-}
+  environmentVariableDetails[app.id].map[key].name = name;
+  isAppInfoChanged[app.id] = true;
+};
 
 // Persistent Volume Binding Editor Related
 const persistentVolumeBindingKeys = (app) => {
-  return persistentVolumeBindingDetails[app.id].keys
-}
+  return persistentVolumeBindingDetails[app.id].keys;
+};
 const persistentVolumeBindingMap = (app) => {
-  return persistentVolumeBindingDetails[app.id].map
-}
+  return persistentVolumeBindingDetails[app.id].map;
+};
 const addPersistentVolumeBinding = (app) => {
-  const key = uuidv4()
+  const key = uuidv4();
   persistentVolumeBindingDetails[app.id].map[key] = {
     persistentVolumeID: -1,
     mountingPath: ''
-  }
-  persistentVolumeBindingDetails[app.id].keys.push(key)
-  isAppInfoChanged[app.id] = true
-}
+  };
+  persistentVolumeBindingDetails[app.id].keys.push(key);
+  isAppInfoChanged[app.id] = true;
+};
 const deletePersistentVolumeBinding = (app, key) => {
-  delete persistentVolumeBindingDetails[app.id].map[key]
-  persistentVolumeBindingDetails[app.id].keys = persistentVolumeBindingDetails[app.id].keys.filter((k) => k !== key)
-  isAppInfoChanged[app.id] = true
-}
+  delete persistentVolumeBindingDetails[app.id].map[key];
+  persistentVolumeBindingDetails[app.id].keys = persistentVolumeBindingDetails[app.id].keys.filter((k) => k !== key);
+  isAppInfoChanged[app.id] = true;
+};
 const onPersistentVolumeChange = (app, key, value) => {
-  persistentVolumeBindingDetails[app.id].map[key].persistentVolumeID = value
-  isAppInfoChanged[app.id] = true
-}
+  persistentVolumeBindingDetails[app.id].map[key].persistentVolumeID = value;
+  isAppInfoChanged[app.id] = true;
+};
 const onPersistentVolumeMountingPathChange = (app, key, value) => {
-  persistentVolumeBindingDetails[app.id].map[key].mountingPath = value
-  isAppInfoChanged[app.id] = true
-}
+  persistentVolumeBindingDetails[app.id].map[key].mountingPath = value;
+  isAppInfoChanged[app.id] = true;
+};
 
 // Config Mount Editor Related
 const configMountKeys = (app) => {
-  return configMountDetails[app.id].keys
-}
+  return configMountDetails[app.id].keys;
+};
 const configMountMap = (app) => {
-  return configMountDetails[app.id].map
-}
+  return configMountDetails[app.id].map;
+};
 const addConfigMount = (app, details) => {
-  const key = uuidv4()
-  configMountDetails[app.id].map[key] = details
-  configMountDetails[app.id].keys.push(key)
-  isAppInfoChanged[app.id] = true
-}
+  const key = uuidv4();
+  configMountDetails[app.id].map[key] = details;
+  configMountDetails[app.id].keys.push(key);
+  isAppInfoChanged[app.id] = true;
+};
 const deleteConfigMount = (app, key) => {
-  delete configMountDetails[app.id].map[key]
-  configMountDetails[app.id].keys = configMountDetails[app.id].keys.filter((k) => k !== key)
-  isAppInfoChanged[app.id] = true
-}
+  delete configMountDetails[app.id].map[key];
+  configMountDetails[app.id].keys = configMountDetails[app.id].keys.filter((k) => k !== key);
+  isAppInfoChanged[app.id] = true;
+};
 const onConfigMountContentChange = (app, key, content) => {
-  configMountDetails[app.id].map[key].content = content
-  isAppInfoChanged[app.id] = true
-}
+  configMountDetails[app.id].map[key].content = content;
+  isAppInfoChanged[app.id] = true;
+};
 
 // Apply Changes
 
-const isApplyingChanges = ref(false)
+const isApplyingChanges = ref(false);
 const { mutate: deployApplication } = useMutation(gql`
   mutation ($id: String!, $input: ApplicationInput!) {
     updateApplication(id: $id, input: $input) {
@@ -379,11 +379,11 @@ const { mutate: deployApplication } = useMutation(gql`
       name
     }
   }
-`)
+`);
 const applyChanges = async () => {
-  isApplyingChanges.value = true
+  isApplyingChanges.value = true;
   for (const appId in isAppInfoChanged) {
-    if (!isAppInfoChanged[appId]) continue
+    if (!isAppInfoChanged[appId]) continue;
     for (const application of applications.value) {
       if (application.id === appId) {
         let updatedPayload = {
@@ -403,7 +403,7 @@ const applyChanges = async () => {
             return {
               key: environmentVariableMap(application)[key].name,
               value: environmentVariableMap(application)[key].value
-            }
+            };
           }),
           configMounts: configMountKeys(application).map((key) => configMountMap(application)[key]),
           persistentVolumeBindings: persistentVolumeBindingKeys(application).map(
@@ -415,7 +415,9 @@ const applyChanges = async () => {
               ? null
               : application.latestDeployment.githubAppInstallationID,
           githubRepositoryID:
-            application.latestDeployment.githubRepositoryID === 0 ? null : application.latestDeployment.githubRepositoryID,
+            application.latestDeployment.githubRepositoryID === 0
+              ? null
+              : application.latestDeployment.githubRepositoryID,
           repositoryOwner: application.latestDeployment.repositoryOwner,
           repositoryName: application.latestDeployment.repositoryName,
           repositoryBranch: application.latestDeployment.repositoryBranch,
@@ -433,22 +435,22 @@ const applyChanges = async () => {
           customHealthCheck: application.customHealthCheck,
           preferredServerHostnames: application.preferredServerHostnames,
           dockerProxyConfig: application.dockerProxyConfig
-        }
+        };
         try {
           await deployApplication({
             input: updatedPayload,
             id: application.id
-          })
+          });
         } catch (e) {
-          toast.error(e.message)
+          toast.error(e.message);
         }
       }
     }
   }
-  isApplyingChanges.value = false
-  toast.success(t('groups.changesApplied'))
-  refetchGroupApplicationDetails()
-}
+  isApplyingChanges.value = false;
+  toast.success(t('groups.changesApplied'));
+  refetchGroupApplicationDetails();
+};
 </script>
 
 <template>
@@ -486,15 +488,15 @@ const applyChanges = async () => {
       <div class="text-center font-medium text-gray-800 dark:text-gray-200">
         <div class="flex flex-row items-center gap-5 px-3 text-center">
           <div class="flex flex-row items-center text-sm text-gray-700 dark:text-gray-300">
-            <font-awesome-icon icon="fa-solid fa-boxes-stacked" class="me-1 text-info-500" />
+            <font-awesome-icon icon="fa-solid fa-boxes-stacked" class="text-info-500 me-1" />
             {{ totalServiceCount }}&nbsp;{{ t('groups.services', totalServiceCount) }}
           </div>
           <div class="flex flex-row items-center text-sm text-gray-700 dark:text-gray-300">
-            <font-awesome-icon icon="fa-solid fa-heart-circle-check" class="me-1 text-success-500" />
+            <font-awesome-icon icon="fa-solid fa-heart-circle-check" class="text-success-500 me-1" />
             {{ healthyServiceCount }}&nbsp;{{ t('groups.healthyCount', healthyServiceCount) }}
           </div>
           <div class="flex flex-row items-center text-sm text-gray-700 dark:text-gray-300">
-            <font-awesome-icon icon="fa-solid fa-heart-circle-exclamation" class="me-1 text-danger-500" />
+            <font-awesome-icon icon="fa-solid fa-heart-circle-exclamation" class="text-danger-500 me-1" />
             {{ unhealthyServiceCount }}&nbsp;{{ t('groups.unhealthyCount', unhealthyServiceCount) }}
           </div>
         </div>
@@ -521,7 +523,7 @@ const applyChanges = async () => {
                   ingressRule.port.toString()
                 "
                 target="_blank"
-                class="has-popover rounded-full bg-primary-500 px-2 py-1 text-secondary-100">
+                class="has-popover bg-primary-500 text-secondary-100 rounded-full px-2 py-1">
                 <font-awesome-icon icon="fa-solid fa-link" class="mr-0.5 text-xs" />
                 {{ t('groups.link', index + 1) }}
                 <div class="popover">
@@ -548,20 +550,20 @@ const applyChanges = async () => {
       <!--    Quick Actions    -->
       <div class="quick-actions">
         <div class="divider"></div>
-        <div class="button" @click="rebuildApplications">
-          <font-awesome-icon icon="fa-solid fa-hammer" class="mr-1" />
+        <button type="button" class="button" @click="rebuildApplications">
+          <font-awesome-icon icon="fa-solid fa-hammer" class="mr-1" aria-hidden="true" />
           {{ t('groups.rebuildDeploy') }}
-        </div>
+        </button>
         <div class="divider"></div>
-        <div class="button" @click="restartApplications">
-          <font-awesome-icon icon="fa-solid fa-rotate-right" class="mr-1" />
+        <button type="button" class="button" @click="restartApplications">
+          <font-awesome-icon icon="fa-solid fa-rotate-right" class="mr-1" aria-hidden="true" />
           {{ t('groups.restartAll') }}
-        </div>
+        </button>
         <div class="divider"></div>
-        <div class="button text-danger-500" @click="deleteApplications">
-          <font-awesome-icon icon="fa-solid fa-trash" class="mr-1" />
+        <button type="button" class="button text-danger-500" @click="deleteApplications">
+          <font-awesome-icon icon="fa-solid fa-trash" class="mr-1" aria-hidden="true" />
           {{ t('groups.deleteAll') }}
-        </div>
+        </button>
       </div>
     </div>
     <!--  main section  -->
@@ -625,13 +627,13 @@ const applyChanges = async () => {
         <!--  Persistent Volume    -->
         <div v-else-if="pageName === 'persistent-volumes'" class="flex w-full flex-col gap-3">
           <div class="flex flex-row flex-wrap gap-2">
-            <div class="w-min cursor-pointer rounded-md px-2 py-2 text-sm font-medium text-secondary-700">
+            <div class="text-secondary-700 w-min cursor-pointer rounded-md px-2 py-2 text-sm font-medium">
               {{ t('groups.applications') }}
             </div>
             <div
               v-for="application in applications"
               v-bind:key="application.id"
-              class="w-min cursor-pointer rounded-md border border-secondary-200 px-3 py-2 text-sm text-secondary-700 hover:bg-secondary-100"
+              class="border-secondary-200 text-secondary-700 hover:bg-secondary-100 w-min cursor-pointer rounded-md border px-3 py-2 text-sm"
               :class="{
                 'border-secondary-400 bg-secondary-50':
                   pageInfo.currentSelectedPersistentVolumeApplicationId === application.id
@@ -657,13 +659,13 @@ const applyChanges = async () => {
         <!--  Environment Variables  -->
         <div v-else-if="pageName === 'environment-variables'" class="flex w-full flex-col gap-3">
           <div class="flex flex-row flex-wrap gap-2">
-            <div class="w-min cursor-pointer rounded-md px-2 py-2 text-sm font-medium text-secondary-700">
+            <div class="text-secondary-700 w-min cursor-pointer rounded-md px-2 py-2 text-sm font-medium">
               {{ t('groups.applications') }}
             </div>
             <div
               v-for="application in applications"
               v-bind:key="application.id"
-              class="w-min cursor-pointer rounded-md border border-secondary-200 px-3 py-2 text-sm text-secondary-700 hover:bg-secondary-100"
+              class="border-secondary-200 text-secondary-700 hover:bg-secondary-100 w-min cursor-pointer rounded-md border px-3 py-2 text-sm"
               :class="{
                 'border-secondary-400 bg-secondary-50':
                   pageInfo.currentSelectedEnvironmentVariableApplicationId === application.id
@@ -686,13 +688,13 @@ const applyChanges = async () => {
         <!--   Config Mounts   -->
         <div v-else-if="pageName === 'static-app-config'" class="flex w-full flex-col gap-3">
           <div class="flex flex-row flex-wrap gap-2">
-            <div class="w-min cursor-pointer rounded-md px-2 py-2 text-sm font-medium text-secondary-700">
+            <div class="text-secondary-700 w-min cursor-pointer rounded-md px-2 py-2 text-sm font-medium">
               {{ t('groups.applications') }}
             </div>
             <div
               v-for="application in applications"
               v-bind:key="application.id"
-              class="w-min cursor-pointer rounded-md border border-secondary-200 px-3 py-2 text-sm text-secondary-700 hover:bg-secondary-100"
+              class="border-secondary-200 text-secondary-700 hover:bg-secondary-100 w-min cursor-pointer rounded-md border px-3 py-2 text-sm"
               :class="{
                 'border-secondary-400 bg-secondary-50':
                   pageInfo.currentSelectedConfigMountApplicationId === application.id
@@ -719,7 +721,9 @@ const applyChanges = async () => {
           v-if="isAnyAppInfoChanged"
           class="mt-4 flex flex-row items-center justify-end gap-2 rounded-md border border-gray-300 p-2 dark:border-gray-600">
           <span class="mr-4 font-medium">{{ t('groups.configUpdated') }}</span>
-          <FilledButton type="primary" :click="applyChanges" :loading="isApplyingChanges">{{ t('groups.applyChanges') }}</FilledButton>
+          <FilledButton type="primary" :click="applyChanges" :loading="isApplyingChanges">{{
+            t('groups.applyChanges')
+          }}</FilledButton>
           <FilledButton type="secondary" :click="refetchGroupApplicationDetails">{{ t('common.cancel') }}</FilledButton>
         </div>
       </div>
@@ -730,30 +734,30 @@ const applyChanges = async () => {
 <style scoped>
 @reference "../../assets/css/base.css";
 .deployment-head {
-  @apply relative flex items-center justify-center gap-2.5  rounded-full border border-secondary-300 px-2 py-1 text-sm font-normal;
+  @apply border-secondary-300 relative flex items-center justify-center gap-2.5 rounded-full border px-2 py-1 text-sm font-normal;
 }
 
 .quick-actions {
-  @apply flex overflow-hidden rounded-full border border-secondary-300 text-sm  text-secondary-700;
+  @apply border-secondary-300 text-secondary-700 flex overflow-hidden rounded-full border text-sm;
 
   .button {
-    @apply cursor-pointer px-2.5 py-1 hover:bg-secondary-200;
+    @apply hover:bg-secondary-200 focus-visible:bg-secondary-200 focus-visible:outline-primary-600 dark:focus-visible:outline-primary-400 cursor-pointer px-2.5 py-1 focus-visible:outline-2 focus-visible:outline-offset-2 dark:hover:bg-gray-700 dark:focus-visible:bg-gray-700;
   }
 
   .divider {
-    @apply h-auto w-px bg-secondary-300;
+    @apply bg-secondary-300 h-auto w-px;
   }
 }
 
 .navbar {
-  @apply flex h-min select-none flex-col flex-wrap gap-1 rounded-lg border border-secondary-200 p-1.5;
+  @apply border-secondary-200 flex h-min flex-col flex-wrap gap-1 rounded-lg border p-1.5 select-none;
 }
 
 .nav-element {
-  @apply min-w-max cursor-pointer rounded-md px-3 py-2 text-sm text-secondary-700 hover:bg-secondary-100;
+  @apply text-secondary-700 hover:bg-secondary-100 min-w-max cursor-pointer rounded-md px-3 py-2 text-sm;
 }
 
 .router-link-exact-active {
-  @apply bg-secondary-100 font-medium text-black dark:bg-secondary-700 dark:text-gray-100;
+  @apply bg-secondary-100 dark:bg-secondary-700 font-medium text-black dark:text-gray-100;
 }
 </style>

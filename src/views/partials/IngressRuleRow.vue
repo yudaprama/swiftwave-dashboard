@@ -1,9 +1,9 @@
 <script setup>
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import TableRow from '@/views/components/Table/TableRow.vue'
-import Badge from '@/views/components/Badge.vue'
-import FilledButton from '@/views/components/FilledButton.vue'
-import { ref } from 'vue'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import TableRow from '@/views/components/Table/TableRow.vue';
+import Badge from '@/views/components/Badge.vue';
+import FilledButton from '@/views/components/FilledButton.vue';
+import { onBeforeUnmount, ref } from 'vue';
 
 defineProps({
   ingressRule: {
@@ -38,48 +38,64 @@ defineProps({
     type: Boolean,
     default: false
   }
-})
+});
 
-const actionsBtnRef = ref(null)
-const actionsMenuRef = ref(null)
+const actionsBtnRef = ref(null);
+const actionsMenuRef = ref(null);
+const isActionsMenuOpen = ref(false);
 
 const onClickActions = () => {
   if (actionsBtnRef.value === null || actionsBtnRef.value.$el === null) {
-    return
+    return;
   }
   if (actionsMenuRef.value === null) {
-    return
+    return;
   }
   if (actionsMenuRef.value.style.display === 'block') {
-    actionsMenuRef.value.style.display = 'none'
-    return
+    actionsMenuRef.value.style.display = 'none';
+    isActionsMenuOpen.value = false;
+    return;
   }
-  const rect = actionsBtnRef.value.$el.getBoundingClientRect()
-  const menuEl = actionsMenuRef.value
-  menuEl.style.display = 'block'
-  menuEl.style.minWidth = `${rect.width}px`
-  menuEl.style.top = `${rect.top + rect.height + 8}px`
-  menuEl.style.right = `${window.innerWidth - rect.left - rect.width}px`
-}
+  const rect = actionsBtnRef.value.$el.getBoundingClientRect();
+  const menuEl = actionsMenuRef.value;
+  menuEl.style.display = 'block';
+  menuEl.style.minWidth = `${rect.width}px`;
+  menuEl.style.top = `${rect.top + rect.height + 8}px`;
+  menuEl.style.right = `${window.innerWidth - rect.left - rect.width}px`;
+  isActionsMenuOpen.value = true;
+};
 
 const closeMenu = () => {
   if (!actionsMenuRef.value) {
-    return
+    return;
   }
-  actionsMenuRef.value.style.display = 'none'
-}
+  actionsMenuRef.value.style.display = 'none';
+  isActionsMenuOpen.value = false;
+};
 
-// on screen resize close the menu
-window.addEventListener('resize', closeMenu)
-// on click outside close the menu
-window.addEventListener('click', (e) => {
+const runMenuAction = (action) => {
+  closeMenu();
+  action();
+};
+
+const onWindowClick = (e) => {
   if (!actionsMenuRef.value || !actionsBtnRef.value.$el) {
-    return
+    return;
   }
   if (!actionsBtnRef.value.$el.contains(e.target)) {
-    closeMenu()
+    closeMenu();
   }
-})
+};
+
+// on screen resize close the menu
+window.addEventListener('resize', closeMenu);
+// on click outside close the menu
+window.addEventListener('click', onWindowClick);
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', closeMenu);
+  window.removeEventListener('click', onWindowClick);
+});
 </script>
 
 <template>
@@ -97,7 +113,7 @@ window.addEventListener('click', (e) => {
       <div
         class="text-sm text-gray-900"
         :class="{
-          'max-w-[200px] overflow-hidden text-ellipsis text-nowrap ': restrictTableWidth
+          'max-w-[200px] overflow-hidden text-nowrap text-ellipsis': restrictTableWidth
         }">
         <a
           v-if="ingressRule.protocol === 'http' || ingressRule.protocol === 'https'"
@@ -115,7 +131,7 @@ window.addEventListener('click', (e) => {
       </div>
     </TableRow>
     <TableRow align="center">
-      <font-awesome-icon icon="fa-solid fa-arrow-right" />
+      <font-awesome-icon icon="fa-solid fa-arrow-right" aria-hidden="true" />
     </TableRow>
     <TableRow align="center">
       <div class="text-sm text-gray-900">
@@ -138,43 +154,67 @@ window.addEventListener('click', (e) => {
           <p><span class="font-medium">ACL</span> - {{ ingressRule.basicAuthAccessControlListName }}</p>
         </div>
       </div>
-      <div v-else class="text-sm italic text-gray-900">N/A</div>
+      <div v-else class="text-sm text-gray-900 italic">N/A</div>
     </TableRow>
     <TableRow align="center" flex v-if="ingressRule.protocol === 'https'">
       <Badge v-if="ingressRule.httpsRedirect" type="success">Active</Badge>
       <Badge v-else type="secondary">Disabled</Badge>
     </TableRow>
     <TableRow align="center" v-else>
-      <p class="text-sm font-medium italic text-gray-900">N/A</p>
+      <p class="text-sm font-medium text-gray-900 italic">N/A</p>
     </TableRow>
     <TableRow align="right" flex>
-      <FilledButton type="ghost" slim ref="actionsBtnRef" :click="onClickActions">
-        <font-awesome-icon icon="fa-solid fa-ellipsis-vertical" />&nbsp;&nbsp;&nbsp;Show Actions
+      <FilledButton
+        ref="actionsBtnRef"
+        type="ghost"
+        slim
+        :click="onClickActions"
+        aria-haspopup="menu"
+        :aria-expanded="isActionsMenuOpen">
+        <font-awesome-icon icon="fa-solid fa-ellipsis-vertical" aria-hidden="true" />&nbsp;&nbsp;&nbsp;Show Actions
       </FilledButton>
     </TableRow>
   </tr>
 
-  <div class="z-1 actions-menu" ref="actionsMenuRef" @click="closeMenu">
-    <ul>
-      <li v-if="ingressRule.httpsRedirect && ingressRule.protocol === 'https'" @click="disableHttpsRedirect">
-        <font-awesome-icon icon="fa-solid fa-location-arrow" />&nbsp;&nbsp;&nbsp;Disable HTTPS Redirect
+  <div class="actions-menu z-1" ref="actionsMenuRef">
+    <ul role="menu">
+      <li v-if="ingressRule.httpsRedirect && ingressRule.protocol === 'https'" role="none">
+        <button type="button" role="menuitem" @click="runMenuAction(disableHttpsRedirect)">
+          <font-awesome-icon icon="fa-solid fa-location-arrow" aria-hidden="true" />&nbsp;&nbsp;&nbsp;Disable HTTPS
+          Redirect
+        </button>
       </li>
-      <li v-else-if="ingressRule.protocol === 'https'" @click="enableHttpsRedirect">
-        <font-awesome-icon icon="fa-solid fa-location-arrow" />&nbsp;&nbsp;&nbsp;Enable HTTPS Redirect
+      <li v-else-if="ingressRule.protocol === 'https'" role="none">
+        <button type="button" role="menuitem" @click="runMenuAction(enableHttpsRedirect)">
+          <font-awesome-icon icon="fa-solid fa-location-arrow" aria-hidden="true" />&nbsp;&nbsp;&nbsp;Enable HTTPS
+          Redirect
+        </button>
       </li>
-      <li @click="setupAuthentication" v-if="ingressRule.authenticationType === 'none'">
-        <font-awesome-icon icon="fa-solid fa-shield-halved" />&nbsp;&nbsp;&nbsp;Setup Authentication
+      <li v-if="ingressRule.authenticationType === 'none'" role="none">
+        <button type="button" role="menuitem" @click="runMenuAction(setupAuthentication)">
+          <font-awesome-icon icon="fa-solid fa-shield-halved" aria-hidden="true" />&nbsp;&nbsp;&nbsp;Setup
+          Authentication
+        </button>
       </li>
-      <li @click="disableAuthentication" v-if="ingressRule.authenticationType !== 'none'">
-        <font-awesome-icon icon="fa-solid fa-shield-halved" />&nbsp;&nbsp;&nbsp;Disable Authentication
+      <li v-if="ingressRule.authenticationType !== 'none'" role="none">
+        <button type="button" role="menuitem" @click="runMenuAction(disableAuthentication)">
+          <font-awesome-icon icon="fa-solid fa-shield-halved" aria-hidden="true" />&nbsp;&nbsp;&nbsp;Disable
+          Authentication
+        </button>
       </li>
-      <li @click="recreateIngressRule">
-        <font-awesome-icon icon="fa-solid fa-hammer" />&nbsp;&nbsp;&nbsp;Recreate & Fix
+      <li role="none">
+        <button type="button" role="menuitem" @click="runMenuAction(recreateIngressRule)">
+          <font-awesome-icon icon="fa-solid fa-hammer" aria-hidden="true" />&nbsp;&nbsp;&nbsp;Recreate & Fix
+        </button>
       </li>
-      <li @click="deleteIngressRule">
-        <p class="font-medium text-danger-500">
-          <font-awesome-icon icon="fa-solid fa-trash" />&nbsp;&nbsp;&nbsp;Delete Ingress Rule
-        </p>
+      <li role="none">
+        <button
+          type="button"
+          role="menuitem"
+          class="text-danger-500 font-medium"
+          @click="runMenuAction(deleteIngressRule)">
+          <font-awesome-icon icon="fa-solid fa-trash" aria-hidden="true" />&nbsp;&nbsp;&nbsp;Delete Ingress Rule
+        </button>
       </li>
     </ul>
   </div>
@@ -186,8 +226,8 @@ window.addEventListener('click', (e) => {
   @apply absolute hidden rounded-md border border-gray-200 bg-white shadow-md;
 
   ul {
-    li {
-      @apply cursor-pointer px-4 py-2 text-sm text-gray-900 hover:bg-gray-100;
+    button {
+      @apply focus-visible:outline-primary-600 w-full cursor-pointer px-4 py-2 text-left text-sm text-gray-900 hover:bg-gray-100 focus-visible:bg-gray-100 focus-visible:outline-2 focus-visible:outline-offset-0;
     }
   }
 }

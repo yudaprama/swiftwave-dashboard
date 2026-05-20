@@ -1,24 +1,24 @@
 <script setup>
-import '@xterm/xterm/css/xterm.css'
+import '@xterm/xterm/css/xterm.css';
 
-import { useMutation, useQuery, useSubscription } from '@vue/apollo-composable'
-import gql from 'graphql-tag'
-import { useRouter } from 'vue-router'
-import { computed, onMounted, ref, watch } from 'vue'
-import Badge from '@/views/components/Badge.vue'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { Terminal } from '@xterm/xterm'
-import { FitAddon } from '@xterm/addon-fit'
-import { toast } from 'vue-sonner'
-import StatusPulse from '@/views/components/StatusPulse.vue'
-import FilledButton from '@/views/components/FilledButton.vue'
-import { camelCaseToSpacedCapitalized } from '@/vendor/utils.js'
-import { useI18n } from 'vue-i18n'
+import { useMutation, useQuery, useSubscription } from '@vue/apollo-composable';
+import gql from 'graphql-tag';
+import { useRouter } from 'vue-router';
+import { computed, onMounted, ref, watch } from 'vue';
+import Badge from '@/views/components/Badge.vue';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { Terminal } from '@xterm/xterm';
+import { FitAddon } from '@xterm/addon-fit';
+import { toast } from 'vue-sonner';
+import StatusPulse from '@/views/components/StatusPulse.vue';
+import FilledButton from '@/views/components/FilledButton.vue';
+import { camelCaseToSpacedCapitalized } from '@/vendor/utils.js';
+import { useI18n } from 'vue-i18n';
 
-const { t } = useI18n()
+const { t } = useI18n();
 
-const router = useRouter()
-const deploymentId = router.currentRoute.value.params.deployment_id
+const router = useRouter();
+const deploymentId = router.currentRoute.value.params.deployment_id;
 
 // Fetch the deployment details
 const { result: deploymentRaw, loading: deploymentLoading } = useQuery(
@@ -49,32 +49,32 @@ const { result: deploymentRaw, loading: deploymentLoading } = useQuery(
   {
     pollInterval: 10000
   }
-)
+);
 
-const deployment = computed(() => deploymentRaw.value?.deployment ?? {})
+const deployment = computed(() => deploymentRaw.value?.deployment ?? {});
 const buildArgs = computed(() => {
-  const args = deploymentRaw.value?.deployment?.buildArgs ?? []
+  const args = deploymentRaw.value?.deployment?.buildArgs ?? [];
   return args
     .map((arg) => {
-      return `${arg.key}=${arg.value}`
+      return `${arg.key}=${arg.value}`;
     })
-    .join(' <b>|</b> ')
-})
+    .join(' <b>|</b> ');
+});
 
 const deployedOn = computed(() => {
-  const date = new Date(deploymentRaw.value?.deployment?.createdAt)
-  return date.toLocaleString()
-})
+  const date = new Date(deploymentRaw.value?.deployment?.createdAt);
+  return date.toLocaleString();
+});
 
 // Deployment logs
-const showDeploymentLog = ref(false)
+const showDeploymentLog = ref(false);
 const terminal = new Terminal({
   convertEol: true,
   rows: 30,
   scrollback: 9999999
-})
-const fitAddon = new FitAddon()
-terminal.loadAddon(fitAddon)
+});
+const fitAddon = new FitAddon();
+terminal.loadAddon(fitAddon);
 
 const { result: deploymentLogRaw, onError: onDeploymentLogError } = useSubscription(
   gql`
@@ -90,29 +90,29 @@ const { result: deploymentLogRaw, onError: onDeploymentLogError } = useSubscript
   {
     enabled: showDeploymentLog
   }
-)
+);
 
 onDeploymentLogError((err) => {
-  toast.error(err.message)
-})
+  toast.error(err.message);
+});
 
-const deploymentLog = computed(() => deploymentLogRaw.value?.fetchDeploymentLog.content ?? '')
+const deploymentLog = computed(() => deploymentLogRaw.value?.fetchDeploymentLog.content ?? '');
 watch(deploymentLog, (value) => {
   if (value) {
-    terminal.write(value)
+    terminal.write(value);
   }
-})
+});
 
 onMounted(() => {
-  terminal.open(document.getElementById('terminal'))
-  fitAddon.fit()
-  showDeploymentLog.value = true
-})
+  terminal.open(document.getElementById('terminal'));
+  fitAddon.fit();
+  showDeploymentLog.value = true;
+});
 
 const isTerminalLoading = computed(() => {
-  let status = deployment.value?.status ?? ''
-  return status === 'pending' || status === 'deployPending'
-})
+  let status = deployment.value?.status ?? '';
+  return status === 'pending' || status === 'deployPending';
+});
 
 // Cancel deployment
 const {
@@ -132,26 +132,26 @@ const {
       id: deploymentId
     }
   }
-)
+);
 
 onCancelDeploymentDone((val) => {
   if (val.data.cancelDeployment) {
-    toast.success(t('applicationDetails.cancelSuccess'))
+    toast.success(t('applicationDetails.cancelSuccess'));
   } else {
-    toast.error(t('applicationDetails.cancelError'))
+    toast.error(t('applicationDetails.cancelError'));
   }
-})
+});
 
 onCancelDeploymentError((err) => {
-  toast.error(err.message)
-})
+  toast.error(err.message);
+});
 </script>
 
 <template>
   <div v-if="deploymentLoading">
     <p>{{ $t('common.loading') }}</p>
   </div>
-  <section v-else class="mx-auto w-full max-w-7xl text-sm px-2 md:px-0">
+  <section v-else class="mx-auto w-full max-w-7xl px-2 text-sm md:px-0">
     <div class="flex items-center gap-2">
       <p class="text-base font-bold">
         <font-awesome-icon icon="fa-solid fa-signal" />
@@ -216,22 +216,30 @@ onCancelDeploymentError((err) => {
         class="nowrap max-w-[40vw] overflow-hidden text-ellipsis">
         {{ deployment.commitMessage }}
       </p>
-      <p v-if="!(deployment.commitHash && deployment.commitMessage)" class="italic">{{ $t('applicationDetails.notAvailable') }}</p>
+      <p v-if="!(deployment.commitHash && deployment.commitMessage)" class="italic">
+        {{ $t('applicationDetails.notAvailable') }}
+      </p>
     </div>
     <div class="mt-2 flex items-center gap-2 font-normal text-gray-800 dark:text-gray-200">
       <font-awesome-icon icon="fa-solid fa-calendar-days" />
       <p>{{ deployedOn }}</p>
     </div>
-    <div class="mb-2 mt-2 flex items-center gap-2 font-normal text-gray-800 dark:text-gray-200" v-if="buildArgs.length !== 0">
+    <div
+      class="mt-2 mb-2 flex items-center gap-2 font-normal text-gray-800 dark:text-gray-200"
+      v-if="buildArgs.length !== 0">
       <font-awesome-icon icon="fa-solid fa-hammer" />
-      <p><span class="font-medium">{{ $t('applicationDetails.buildArguments') }}</span> <span v-html="buildArgs"></span></p>
+      <p>
+        <span class="font-medium">{{ $t('applicationDetails.buildArguments') }}</span> <span v-html="buildArgs"></span>
+      </p>
     </div>
     <div
       v-if="deployment.status === 'pending'"
       class="mt-2 flex flex-row items-center justify-between rounded-md bg-red-100 px-3 py-2">
       <div>
-        <p class="inline-flex items-center gap-2 text-lg font-medium">{{ $t('applicationDetails.cancelDeployment') }}</p>
-        <p class="text-sm text-secondary-700">
+        <p class="inline-flex items-center gap-2 text-lg font-medium">
+          {{ $t('applicationDetails.cancelDeployment') }}
+        </p>
+        <p class="text-secondary-700 text-sm">
           {{ $t('applicationDetails.cancelDeploymentHint') }}
         </p>
       </div>
@@ -240,12 +248,12 @@ onCancelDeploymentError((err) => {
       </FilledButton>
     </div>
 
-    <hr class="mb-2 mt-2" />
+    <hr class="mt-2 mb-2" />
     <p class="inline-flex items-center gap-2 text-base font-medium">
       {{ $t('applicationDetails.deploymentLogs') }}
-      <StatusPulse v-if="isTerminalLoading" type="success" />
+      <StatusPulse v-if="isTerminalLoading" type="success" :label="$t('common.loading')" />
     </p>
-    <p class="text-sm text-secondary-700">
+    <p class="text-secondary-700 text-sm">
       {{ $t('applicationDetails.deploymentLogsHint') }}
     </p>
   </section>

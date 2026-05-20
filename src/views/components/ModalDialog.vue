@@ -1,5 +1,5 @@
 <script setup>
-import { Dialog, DialogDescription, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
+import { Dialog, DialogDescription, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue';
 
 const props = defineProps({
   isOpen: {
@@ -18,17 +18,17 @@ const props = defineProps({
     type: String,
     default: 'md',
     validator: (value) => {
-      return ['sm', 'md', 'lg', 'xl', '2xl', '4xl', '6xl'].includes(value)
+      return ['sm', 'md', 'lg', 'xl', '2xl', '4xl', '6xl'].includes(value);
     }
   }
-})
+});
 
 const closeModalWithValidation = () => {
   if (props.nonCancelable) {
-    return
+    return;
   }
-  props.closeModal()
-}
+  props.closeModal();
+};
 </script>
 
 <template>
@@ -64,17 +64,23 @@ const closeModalWithValidation = () => {
                 'max-w-4xl': width === '4xl',
                 'max-w-6xl': width === '6xl'
               }"
-              class="w-full transform overflow-hidden rounded-2xl bg-white p-4 text-left align-middle shadow-xl transition-all dark:bg-secondary-800">
-              <DialogTitle as="h3" class="text-lg font-semibold leading-6 text-gray-900 dark:text-gray-100">
+              class="dark:bg-secondary-800 w-full transform overflow-hidden rounded-2xl bg-white p-4 text-left align-middle shadow-xl transition-all">
+              <DialogTitle as="h3" class="text-lg leading-6 font-semibold text-gray-900 dark:text-gray-100">
                 <slot name="header"></slot>
                 <!-- Close button -->
                 <button
                   v-show="!nonCancelable"
-                  class="absolute right-4 top-4 rounded-md border-2 p-1 text-gray-400 transition-shadow duration-200 hover:text-gray-500 hover:ring-2 hover:ring-gray-400"
+                  class="absolute top-4 right-4 rounded-md border-2 p-1 text-gray-400 transition-shadow duration-200 hover:text-gray-500 hover:ring-2 hover:ring-gray-400"
                   type="button"
+                  :aria-label="$t('common.close')"
                   @click="closeModalWithValidation">
-                  <span class="sr-only">Close</span>
-                  <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <span class="sr-only">{{ $t('common.close') }}</span>
+                  <svg
+                    aria-hidden="true"
+                    class="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
                     <path
                       d="M6 18L18 6M6 6l12 12"
                       stroke="currentColor"

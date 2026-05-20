@@ -1,23 +1,23 @@
 <script setup>
-import { useRouter } from 'vue-router'
-import { useMutation, useQuery } from '@vue/apollo-composable'
-import gql from 'graphql-tag'
-import { computed, ref } from 'vue'
-import Badge from '@/views/components/Badge.vue'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import ApplicationDetailsNavbar from '@/views/partials/ApplicationDetailsNavbar.vue'
-import NewApplicationUpdaterStore from '@/store/applicationUpdater.js'
-import FilledButton from '@/views/components/FilledButton.vue'
-import { toast } from 'vue-sonner'
-import { isNaN } from 'lodash'
-import UptimeChart from '@/views/components/UptimeChart.vue'
-import UpdateApplicationGroupModal from '@/views/partials/UpdateApplicationGroupModal.vue'
-import { camelCaseToSpacedCapitalized } from '@/vendor/utils.js'
-import { useI18n } from 'vue-i18n'
-import { useConfirmDialog } from '@/composables/useConfirmDialog.js'
-import ConfirmDialog from '@/views/components/ConfirmDialog.vue'
+import { useRouter } from 'vue-router';
+import { useMutation, useQuery } from '@vue/apollo-composable';
+import gql from 'graphql-tag';
+import { computed, ref } from 'vue';
+import Badge from '@/views/components/Badge.vue';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import ApplicationDetailsNavbar from '@/views/partials/ApplicationDetailsNavbar.vue';
+import NewApplicationUpdaterStore from '@/store/applicationUpdater.js';
+import FilledButton from '@/views/components/FilledButton.vue';
+import { toast } from 'vue-sonner';
+import { isNaN } from 'lodash';
+import UptimeChart from '@/views/components/UptimeChart.vue';
+import UpdateApplicationGroupModal from '@/views/partials/UpdateApplicationGroupModal.vue';
+import { camelCaseToSpacedCapitalized } from '@/vendor/utils.js';
+import { useI18n } from 'vue-i18n';
+import { useConfirmDialog } from '@/composables/useConfirmDialog.js';
+import ConfirmDialog from '@/views/components/ConfirmDialog.vue';
 
-const { t } = useI18n()
+const { t } = useI18n();
 
 const {
   isOpen: isRestartConfirmOpen,
@@ -26,7 +26,7 @@ const {
   confirm: askRestartConfirm,
   onConfirm: onRestartConfirm,
   onCancel: onRestartCancel
-} = useConfirmDialog()
+} = useConfirmDialog();
 
 const {
   isOpen: isRebuildConfirmOpen,
@@ -35,11 +35,11 @@ const {
   confirm: askRebuildConfirm,
   onConfirm: onRebuildConfirm,
   onCancel: onRebuildCancel
-} = useConfirmDialog()
+} = useConfirmDialog();
 
 // Get the application ID from the URL
-const router = useRouter()
-const applicationId = router.currentRoute.value.params.id
+const router = useRouter();
+const applicationId = router.currentRoute.value.params.id;
 
 // Fetch the application details
 const {
@@ -95,25 +95,25 @@ const {
   {
     pollInterval: 10000
   }
-)
+);
 
-const applicationDetails = computed(() => applicationDetailsRaw.value?.application ?? {})
-const realtimeInfo = computed(() => applicationDetailsRaw.value?.application?.realtimeInfo ?? {})
+const applicationDetails = computed(() => applicationDetailsRaw.value?.application ?? {});
+const realtimeInfo = computed(() => applicationDetailsRaw.value?.application?.realtimeInfo ?? {});
 const realtimeReplicaCountPercentage = computed(() => {
   try {
-    return (realtimeInfo.value.RunningReplicas / applicationDetails.value.replicas) * 100
+    return (realtimeInfo.value.RunningReplicas / applicationDetails.value.replicas) * 100;
   } catch (e) {
-    return 0
+    return 0;
   }
-})
-const deploymentMode = computed(() => applicationDetails.value?.deploymentMode ?? '')
+});
+const deploymentMode = computed(() => applicationDetails.value?.deploymentMode ?? '');
 
 const isIngressRulesAvailable = computed(() => {
-  return (applicationDetails.value?.ingressRules ?? []).length > 0
-})
+  return (applicationDetails.value?.ingressRules ?? []).length > 0;
+});
 
 // Environment variables editor
-const applicationUpdater = NewApplicationUpdaterStore(applicationId)()
+const applicationUpdater = NewApplicationUpdaterStore(applicationId)();
 
 // App Doze Mode
 const {
@@ -131,16 +131,16 @@ const {
       id: applicationId
     }
   }
-)
+);
 
 onSleepApplicationDone(() => {
-  toast.success(t('applicationDetails.pauseSuccess'))
-  refetchApplicationDetails()
-})
+  toast.success(t('applicationDetails.pauseSuccess'));
+  refetchApplicationDetails();
+});
 
 onSleepApplicationError((error) => {
-  toast.error(error.message)
-})
+  toast.error(error.message);
+});
 
 const {
   mutate: wakeApplication,
@@ -157,16 +157,16 @@ const {
       id: applicationId
     }
   }
-)
+);
 
 onWakeApplicationDone(() => {
-  toast.success(t('applicationDetails.resumeSuccess'))
-  refetchApplicationDetails()
-})
+  toast.success(t('applicationDetails.resumeSuccess'));
+  refetchApplicationDetails();
+});
 
 onWakeApplicationError((error) => {
-  toast.error(error.message)
-})
+  toast.error(error.message);
+});
 
 // Restart Application
 const {
@@ -185,25 +185,25 @@ const {
       id: router.currentRoute.value.params.id
     }
   }
-)
+);
 
 restartApplicationDone((result) => {
   if (result.data.restartApplication) {
-    toast.success(t('applicationDetails.restartSuccess'))
+    toast.success(t('applicationDetails.restartSuccess'));
   } else {
-    toast.error(t('applicationDetails.somethingWentWrong'))
+    toast.error(t('applicationDetails.somethingWentWrong'));
   }
-})
+});
 
 restartApplicationError((error) => {
-  toast.error(error.message)
-})
+  toast.error(error.message);
+});
 
 const restartApplicationWithConfirmation = async () => {
   if (await askRestartConfirm(t('applicationDetails.restartConfirm'), 'warning')) {
-    restartApplication()
+    restartApplication();
   }
-}
+};
 
 // Rebuild Application
 const {
@@ -222,37 +222,37 @@ const {
       id: router.currentRoute.value.params.id
     }
   }
-)
+);
 
 rebuildApplicationDone((result) => {
   if (result.data.rebuildApplication) {
-    toast.success(t('applicationDetails.rebuildSuccess'))
+    toast.success(t('applicationDetails.rebuildSuccess'));
   } else {
-    toast.error(t('applicationDetails.somethingWentWrong'))
+    toast.error(t('applicationDetails.somethingWentWrong'));
   }
   router.push({
     name: 'Application Details Deployments',
     params: {
       id: router.currentRoute.value.params.id
     }
-  })
-})
+  });
+});
 
 rebuildApplicationError((error) => {
-  toast.error(error.message)
-})
+  toast.error(error.message);
+});
 
 const rebuildApplicationWithConfirmation = async () => {
   if (await askRebuildConfirm(t('applicationDetails.rebuildConfirm'), 'warning')) {
-    rebuildApplication()
+    rebuildApplication();
   }
-}
+};
 
 // Application group update
-const applicationGroupUpdateModalRef = ref(null)
+const applicationGroupUpdateModalRef = ref(null);
 const openApplicationGroupUpdateModal = () => {
-  if (applicationGroupUpdateModalRef.value) applicationGroupUpdateModalRef.value.openModal()
-}
+  if (applicationGroupUpdateModalRef.value) applicationGroupUpdateModalRef.value.openModal();
+};
 </script>
 
 <template>
@@ -275,7 +275,7 @@ const openApplicationGroupUpdateModal = () => {
         <div class="flex flex-row items-center gap-2 overflow-hidden">
           <div
             @click="openApplicationGroupUpdateModal"
-            class="flex cursor-pointer items-center justify-center rounded-full bg-secondary-600 px-3 py-1 text-sm font-medium text-white hover:bg-secondary-700">
+            class="bg-secondary-600 hover:bg-secondary-700 flex cursor-pointer items-center justify-center rounded-full px-3 py-1 text-sm font-medium text-white">
             <span v-if="applicationDetails.applicationGroup">{{ applicationDetails.applicationGroup.name }}</span>
             <span v-else>{{ $t('applicationDetails.noProject') }}</span>
             &nbsp;&nbsp;
@@ -317,19 +317,19 @@ const openApplicationGroupUpdateModal = () => {
           <div
             v-if="applicationDetails.realtimeInfo.HealthStatus === 'healthy'"
             class="flex flex-row items-center text-sm text-gray-700 dark:text-gray-300">
-            <font-awesome-icon icon="fa-solid fa-heart-circle-check" class="me-1 text-success-500" />
+            <font-awesome-icon icon="fa-solid fa-heart-circle-check" class="text-success-500 me-1" />
             {{ $t('applicationDetails.healthy') }}
           </div>
           <div
             v-else-if="applicationDetails.realtimeInfo.HealthStatus === 'unhealthy'"
             class="flex flex-row items-center text-sm text-gray-700 dark:text-gray-300">
-            <font-awesome-icon icon="fa-solid fa-heart-circle-exclamation" class="me-1 text-danger-500" />
+            <font-awesome-icon icon="fa-solid fa-heart-circle-exclamation" class="text-danger-500 me-1" />
             {{ $t('applicationDetails.unhealthy') }}
           </div>
           <div
             v-else-if="applicationDetails.realtimeInfo.HealthStatus === 'unknown'"
             class="flex flex-row items-center text-sm text-gray-700 dark:text-gray-300">
-            <font-awesome-icon icon="fa-solid fa-heart-circle-xmark" class="me-1 text-warning-600" />
+            <font-awesome-icon icon="fa-solid fa-heart-circle-xmark" class="text-warning-600 me-1" />
             {{ $t('applicationDetails.unknown') }}
           </div>
           <UptimeChart
@@ -339,12 +339,12 @@ const openApplicationGroupUpdateModal = () => {
             v-if="!isNaN(realtimeReplicaCountPercentage) && deploymentMode === 'replicated'"
             :percentage="realtimeReplicaCountPercentage"
             :label="`(${realtimeInfo.RunningReplicas ?? 0} / ${applicationDetails.replicas})`" />
-          <p v-else-if="deploymentMode === 'global'" class="w-full text-center text-sm text-secondary-700">
+          <p v-else-if="deploymentMode === 'global'" class="text-secondary-700 w-full text-center text-sm">
             {{ $t('applicationDetails.instanceRunning', { count: realtimeInfo.RunningReplicas ?? 0 }) }}
           </p>
           <p v-else class="text-warning-600">{{ $t('applicationDetails.notAvailable') }}</p>
         </div>
-        <p v-else class="text-sm text-warning-600">{{ $t('applicationDetails.healthInfoNotAvailable') }}</p>
+        <p v-else class="text-warning-600 text-sm">{{ $t('applicationDetails.healthInfoNotAvailable') }}</p>
       </div>
     </div>
     <!--  Second line  -->
@@ -420,7 +420,7 @@ const openApplicationGroupUpdateModal = () => {
                   ingressRule.port.toString()
                 "
                 target="_blank"
-                class="has-popover rounded-full bg-primary-500 px-2 py-1 text-secondary-100">
+                class="has-popover bg-primary-500 text-secondary-100 rounded-full px-2 py-1">
                 <font-awesome-icon icon="fa-solid fa-link" class="mr-0.5 text-xs" />
                 {{ $t('applicationDetails.link', index + 1) }}
                 <div class="popover">
@@ -444,7 +444,7 @@ const openApplicationGroupUpdateModal = () => {
                   name: 'Application Details Ingress Rules',
                   params: { id: $route.params.id }
                 }"
-                class="font-semibold hover:cursor-pointer hover:text-primary-600">
+                class="hover:text-primary-600 font-semibold hover:cursor-pointer">
                 <font-awesome-icon icon="fa-solid fa-plus" />
               </RouterLink>
             </div>
@@ -454,25 +454,25 @@ const openApplicationGroupUpdateModal = () => {
       </div>
       <!--    Quick Actions    -->
       <div class="quick-actions">
-        <div class="button" v-if="applicationDetails.isSleeping" @click="wakeApplication">
-          <font-awesome-icon icon="fa-solid fa-play" class="mr-1" />
+        <button v-if="applicationDetails.isSleeping" type="button" class="button" @click="wakeApplication">
+          <font-awesome-icon icon="fa-solid fa-play" class="mr-1" aria-hidden="true" />
           {{ $t('applicationDetails.resume') }}
-        </div>
+        </button>
         <div class="divider" v-if="applicationDetails.isSleeping"></div>
-        <div class="button" v-if="!applicationDetails.isSleeping" @click="sleepApplication">
-          <font-awesome-icon icon="fa-solid fa-pause" class="mr-1" />
+        <button v-if="!applicationDetails.isSleeping" type="button" class="button" @click="sleepApplication">
+          <font-awesome-icon icon="fa-solid fa-pause" class="mr-1" aria-hidden="true" />
           {{ $t('applicationDetails.pause') }}
-        </div>
+        </button>
         <div class="divider" v-if="!applicationDetails.isSleeping"></div>
-        <div class="button" @click="rebuildApplicationWithConfirmation">
-          <font-awesome-icon icon="fa-solid fa-hammer" class="mr-1" />
+        <button type="button" class="button" @click="rebuildApplicationWithConfirmation">
+          <font-awesome-icon icon="fa-solid fa-hammer" class="mr-1" aria-hidden="true" />
           {{ $t('applicationDetails.rebuild') }}
-        </div>
+        </button>
         <div class="divider"></div>
-        <div class="button" @click="restartApplicationWithConfirmation">
-          <font-awesome-icon icon="fa-solid fa-rotate-right" class="mr-1" />
+        <button type="button" class="button" @click="restartApplicationWithConfirmation">
+          <font-awesome-icon icon="fa-solid fa-rotate-right" class="mr-1" aria-hidden="true" />
           {{ $t('applicationDetails.restart') }}
-        </div>
+        </button>
       </div>
     </div>
     <div class="mt-8 flex w-full flex-row gap-5">
@@ -485,7 +485,7 @@ const openApplicationGroupUpdateModal = () => {
         <!--  Update Config Notify bar  -->
         <div
           v-if="applicationUpdater.isConfigurationUpdated"
-          class="mt-4 flex flex-row items-center justify-end gap-2 rounded-md border border-gray-300 dark:border-gray-600 p-2">
+          class="mt-4 flex flex-row items-center justify-end gap-2 rounded-md border border-gray-300 p-2 dark:border-gray-600">
           <span class="mr-4 font-medium">{{ $t('applicationDetails.configUpdated') }}</span>
           <FilledButton
             :click="applicationUpdater.applyConfigurationChanges"
@@ -503,26 +503,36 @@ const openApplicationGroupUpdateModal = () => {
       </div>
     </div>
 
-    <ConfirmDialog :is-open="isRestartConfirmOpen" :message="restartMessage" :confirm-type="restartConfirmType" :on-confirm="onRestartConfirm" :on-cancel="onRestartCancel" />
-    <ConfirmDialog :is-open="isRebuildConfirmOpen" :message="rebuildMessage" :confirm-type="rebuildConfirmType" :on-confirm="onRebuildConfirm" :on-cancel="onRebuildCancel" />
+    <ConfirmDialog
+      :is-open="isRestartConfirmOpen"
+      :message="restartMessage"
+      :confirm-type="restartConfirmType"
+      :on-confirm="onRestartConfirm"
+      :on-cancel="onRestartCancel" />
+    <ConfirmDialog
+      :is-open="isRebuildConfirmOpen"
+      :message="rebuildMessage"
+      :confirm-type="rebuildConfirmType"
+      :on-confirm="onRebuildConfirm"
+      :on-cancel="onRebuildCancel" />
   </section>
 </template>
 
 <style scoped>
 @reference "../../assets/css/base.css";
 .deployment-head {
-  @apply relative flex items-center justify-center gap-2.5  rounded-full border border-secondary-300 dark:border-gray-600 px-2 py-1 text-sm font-normal;
+  @apply border-secondary-300 relative flex items-center justify-center gap-2.5 rounded-full border px-2 py-1 text-sm font-normal dark:border-gray-600;
 }
 
 .quick-actions {
-  @apply flex overflow-hidden rounded-full border border-secondary-300 dark:border-gray-600 text-sm  text-secondary-700 dark:text-gray-300;
+  @apply border-secondary-300 text-secondary-700 flex overflow-hidden rounded-full border text-sm dark:border-gray-600 dark:text-gray-300;
 
   .button {
-    @apply cursor-pointer px-2.5 py-1 hover:bg-secondary-200 dark:hover:bg-gray-700;
+    @apply hover:bg-secondary-200 focus-visible:bg-secondary-200 focus-visible:outline-primary-600 dark:focus-visible:outline-primary-400 cursor-pointer px-2.5 py-1 focus-visible:outline-2 focus-visible:outline-offset-2 dark:hover:bg-gray-700 dark:focus-visible:bg-gray-700;
   }
 
   .divider {
-    @apply h-auto w-px bg-secondary-300;
+    @apply bg-secondary-300 h-auto w-px;
   }
 }
 </style>

@@ -4,19 +4,27 @@ defineProps({
     type: String,
     default: 'success',
     validator: (value) => {
-      return ['primary', 'secondary', 'success', 'danger', 'warning'].includes(value)
+      return ['primary', 'secondary', 'success', 'danger', 'warning'].includes(value);
     }
   },
   animated: {
     type: Boolean,
     default: true
+  },
+  label: {
+    type: String,
+    default: ''
   }
-})
+});
 </script>
 
 <template>
-  <span class="relative flex h-3.5 w-3.5 items-center justify-center">
+  <span
+    class="relative flex h-3.5 w-3.5 items-center justify-center"
+    role="status"
+    :aria-label="label || `${type} status`">
     <span
+      aria-hidden="true"
       class="absolute inline-flex h-full w-full rounded-full opacity-75"
       :class="{
         'bg-primary-400': type === 'primary',
@@ -27,6 +35,7 @@ defineProps({
         'animate-ping': animated
       }"></span>
     <span
+      aria-hidden="true"
       class="relative inline-flex h-3 w-3 rounded-full"
       :class="{
         'bg-primary-500': type === 'primary',

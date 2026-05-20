@@ -1,19 +1,19 @@
 <script setup>
-import { ref, reactive, onMounted, computed } from 'vue'
-import { useQuery, useMutation } from '@vue/apollo-composable'
-import gql from 'graphql-tag'
-import { toast } from 'vue-sonner'
-import { useI18n } from 'vue-i18n'
+import { ref, reactive, onMounted, computed } from 'vue';
+import { useQuery, useMutation } from '@vue/apollo-composable';
+import gql from 'graphql-tag';
+import { toast } from 'vue-sonner';
+import { useI18n } from 'vue-i18n';
 
-const { t } = useI18n()
+const { t } = useI18n();
 
-const rating = ref(0)
-const hoverRating = ref(0)
-const text = ref('')
-const submitted = ref(false)
-const existingTestimonial = ref(null)
-const voucherCode = ref(null)
-const loading = ref(true)
+const rating = ref(0);
+const hoverRating = ref(0);
+const text = ref('');
+const submitted = ref(false);
+const existingTestimonial = ref(null);
+const voucherCode = ref(null);
+const loading = ref(true);
 
 const { result: myResult, onResult } = useQuery(gql`
   query {
@@ -26,22 +26,27 @@ const { result: myResult, onResult } = useQuery(gql`
       createdAt
     }
   }
-`)
+`);
 
 onResult(({ data }) => {
-  loading.value = false
+  loading.value = false;
   if (data?.myTestimonial) {
-    existingTestimonial.value = data.myTestimonial
-    submitted.value = true
+    existingTestimonial.value = data.myTestimonial;
+    submitted.value = true;
     if (data.myTestimonial.voucherCode) {
-      voucherCode.value = data.myTestimonial.voucherCode
+      voucherCode.value = data.myTestimonial.voucherCode;
     }
   } else {
-    loading.value = false
+    loading.value = false;
   }
-})
+});
 
-const { mutate: submitTestimonial, loading: submitting, onDone, onError } = useMutation(gql`
+const {
+  mutate: submitTestimonial,
+  loading: submitting,
+  onDone,
+  onError
+} = useMutation(gql`
   mutation SubmitTestimonial($input: TestimonialInput!) {
     submitTestimonial(input: $input) {
       id
@@ -52,60 +57,68 @@ const { mutate: submitTestimonial, loading: submitting, onDone, onError } = useM
       createdAt
     }
   }
-`)
+`);
 
 onDone(({ data }) => {
-  const result = data.submitTestimonial
-  existingTestimonial.value = result
-  submitted.value = true
+  const result = data.submitTestimonial;
+  existingTestimonial.value = result;
+  submitted.value = true;
   if (result.voucherCode) {
-    voucherCode.value = result.voucherCode
-    toast.success(t('testimonial.voucherReward', { code: result.voucherCode }))
+    voucherCode.value = result.voucherCode;
+    toast.success(t('testimonial.voucherReward', { code: result.voucherCode }));
   } else {
-    toast.success(t('testimonial.submitSuccess'))
+    toast.success(t('testimonial.submitSuccess'));
   }
-})
+});
 
 onError((error) => {
-  toast.error(error.message)
-})
+  toast.error(error.message);
+});
 
 const handleSubmit = () => {
   if (rating.value < 1 || rating.value > 5) {
-    toast.error(t('testimonial.ratingRequired'))
-    return
+    toast.error(t('testimonial.ratingRequired'));
+    return;
   }
   if (text.value.trim().length < 10) {
-    toast.error(t('testimonial.textTooShort'))
-    return
+    toast.error(t('testimonial.textTooShort'));
+    return;
   }
   submitTestimonial({
     input: {
       rating: rating.value,
       text: text.value.trim()
     }
-  })
-}
+  });
+};
 
 const statusLabel = computed(() => {
-  if (!existingTestimonial.value) return ''
+  if (!existingTestimonial.value) return '';
   switch (existingTestimonial.value.status) {
-    case 'pending': return t('testimonial.statusPending')
-    case 'approved': return t('testimonial.statusApproved')
-    case 'rejected': return t('testimonial.statusRejected')
-    default: return existingTestimonial.value.status
+    case 'pending':
+      return t('testimonial.statusPending');
+    case 'approved':
+      return t('testimonial.statusApproved');
+    case 'rejected':
+      return t('testimonial.statusRejected');
+    default:
+      return existingTestimonial.value.status;
   }
-})
+});
 
 const statusColor = computed(() => {
-  if (!existingTestimonial.value) return ''
+  if (!existingTestimonial.value) return '';
   switch (existingTestimonial.value.status) {
-    case 'pending': return 'bg-yellow-100 text-yellow-800'
-    case 'approved': return 'bg-green-100 text-green-800'
-    case 'rejected': return 'bg-red-100 text-red-800'
-    default: return 'bg-gray-100 text-gray-800'
+    case 'pending':
+      return 'bg-yellow-100 text-yellow-800';
+    case 'approved':
+      return 'bg-green-100 text-green-800';
+    case 'rejected':
+      return 'bg-red-100 text-red-800';
+    default:
+      return 'bg-gray-100 text-gray-800';
   }
-})
+});
 </script>
 
 <template>
@@ -116,7 +129,7 @@ const statusColor = computed(() => {
 
     <!-- Already submitted -->
     <div v-else-if="submitted && existingTestimonial" class="space-y-4">
-      <div class="rounded-lg border bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-secondary-800">
+      <div class="dark:bg-secondary-800 rounded-lg border bg-white p-6 shadow-sm dark:border-gray-700">
         <div class="mb-3 flex items-center justify-between">
           <div class="flex items-center gap-2">
             <span class="text-lg">
@@ -142,17 +155,20 @@ const statusColor = computed(() => {
     </div>
 
     <!-- Submit form -->
-    <div v-else class="rounded-lg border bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-secondary-800">
+    <div v-else class="dark:bg-secondary-800 rounded-lg border bg-white p-6 shadow-sm dark:border-gray-700">
       <p class="mb-6 text-gray-600 dark:text-gray-400">{{ t('testimonial.description') }}</p>
 
       <!-- Star rating -->
       <div class="mb-6">
-        <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">{{ t('testimonial.ratingLabel') }}</label>
+        <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">{{
+          t('testimonial.ratingLabel')
+        }}</label>
         <div class="flex gap-1">
           <button
             v-for="star in 5"
             :key="star"
             type="button"
+            :aria-label="`${star} ${t('testimonial.ratingLabel')}`"
             class="text-3xl transition-colors"
             :class="(hoverRating || rating) >= star ? 'text-yellow-400' : 'text-gray-300'"
             @mouseenter="hoverRating = star"
@@ -165,11 +181,13 @@ const statusColor = computed(() => {
 
       <!-- Text -->
       <div class="mb-6">
-        <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">{{ t('testimonial.textLabel') }}</label>
+        <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">{{
+          t('testimonial.textLabel')
+        }}</label>
         <textarea
           v-model="text"
           rows="4"
-          class="w-full rounded-lg border border-gray-300 p-3 text-sm focus:border-primary-500 focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-secondary-900 dark:text-gray-200"
+          class="focus:border-primary-500 focus:ring-primary-500 dark:bg-secondary-900 w-full rounded-lg border border-gray-300 p-3 text-sm focus:ring-1 dark:border-gray-600 dark:text-gray-200"
           :placeholder="t('testimonial.textPlaceholder')"></textarea>
       </div>
 
@@ -179,7 +197,8 @@ const statusColor = computed(() => {
       </div>
 
       <button
-        class="rounded-lg bg-primary-600 px-6 py-2 text-sm font-medium text-white hover:bg-primary-700 disabled:opacity-50"
+        type="button"
+        class="bg-primary-600 hover:bg-primary-700 rounded-lg px-6 py-2 text-sm font-medium text-white disabled:opacity-50"
         :disabled="submitting"
         @click="handleSubmit">
         {{ submitting ? t('common.submitting') : t('testimonial.submit') }}

@@ -1,74 +1,88 @@
 <script setup>
-import { onMounted } from 'vue'
-import { useI18n } from 'vue-i18n'
-import { useBillingStore } from '@/store/billing.js'
-import { useAuthStore } from '@/store/auth.js'
-import { toast } from 'vue-sonner'
-import { useConfirmDialog } from '@/composables/useConfirmDialog.js'
-import ConfirmDialog from '@/views/components/ConfirmDialog.vue'
+import { onMounted } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { useBillingStore } from '@/store/billing.js';
+import { useAuthStore } from '@/store/auth.js';
+import { toast } from 'vue-sonner';
+import { useConfirmDialog } from '@/composables/useConfirmDialog.js';
+import ConfirmDialog from '@/views/components/ConfirmDialog.vue';
 
-const { t } = useI18n()
-const billingStore = useBillingStore()
-const authStore = useAuthStore()
-const { isOpen: isCancelSubConfirmOpen, message: cancelSubMessage, confirmType: cancelSubType, confirm: askCancelSub, onConfirm: onCancelSubConfirm, onCancel: onCancelSubCancel } = useConfirmDialog()
+const { t } = useI18n();
+const billingStore = useBillingStore();
+const authStore = useAuthStore();
+const {
+  isOpen: isCancelSubConfirmOpen,
+  message: cancelSubMessage,
+  confirmType: cancelSubType,
+  confirm: askCancelSub,
+  onConfirm: onCancelSubConfirm,
+  onCancel: onCancelSubCancel
+} = useConfirmDialog();
 
 onMounted(async () => {
-  await Promise.all([
-    billingStore.fetchSubscription(),
-    billingStore.fetchInvoices()
-  ])
-})
+  await Promise.all([billingStore.fetchSubscription(), billingStore.fetchInvoices()]);
+});
 
 const formatDate = (date) => {
-  if (!date) return '-'
-  return new Date(date).toLocaleDateString('id-ID', { year: 'numeric', month: 'short', day: 'numeric' })
-}
+  if (!date) return '-';
+  return new Date(date).toLocaleDateString('id-ID', { year: 'numeric', month: 'short', day: 'numeric' });
+};
 
 const formatCurrency = (cents, currency = 'IDR') => {
-  if (cents === 0) return t('billing.free')
-  return new Intl.NumberFormat('id-ID', { style: 'currency', currency }).format(cents / 100)
-}
+  if (cents === 0) return t('billing.free');
+  return new Intl.NumberFormat('id-ID', { style: 'currency', currency }).format(cents / 100);
+};
 
 const statusColor = (status) => {
   switch (status) {
-    case 'active': return 'bg-green-100 text-green-800'
-    case 'past_due': return 'bg-yellow-100 text-yellow-800'
-    case 'suspended': return 'bg-red-100 text-red-800'
-    case 'cancelled': return 'bg-gray-100 text-gray-800'
-    default: return 'bg-gray-100 text-gray-800'
+    case 'active':
+      return 'bg-green-100 text-green-800';
+    case 'past_due':
+      return 'bg-yellow-100 text-yellow-800';
+    case 'suspended':
+      return 'bg-red-100 text-red-800';
+    case 'cancelled':
+      return 'bg-gray-100 text-gray-800';
+    default:
+      return 'bg-gray-100 text-gray-800';
   }
-}
+};
 
 const invoiceStatusColor = (status) => {
   switch (status) {
-    case 'paid': return 'bg-green-100 text-green-800'
-    case 'pending': return 'bg-yellow-100 text-yellow-800'
-    case 'failed': return 'bg-red-100 text-red-800'
-    case 'expired': return 'bg-gray-100 text-gray-800'
-    default: return 'bg-gray-100 text-gray-800'
+    case 'paid':
+      return 'bg-green-100 text-green-800';
+    case 'pending':
+      return 'bg-yellow-100 text-yellow-800';
+    case 'failed':
+      return 'bg-red-100 text-red-800';
+    case 'expired':
+      return 'bg-gray-100 text-gray-800';
+    default:
+      return 'bg-gray-100 text-gray-800';
   }
-}
+};
 
 const cancelSub = async () => {
-  if (!await askCancelSub(t('billing.cancelConfirm'), 'warning')) return
-  const res = await billingStore.cancelSubscription()
+  if (!(await askCancelSub(t('billing.cancelConfirm'), 'warning'))) return;
+  const res = await billingStore.cancelSubscription();
   if (res.success) {
-    toast.success(t('billing.cancelSuccess'))
+    toast.success(t('billing.cancelSuccess'));
   } else {
-    toast.error(res.message || t('billing.cancelFailed'))
+    toast.error(res.message || t('billing.cancelFailed'));
   }
-}
+};
 
 const payInvoice = (url) => {
-  if (url) window.open(url, '_blank')
-}
+  if (url) window.open(url, '_blank');
+};
 </script>
 
 <template>
   <div class="p-6 px-2 md:px-6">
     <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">{{ $t('billing.title') }}</h1>
 
-    <div class="mt-6 rounded-lg border bg-white dark:bg-secondary-800 p-6 shadow-sm">
+    <div class="dark:bg-secondary-800 mt-6 rounded-lg border bg-white p-6 shadow-sm">
       <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100">{{ $t('billing.subscription') }}</h2>
       <div v-if="billingStore.subscription" class="mt-4">
         <div class="flex items-center gap-3">
@@ -79,7 +93,10 @@ const payInvoice = (url) => {
           </span>
         </div>
         <div class="mt-2 text-sm text-gray-600 dark:text-gray-400">
-          <p>{{ $t('billing.period') }} {{ formatDate(billingStore.subscription.currentPeriodStart) }} - {{ formatDate(billingStore.subscription.currentPeriodEnd) }}</p>
+          <p>
+            {{ $t('billing.period') }} {{ formatDate(billingStore.subscription.currentPeriodStart) }} -
+            {{ formatDate(billingStore.subscription.currentPeriodEnd) }}
+          </p>
           <p v-if="billingStore.subscription.cancelAtPeriodEnd" class="mt-1 text-yellow-700">
             <font-awesome-icon icon="fa-solid fa-triangle-exclamation" class="mr-1" />
             {{ $t('billing.cancelAtPeriodEnd') }}
@@ -87,6 +104,7 @@ const payInvoice = (url) => {
         </div>
         <button
           v-if="!authStore.isAdmin && billingStore.isActive && !billingStore.subscription.cancelAtPeriodEnd"
+          type="button"
           class="mt-4 rounded-md border border-red-300 px-4 py-2 text-sm text-red-600 hover:bg-red-50"
           @click="cancelSub">
           {{ $t('billing.cancelSubscription') }}
@@ -95,13 +113,13 @@ const payInvoice = (url) => {
       <p v-else class="mt-4 text-sm text-gray-500 dark:text-gray-400">{{ $t('billing.noSubscription') }}</p>
     </div>
 
-    <div class="mt-6 rounded-lg border bg-white dark:bg-secondary-800 shadow-sm">
-      <div class="border-b dark:border-gray-700 p-6 pb-3">
+    <div class="dark:bg-secondary-800 mt-6 rounded-lg border bg-white shadow-sm">
+      <div class="border-b p-6 pb-3 dark:border-gray-700">
         <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100">{{ $t('billing.invoices') }}</h2>
       </div>
       <div class="overflow-x-auto">
         <table class="w-full text-left text-sm">
-          <thead class="bg-gray-50 dark:bg-secondary-900 text-xs uppercase text-gray-500 dark:text-gray-400">
+          <thead class="dark:bg-secondary-900 bg-gray-50 text-xs text-gray-500 uppercase dark:text-gray-400">
             <tr>
               <th class="px-6 py-3">{{ $t('billing.date') }}</th>
               <th class="px-6 py-3">{{ $t('billing.description') }}</th>
@@ -123,6 +141,7 @@ const payInvoice = (url) => {
               <td class="px-6 py-4">
                 <button
                   v-if="inv.status === 'pending' && inv.xenditInvoiceUrl"
+                  type="button"
                   class="text-primary-600 hover:text-primary-800 text-sm font-medium"
                   @click="payInvoice(inv.xenditInvoiceUrl)">
                   {{ $t('billing.payNow') }}
@@ -131,12 +150,19 @@ const payInvoice = (url) => {
               </td>
             </tr>
             <tr v-if="billingStore.invoices.length === 0">
-              <td colspan="5" class="px-6 py-8 text-center text-gray-500 dark:text-gray-400">{{ $t('billing.noInvoices') }}</td>
+              <td colspan="5" class="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
+                {{ $t('billing.noInvoices') }}
+              </td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
   </div>
-  <ConfirmDialog :is-open="isCancelSubConfirmOpen" :message="cancelSubMessage" :confirm-type="cancelSubType" :on-confirm="onCancelSubConfirm" :on-cancel="onCancelSubCancel" />
+  <ConfirmDialog
+    :is-open="isCancelSubConfirmOpen"
+    :message="cancelSubMessage"
+    :confirm-type="cancelSubType"
+    :on-confirm="onCancelSubConfirm"
+    :on-cancel="onCancelSubCancel" />
 </template>

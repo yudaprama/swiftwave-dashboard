@@ -1,26 +1,31 @@
 <script setup>
-import { reactive, ref } from 'vue'
-import { Tab, TabGroup, TabList, TabPanels } from '@headlessui/vue'
-import ApplicationNameSelection from '@/views/partials/DeployApplication/ApplicationNameSelection.vue'
-import ApplicationSourceSelection from '@/views/partials/DeployApplication/ApplicationSourceSelection.vue'
-import ApplicationSourceConfiguration from '@/views/partials/DeployApplication/ApplicationSourceConfiguration.vue'
-import ApplicationAdditionalSettings from '@/views/partials/DeployApplication/ApplicationAdditionalSettings.vue'
-import { useMutation } from '@vue/apollo-composable'
-import gql from 'graphql-tag'
-import { toast } from 'vue-sonner'
-import { useRouter } from 'vue-router'
-import ModalDialog from '@/views/components/ModalDialog.vue'
-import { useI18n } from 'vue-i18n'
+import { reactive, ref } from 'vue';
+import { Tab, TabGroup, TabList, TabPanels } from '@headlessui/vue';
+import ApplicationNameSelection from '@/views/partials/DeployApplication/ApplicationNameSelection.vue';
+import ApplicationSourceSelection from '@/views/partials/DeployApplication/ApplicationSourceSelection.vue';
+import ApplicationSourceConfiguration from '@/views/partials/DeployApplication/ApplicationSourceConfiguration.vue';
+import ApplicationAdditionalSettings from '@/views/partials/DeployApplication/ApplicationAdditionalSettings.vue';
+import { useMutation } from '@vue/apollo-composable';
+import gql from 'graphql-tag';
+import { toast } from 'vue-sonner';
+import { useRouter } from 'vue-router';
+import ModalDialog from '@/views/components/ModalDialog.vue';
+import { useI18n } from 'vue-i18n';
 
-const { t } = useI18n()
+const { t } = useI18n();
 
-const router = useRouter()
-const sectionNames = [t('deploy.applicationNameTab'), t('deploy.selectSourceTab'), t('deploy.applicationSourceTab'), t('deploy.deployConfigurationTab')]
-const isApplicationDeployedSuccessfulModalOpen = ref(false)
-const selectedTabIndex = ref(0)
+const router = useRouter();
+const sectionNames = [
+  t('deploy.applicationNameTab'),
+  t('deploy.selectSourceTab'),
+  t('deploy.applicationSourceTab'),
+  t('deploy.deployConfigurationTab')
+];
+const isApplicationDeployedSuccessfulModalOpen = ref(false);
+const selectedTabIndex = ref(0);
 const changeTab = (index) => {
-  selectedTabIndex.value = index
-}
+  selectedTabIndex.value = index;
+};
 
 // state
 const newApplicationState = reactive({
@@ -90,7 +95,7 @@ const newApplicationState = reactive({
       volumes: 'none'
     }
   }
-})
+});
 
 // Deploy application
 const {
@@ -115,14 +120,14 @@ const {
       input: newApplicationState
     }
   }
-)
+);
 
 onDeployApplicationMutationDone((result) => {
   if (result.data.createApplication.latestDeployment === null) {
-    toast.warning(t('deploy.notDeployedYet'))
-    return
+    toast.warning(t('deploy.notDeployedYet'));
+    return;
   }
-  isApplicationDeployedSuccessfulModalOpen.value = true
+  isApplicationDeployedSuccessfulModalOpen.value = true;
   setTimeout(() => {
     router.push({
       name: 'Application Details Deployments',
@@ -130,114 +135,115 @@ onDeployApplicationMutationDone((result) => {
         id: result.data.createApplication.id,
         deployment_id: result.data.createApplication.latestDeployment.id
       }
-    })
-  }, 2000)
-})
+    });
+  }, 2000);
+});
 
 onDeployApplicationMutationError((err) => {
-  toast.error(err.message)
-})
+  toast.error(err.message);
+});
 
 // functions
 const finalApplicationNameAndMoveToNextTab = (name) => {
-  newApplicationState.name = name
-  changeTab(1)
-}
+  newApplicationState.name = name;
+  changeTab(1);
+};
 
 const finalizeApplicationSourceAndMoveToNextTab = (upstreamType) => {
-  newApplicationState.upstreamType = upstreamType
-  changeTab(2)
-}
+  newApplicationState.upstreamType = upstreamType;
+  changeTab(2);
+};
 
 const finalizeApplicationSourceConfigurationAndMoveToNextTab = (configuration) => {
   // Store the configuration in the state
   // NOTE: Don't modify as configuration is a reference to the state of `ApplicationSourceConfiguration.vue`
-  newApplicationState.dockerfile = configuration.dockerFile
-  let buildArgs = []
+  newApplicationState.dockerfile = configuration.dockerFile;
+  let buildArgs = [];
   for (let key in configuration.buildArgs) {
     buildArgs.push({
       key: key,
       value: configuration.buildArgs[key]
-    })
+    });
   }
-  newApplicationState.command = configuration.command
-  newApplicationState.buildArgs = buildArgs
-  newApplicationState.imageRegistryCredentialID = parseInt(configuration.imageRegistryCredentialID)
+  newApplicationState.command = configuration.command;
+  newApplicationState.buildArgs = buildArgs;
+  newApplicationState.imageRegistryCredentialID = parseInt(configuration.imageRegistryCredentialID);
   newApplicationState.githubAppInstallationID =
     !configuration.githubAppInstallationID || configuration.githubAppInstallationID === 0
       ? null
-      : parseInt(configuration.githubAppInstallationID.toString())
+      : parseInt(configuration.githubAppInstallationID.toString());
   newApplicationState.githubRepositoryID =
     !configuration.githubRepositoryID || configuration.githubRepositoryID === 0
       ? null
-      : parseInt(configuration.githubRepositoryID.toString())
+      : parseInt(configuration.githubRepositoryID.toString());
   newApplicationState.imageRegistryCredentialID =
-    configuration.imageRegistryCredentialID === 0 ? null : configuration.imageRegistryCredentialID
-  newApplicationState.repositoryOwner = configuration.repositoryOwner
-  newApplicationState.repositoryName = configuration.repositoryName
-  newApplicationState.repositoryBranch = configuration.gitBranch
-  newApplicationState.codePath = configuration.codePath
-  newApplicationState.sourceCodeCompressedFileName = configuration.sourceCodeFile
-  newApplicationState.dockerImage = configuration.dockerImage
-  changeTab(3)
-}
+    configuration.imageRegistryCredentialID === 0 ? null : configuration.imageRegistryCredentialID;
+  newApplicationState.repositoryOwner = configuration.repositoryOwner;
+  newApplicationState.repositoryName = configuration.repositoryName;
+  newApplicationState.repositoryBranch = configuration.gitBranch;
+  newApplicationState.codePath = configuration.codePath;
+  newApplicationState.sourceCodeCompressedFileName = configuration.sourceCodeFile;
+  newApplicationState.dockerImage = configuration.dockerImage;
+  changeTab(3);
+};
 
 const finalizeApplicationAdditionalSettings = (additionalSettings) => {
   // Store the configuration in the state
   // NOTE: Don't modify as configuration is a reference to the state of `ApplicationAdditionalSettings.vue`
-  newApplicationState.deploymentMode = additionalSettings.deploymentMode
-  newApplicationState.replicas = additionalSettings.replicas
-  newApplicationState.hostname = additionalSettings.hostname
-  newApplicationState.environmentVariables = additionalSettings.environmentVariables
-  newApplicationState.persistentVolumeBindings = additionalSettings.persistentVolumeBindings
-  newApplicationState.configMounts = additionalSettings.configMounts
-  newApplicationState.preferredServerHostnames = additionalSettings.preferredServerHostnames
-  newApplicationState.dockerProxyConfig.enabled = additionalSettings.dockerProxyConfig.enabled
-  newApplicationState.dockerProxyConfig.permission.ping = additionalSettings.dockerProxyConfig.permission.ping
-  newApplicationState.dockerProxyConfig.permission.version = additionalSettings.dockerProxyConfig.permission.version
-  newApplicationState.dockerProxyConfig.permission.info = additionalSettings.dockerProxyConfig.permission.info
-  newApplicationState.dockerProxyConfig.permission.events = additionalSettings.dockerProxyConfig.permission.events
-  newApplicationState.dockerProxyConfig.permission.auth = additionalSettings.dockerProxyConfig.permission.auth
-  newApplicationState.dockerProxyConfig.permission.secrets = additionalSettings.dockerProxyConfig.permission.secrets
-  newApplicationState.dockerProxyConfig.permission.build = additionalSettings.dockerProxyConfig.permission.build
-  newApplicationState.dockerProxyConfig.permission.commit = additionalSettings.dockerProxyConfig.permission.commit
-  newApplicationState.dockerProxyConfig.permission.configs = additionalSettings.dockerProxyConfig.permission.configs
+  newApplicationState.deploymentMode = additionalSettings.deploymentMode;
+  newApplicationState.replicas = additionalSettings.replicas;
+  newApplicationState.hostname = additionalSettings.hostname;
+  newApplicationState.environmentVariables = additionalSettings.environmentVariables;
+  newApplicationState.persistentVolumeBindings = additionalSettings.persistentVolumeBindings;
+  newApplicationState.configMounts = additionalSettings.configMounts;
+  newApplicationState.preferredServerHostnames = additionalSettings.preferredServerHostnames;
+  newApplicationState.dockerProxyConfig.enabled = additionalSettings.dockerProxyConfig.enabled;
+  newApplicationState.dockerProxyConfig.permission.ping = additionalSettings.dockerProxyConfig.permission.ping;
+  newApplicationState.dockerProxyConfig.permission.version = additionalSettings.dockerProxyConfig.permission.version;
+  newApplicationState.dockerProxyConfig.permission.info = additionalSettings.dockerProxyConfig.permission.info;
+  newApplicationState.dockerProxyConfig.permission.events = additionalSettings.dockerProxyConfig.permission.events;
+  newApplicationState.dockerProxyConfig.permission.auth = additionalSettings.dockerProxyConfig.permission.auth;
+  newApplicationState.dockerProxyConfig.permission.secrets = additionalSettings.dockerProxyConfig.permission.secrets;
+  newApplicationState.dockerProxyConfig.permission.build = additionalSettings.dockerProxyConfig.permission.build;
+  newApplicationState.dockerProxyConfig.permission.commit = additionalSettings.dockerProxyConfig.permission.commit;
+  newApplicationState.dockerProxyConfig.permission.configs = additionalSettings.dockerProxyConfig.permission.configs;
   newApplicationState.dockerProxyConfig.permission.containers =
-    additionalSettings.dockerProxyConfig.permission.containers
+    additionalSettings.dockerProxyConfig.permission.containers;
   newApplicationState.dockerProxyConfig.permission.distribution =
-    additionalSettings.dockerProxyConfig.permission.distribution
-  newApplicationState.dockerProxyConfig.permission.exec = additionalSettings.dockerProxyConfig.permission.exec
-  newApplicationState.dockerProxyConfig.permission.grpc = additionalSettings.dockerProxyConfig.permission.grpc
-  newApplicationState.dockerProxyConfig.permission.images = additionalSettings.dockerProxyConfig.permission.images
-  newApplicationState.dockerProxyConfig.permission.networks = additionalSettings.dockerProxyConfig.permission.networks
-  newApplicationState.dockerProxyConfig.permission.nodes = additionalSettings.dockerProxyConfig.permission.nodes
-  newApplicationState.dockerProxyConfig.permission.plugins = additionalSettings.dockerProxyConfig.permission.plugins
-  newApplicationState.dockerProxyConfig.permission.services = additionalSettings.dockerProxyConfig.permission.services
-  newApplicationState.dockerProxyConfig.permission.session = additionalSettings.dockerProxyConfig.permission.session
-  newApplicationState.dockerProxyConfig.permission.swarm = additionalSettings.dockerProxyConfig.permission.swarm
-  newApplicationState.dockerProxyConfig.permission.system = additionalSettings.dockerProxyConfig.permission.system
-  newApplicationState.dockerProxyConfig.permission.tasks = additionalSettings.dockerProxyConfig.permission.tasks
-  newApplicationState.dockerProxyConfig.permission.volumes = additionalSettings.dockerProxyConfig.permission.volumes
-  newApplicationState.customHealthCheck.enabled = additionalSettings.customHealthCheck.enabled
-  newApplicationState.customHealthCheck.test_command = additionalSettings.customHealthCheck.test_command
-  newApplicationState.customHealthCheck.interval_seconds = additionalSettings.customHealthCheck.interval_seconds
-  newApplicationState.customHealthCheck.timeout_seconds = additionalSettings.customHealthCheck.timeout_seconds
-  newApplicationState.customHealthCheck.start_period_seconds = additionalSettings.customHealthCheck.start_period_seconds
+    additionalSettings.dockerProxyConfig.permission.distribution;
+  newApplicationState.dockerProxyConfig.permission.exec = additionalSettings.dockerProxyConfig.permission.exec;
+  newApplicationState.dockerProxyConfig.permission.grpc = additionalSettings.dockerProxyConfig.permission.grpc;
+  newApplicationState.dockerProxyConfig.permission.images = additionalSettings.dockerProxyConfig.permission.images;
+  newApplicationState.dockerProxyConfig.permission.networks = additionalSettings.dockerProxyConfig.permission.networks;
+  newApplicationState.dockerProxyConfig.permission.nodes = additionalSettings.dockerProxyConfig.permission.nodes;
+  newApplicationState.dockerProxyConfig.permission.plugins = additionalSettings.dockerProxyConfig.permission.plugins;
+  newApplicationState.dockerProxyConfig.permission.services = additionalSettings.dockerProxyConfig.permission.services;
+  newApplicationState.dockerProxyConfig.permission.session = additionalSettings.dockerProxyConfig.permission.session;
+  newApplicationState.dockerProxyConfig.permission.swarm = additionalSettings.dockerProxyConfig.permission.swarm;
+  newApplicationState.dockerProxyConfig.permission.system = additionalSettings.dockerProxyConfig.permission.system;
+  newApplicationState.dockerProxyConfig.permission.tasks = additionalSettings.dockerProxyConfig.permission.tasks;
+  newApplicationState.dockerProxyConfig.permission.volumes = additionalSettings.dockerProxyConfig.permission.volumes;
+  newApplicationState.customHealthCheck.enabled = additionalSettings.customHealthCheck.enabled;
+  newApplicationState.customHealthCheck.test_command = additionalSettings.customHealthCheck.test_command;
+  newApplicationState.customHealthCheck.interval_seconds = additionalSettings.customHealthCheck.interval_seconds;
+  newApplicationState.customHealthCheck.timeout_seconds = additionalSettings.customHealthCheck.timeout_seconds;
+  newApplicationState.customHealthCheck.start_period_seconds =
+    additionalSettings.customHealthCheck.start_period_seconds;
   newApplicationState.customHealthCheck.start_interval_seconds =
-    additionalSettings.customHealthCheck.start_interval_seconds
-  newApplicationState.customHealthCheck.retries = additionalSettings.customHealthCheck.retries
-}
+    additionalSettings.customHealthCheck.start_interval_seconds;
+  newApplicationState.customHealthCheck.retries = additionalSettings.customHealthCheck.retries;
+};
 
 const finalizeApplicationAdditionalSettingsAndDeploy = (additionalSettings) => {
-  finalizeApplicationAdditionalSettings(additionalSettings)
-  deployApplication()
-}
+  finalizeApplicationAdditionalSettings(additionalSettings);
+  deployApplication();
+};
 
 const onClickTab = (index) => {
   if (index < selectedTabIndex.value) {
-    alert(t('deploy.changePrevConfigAlert'))
+    alert(t('deploy.changePrevConfigAlert'));
   }
-}
+};
 </script>
 
 <template>
@@ -252,14 +258,14 @@ const onClickTab = (index) => {
   </ModalDialog>
   <div class="flex h-full w-full max-w-7xl flex-col items-center px-2 md:px-0">
     <TabGroup :selected-index="selectedTabIndex">
-      <TabList class="flex w-full max-w-4xl space-x-3 rounded-full bg-primary-600 p-1">
+      <TabList class="bg-primary-600 flex w-full max-w-4xl space-x-3 rounded-full p-1">
         <Tab
           v-for="(sectionName, index) in sectionNames"
           :key="sectionName"
           v-slot="{ selected }"
           as="template"
           @click="() => onClickTab(index)">
-          <button :class="selected ? 'tab-button-selected' : 'tab-button-unselected'" class="tab-button">
+          <button type="button" :class="selected ? 'tab-button-selected' : 'tab-button-unselected'" class="tab-button">
             {{ sectionName }}
           </button>
         </Tab>
@@ -289,11 +295,11 @@ const onClickTab = (index) => {
 <style scoped>
 @reference "../../assets/css/base.css";
 .tab-button {
-  @apply w-full rounded-full px-3 py-2 text-sm font-medium leading-5 focus:outline-none;
+  @apply w-full rounded-full px-3 py-2 text-sm leading-5 font-medium focus:outline-none;
 }
 
 .tab-button-selected {
-  @apply bg-gray-100 dark:bg-secondary-700 text-gray-900 dark:text-gray-100 shadow;
+  @apply dark:bg-secondary-700 bg-gray-100 text-gray-900 shadow dark:text-gray-100;
 }
 
 .tab-button-unselected {

@@ -1,17 +1,17 @@
 <script setup>
-import { useRouter } from 'vue-router'
-import { useMutation, useQuery } from '@vue/apollo-composable'
-import gql from 'graphql-tag'
-import { computed } from 'vue'
-import { toast } from 'vue-sonner'
-import FilledButton from '@/views/components/FilledButton.vue'
-import { useI18n } from 'vue-i18n'
-import { useConfirmDialog } from '@/composables/useConfirmDialog.js'
-import ConfirmDialog from '@/views/components/ConfirmDialog.vue'
+import { useRouter } from 'vue-router';
+import { useMutation, useQuery } from '@vue/apollo-composable';
+import gql from 'graphql-tag';
+import { computed } from 'vue';
+import { toast } from 'vue-sonner';
+import FilledButton from '@/views/components/FilledButton.vue';
+import { useI18n } from 'vue-i18n';
+import { useConfirmDialog } from '@/composables/useConfirmDialog.js';
+import ConfirmDialog from '@/views/components/ConfirmDialog.vue';
 
-const { t } = useI18n()
-const router = useRouter()
-const applicationId = router.currentRoute.value.params.id
+const { t } = useI18n();
+const router = useRouter();
+const applicationId = router.currentRoute.value.params.id;
 
 const {
   isOpen: isRegenerateWebhookConfirmOpen,
@@ -20,7 +20,7 @@ const {
   confirm: askRegenerateWebhookConfirm,
   onConfirm: onRegenerateWebhookConfirm,
   onCancel: onRegenerateWebhookCancel
-} = useConfirmDialog()
+} = useConfirmDialog();
 
 const {
   result: applicationDetailsRaw,
@@ -42,22 +42,22 @@ const {
     fetchPolicy: 'no-cache',
     nextFetchPolicy: 'no-cache'
   }
-)
+);
 
 const webhookTriggerLink = computed(() => {
-  if (applicationDetailsLoading.value) return 'Loading...'
+  if (applicationDetailsLoading.value) return 'Loading...';
   if (applicationDetailsRaw.value?.application?.webhookToken) {
-    let token = applicationDetailsRaw.value?.application?.webhookToken ?? ''
-    return location.origin + '/webhook/redeploy-app/' + applicationId + '/' + token
+    let token = applicationDetailsRaw.value?.application?.webhookToken ?? '';
+    return location.origin + '/webhook/redeploy-app/' + applicationId + '/' + token;
   } else {
-    return 'Loading...'
+    return 'Loading...';
   }
-})
+});
 
 const copyToClipboard = (text) => {
-  navigator.clipboard.writeText(text)
-  toast.success(t('applicationDetails.copyWebhookLink'))
-}
+  navigator.clipboard.writeText(text);
+  toast.success(t('applicationDetails.copyWebhookLink'));
+};
 
 // Regenerate Webhook Token
 const {
@@ -75,54 +75,61 @@ const {
     fetchPolicy: 'no-cache',
     nextFetchPolicy: 'no-cache'
   }
-)
+);
 
 regenerateWebhookTokenError((error) => {
-  toast.error(error.message)
-})
+  toast.error(error.message);
+});
 
 regenerateWebhookTokenDone((result) => {
   if (result.data.regenerateWebhookToken) {
-    toast.success(t('applicationDetails.regenerateWebhookSuccess'))
-    refetchApplicationDetails()
+    toast.success(t('applicationDetails.regenerateWebhookSuccess'));
+    refetchApplicationDetails();
   } else {
-    toast.error(t('applicationDetails.somethingWentWrong'))
+    toast.error(t('applicationDetails.somethingWentWrong'));
   }
-})
+});
 
 const regenerateWebhookTokenWithConfirmation = async () => {
   if (await askRegenerateWebhookConfirm(t('applicationDetails.regenerateWebhookConfirm'), 'warning')) {
     regenerateWebhookToken({
       id: applicationId
-    })
+    });
   }
-}
+};
 </script>
 
 <template>
   <!--  NOTE -->
-  <div class="mb-8 rounded-md border-l-4 border-yellow-500 bg-yellow-100 dark:bg-yellow-900/30 p-3 text-yellow-700 dark:text-yellow-300" role="alert">
+  <div
+    class="mb-8 rounded-md border-l-4 border-yellow-500 bg-yellow-100 p-3 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-300"
+    role="alert">
     <p class="font-bold">{{ $t('applicationDetails.webhookNote') }}</p>
     <p>{{ $t('applicationDetails.webhookNoteMessage') }}</p>
   </div>
 
   <p class="inline-flex items-center gap-2 text-lg font-medium">{{ $t('applicationDetails.webhookBasedCI') }}</p>
-  <p class="text-sm text-secondary-700">
+  <p class="text-secondary-700 text-sm">
     {{ $t('applicationDetails.webhookCIHint') }}
   </p>
 
   <!--  Link with a copy button -->
   <div class="mt-6">
     <div class="relative flex flex-row items-center gap-2">
-      <input :value="webhookTriggerLink" class="w-full rounded-md border border-gray-300 dark:border-gray-600 p-2 dark:bg-secondary-700 dark:text-gray-200" readonly type="text" />
+      <input
+        :value="webhookTriggerLink"
+        class="dark:bg-secondary-700 w-full rounded-md border border-gray-300 p-2 dark:border-gray-600 dark:text-gray-200"
+        readonly
+        type="text" />
       <button
-        class="absolute bottom-1 right-1 top-1 rounded-md bg-secondary-200 dark:bg-secondary-600 px-3 text-sm font-bold hover:bg-secondary-300 dark:hover:bg-secondary-500 dark:text-gray-200"
+        type="button"
+        class="bg-secondary-200 dark:bg-secondary-600 hover:bg-secondary-300 dark:hover:bg-secondary-500 absolute top-1 right-1 bottom-1 rounded-md px-3 text-sm font-bold dark:text-gray-200"
         @click="copyToClipboard(webhookTriggerLink)">
         {{ $t('applicationDetails.copyLabel') }}
-        <font-awesome-icon icon="fa-solid fa-copy" />
+        <font-awesome-icon icon="fa-solid fa-copy" aria-hidden="true" />
       </button>
     </div>
-    <p class="mt-2 text-sm text-secondary-700">
+    <p class="text-secondary-700 mt-2 text-sm">
       {{ $t('applicationDetails.copyWebhookHint') }}
     </p>
   </div>
@@ -130,8 +137,10 @@ const regenerateWebhookTokenWithConfirmation = async () => {
   <!-- Regenerate Webhook tolen -->
   <div class="mt-6 flex w-full flex-row items-center justify-between rounded-md">
     <div>
-      <p class="inline-flex items-center gap-2 text-lg font-medium">{{ $t('applicationDetails.regenerateWebhookTokenTitle') }}</p>
-      <p class="text-sm text-secondary-700">{{ $t('applicationDetails.regenerateWebhookTokenHint') }}</p>
+      <p class="inline-flex items-center gap-2 text-lg font-medium">
+        {{ $t('applicationDetails.regenerateWebhookTokenTitle') }}
+      </p>
+      <p class="text-secondary-700 text-sm">{{ $t('applicationDetails.regenerateWebhookTokenHint') }}</p>
     </div>
     <FilledButton
       type="primary"
@@ -141,7 +150,12 @@ const regenerateWebhookTokenWithConfirmation = async () => {
     </FilledButton>
   </div>
 
-  <ConfirmDialog :is-open="isRegenerateWebhookConfirmOpen" :message="regenerateWebhookMessage" :confirm-type="regenerateWebhookConfirmType" :on-confirm="onRegenerateWebhookConfirm" :on-cancel="onRegenerateWebhookCancel" />
+  <ConfirmDialog
+    :is-open="isRegenerateWebhookConfirmOpen"
+    :message="regenerateWebhookMessage"
+    :confirm-type="regenerateWebhookConfirmType"
+    :on-confirm="onRegenerateWebhookConfirm"
+    :on-cancel="onRegenerateWebhookCancel" />
 </template>
 
 <style scoped></style>
