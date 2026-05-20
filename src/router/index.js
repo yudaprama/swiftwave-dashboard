@@ -25,6 +25,7 @@ import PersistentVolumeManagementPage from '@/views/pages/PersistentVolumeManage
 import UserManagementPage from '@/views/pages/UsersManagement.vue'
 import GitCredentialManagementPage from '@/views/pages/GitCredentialManagement.vue'
 import ImageRegistryCredentialManagementPage from '@/views/pages/ImageRegistryCredentialManagement.vue'
+import MCPApiKeyManagementPage from '@/views/pages/MCPApiKeyManagement.vue'
 import DomainManagementPage from '@/views/pages/DomainManagement.vue'
 import RedirectRuleManagementPage from '@/views/pages/RedirectRuleManagement.vue'
 import IngressRuleManagementPage from '@/views/pages/IngressRuleManagement.vue'
@@ -233,6 +234,12 @@ const router = createRouter({
       name: 'Image Registry Credentials',
       component: ImageRegistryCredentialManagementPage,
       meta: { breadcrumb: 'sidebar.imageRegCredentials' }
+    },
+    {
+      path: '/mcp-api-keys',
+      name: 'MCP API Keys',
+      component: MCPApiKeyManagementPage,
+      meta: { breadcrumb: 'sidebar.mcpApiKeys' }
     },
     {
       path: '/domains',
