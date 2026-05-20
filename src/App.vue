@@ -1,50 +1,50 @@
 <script setup>
-import { RouterView, useRouter } from 'vue-router'
-import { computed, onBeforeMount, onMounted, ref } from 'vue'
-import { useAuthStore } from '@/store/auth.js'
-import { useThemeStore } from '@/store/theme.js'
-import SideBar from '@/views/partials/SideBar.vue'
-import MobileSidebarDrawer from '@/views/partials/MobileSidebarDrawer.vue'
-import Breadcrumb from '@/views/components/Breadcrumb.vue'
-import LoadingPage from '@/views/pages/LoadingPage.vue'
-import GlobalWarning from '@/views/partials/GlobalWarning.vue'
-import { Toaster } from 'vue-sonner'
-import { useI18n } from 'vue-i18n'
+import { RouterView, useRouter } from 'vue-router';
+import { computed, onBeforeMount, onMounted, ref } from 'vue';
+import { useAuthStore } from '@/store/auth.js';
+import { useThemeStore } from '@/store/theme.js';
+import SideBar from '@/views/partials/SideBar.vue';
+import MobileSidebarDrawer from '@/views/partials/MobileSidebarDrawer.vue';
+import Breadcrumb from '@/views/components/Breadcrumb.vue';
+import LoadingPage from '@/views/pages/LoadingPage.vue';
+import GlobalWarning from '@/views/partials/GlobalWarning.vue';
+import { Toaster } from 'vue-sonner';
+import { useI18n } from 'vue-i18n';
 
-const { t } = useI18n()
-const authStore = useAuthStore()
-const themeStore = useThemeStore()
-const router = useRouter()
+const { t } = useI18n();
+const authStore = useAuthStore();
+const themeStore = useThemeStore();
+const router = useRouter();
 
-const isMobileSidebarOpen = ref(false)
-const isSidebarCollapsed = ref(localStorage.getItem('sidebar-collapsed') === 'true')
+const isMobileSidebarOpen = ref(false);
+const isSidebarCollapsed = ref(localStorage.getItem('sidebar-collapsed') === 'true');
 
 const toggleSidebar = () => {
-  isSidebarCollapsed.value = !isSidebarCollapsed.value
-  localStorage.setItem('sidebar-collapsed', isSidebarCollapsed.value)
-}
+  isSidebarCollapsed.value = !isSidebarCollapsed.value;
+  localStorage.setItem('sidebar-collapsed', isSidebarCollapsed.value);
+};
 
 onBeforeMount(() => {
-  const token = localStorage.getItem('token')
+  const token = localStorage.getItem('token');
   if (token !== null) {
-    authStore.SetCredential(token)
+    authStore.SetCredential(token);
   }
-})
+});
 
 onMounted(() => {
   authStore.StartAuthChecker(() => {
-    authStore.Logout()
-  })
-})
+    authStore.Logout();
+  });
+});
 
-const isLoginPage = computed(() => router.currentRoute.value.name === 'Login')
+const isLoginPage = computed(() => router.currentRoute.value.name === 'Login');
 const isShowSideBar = computed(() => {
   if (!authStore.IsLoggedIn) {
-    return false
+    return false;
   } else {
-    return !['Download Persistent Volume Backup', 'Maintenance', 'Setup'].includes(router.currentRoute.value.name)
+    return !['Download Persistent Volume Backup', 'Maintenance', 'Setup'].includes(router.currentRoute.value.name);
   }
-})
+});
 </script>
 
 <template>
@@ -54,7 +54,7 @@ const isShowSideBar = computed(() => {
   <!-- Skip to content link for keyboard users -->
   <a
     href="#main-content"
-    class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-md focus:bg-primary-600 focus:px-4 focus:py-2 focus:text-white focus:shadow-lg">
+    class="focus:bg-primary-600 sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:rounded-md focus:px-4 focus:py-2 focus:text-white focus:shadow-lg">
     {{ t('common.skipToContent') }}
   </a>
 
@@ -62,7 +62,7 @@ const isShowSideBar = computed(() => {
     <!-- Mobile top bar -->
     <header
       v-if="isShowSideBar"
-      class="flex h-14 items-center justify-between border-b bg-white px-4 dark:border-gray-700 dark:bg-secondary-800 md:hidden">
+      class="dark:bg-secondary-800 flex h-14 items-center justify-between border-b bg-white px-4 md:hidden dark:border-gray-700">
       <button
         type="button"
         class="rounded-md p-2 text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
@@ -86,7 +86,7 @@ const isShowSideBar = computed(() => {
       <SideBar :collapsed="isSidebarCollapsed" />
       <button
         type="button"
-        class="absolute -right-3 top-8 z-10 flex h-6 w-6 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 shadow-sm transition-colors hover:bg-gray-50 dark:border-gray-600 dark:bg-secondary-700 dark:text-gray-400 dark:hover:bg-secondary-600"
+        class="dark:bg-secondary-700 dark:hover:bg-secondary-600 absolute top-8 -right-3 z-10 flex h-6 w-6 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 shadow-sm transition-colors hover:bg-gray-50 dark:border-gray-600 dark:text-gray-400"
         :aria-label="isSidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'"
         @click="toggleSidebar">
         <font-awesome-icon
@@ -99,7 +99,7 @@ const isShowSideBar = computed(() => {
     <main
       id="main-content"
       tabindex="-1"
-      class="scrollbox flex max-h-screen w-full flex-col items-center overflow-y-auto"
+      class="scrollbox dark:bg-secondary-900 flex max-h-screen w-full flex-col items-center overflow-y-auto bg-white text-gray-900 dark:text-gray-100"
       :class="{
         'p-4': !isLoginPage
       }">
@@ -135,7 +135,7 @@ const isShowSideBar = computed(() => {
 }
 
 .scrollbox::-webkit-scrollbar-thumb {
-  @apply rounded-full bg-primary-500;
+  @apply bg-primary-500 rounded-full;
 }
 
 .terminal {
@@ -143,14 +143,14 @@ const isShowSideBar = computed(() => {
 }
 
 .xterm-viewport {
-  right: calc(-0.5rem - 9px)!;
-  cursor: pointer!;
-  overflow-y: auto!;
+  right: calc(-0.5rem - 9px) !important;
+  cursor: pointer !important;
+  overflow-y: auto !important;
 }
 
 .xterm-viewport::-webkit-scrollbar {
-  width: 9px!;
-  height: 9px!;
+  width: 9px !important;
+  height: 9px !important;
 }
 
 .xterm-viewport::-webkit-scrollbar-track {
@@ -158,7 +158,7 @@ const isShowSideBar = computed(() => {
 }
 
 .xterm-viewport::-webkit-scrollbar-thumb {
-  @apply rounded-full bg-primary-500;
+  @apply bg-primary-500 rounded-full;
 }
 
 .bg-color-1 {
@@ -199,7 +199,7 @@ const isShowSideBar = computed(() => {
 }
 
 .otp-input {
-  @apply mx-1 h-10 w-10 rounded-md! border! border-gray-300! p-1! text-center! text-base! focus:border-primary-500! focus:ring-primary-500!;
+  @apply focus:border-primary-500! focus:ring-primary-500! mx-1 h-10 w-10 rounded-md! border! border-gray-300! p-1! text-center! text-base!;
 }
 
 .otp-input::-webkit-inner-spin-button,
@@ -219,7 +219,7 @@ const isShowSideBar = computed(() => {
 
 /* popover */
 .popover {
-  @apply absolute left-1/2 top-[calc(100%+15px)] z-50 hidden max-w-[300px] -translate-x-1/2 flex-col items-center gap-1.5 rounded-lg bg-primary-500 p-2.5 text-sm text-secondary-100 shadow-md;
+  @apply bg-primary-500 text-secondary-100 absolute top-[calc(100%+15px)] left-1/2 z-50 hidden max-w-[300px] -translate-x-1/2 flex-col items-center gap-1.5 rounded-lg p-2.5 text-sm shadow-md;
 }
 
 .has-popover {

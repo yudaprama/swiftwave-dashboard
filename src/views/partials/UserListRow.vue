@@ -1,13 +1,13 @@
 <script setup>
-import TableRow from '@/views/components/Table/TableRow.vue'
-import Badge from '@/views/components/Badge.vue'
-import TextButton from '@/views/components/TextButton.vue'
-import { useAuthStore } from '@/store/auth.js'
-import FilledButton from '@/views/components/FilledButton.vue'
-import { useI18n } from 'vue-i18n'
+import TableRow from '@/views/components/Table/TableRow.vue';
+import Badge from '@/views/components/Badge.vue';
+import TextButton from '@/views/components/TextButton.vue';
+import { useAuthStore } from '@/store/auth.js';
+import FilledButton from '@/views/components/FilledButton.vue';
+import { useI18n } from 'vue-i18n';
 
-const { t } = useI18n()
-const currentEmail = useAuthStore().currentEmail
+const { t } = useI18n();
+const currentEmail = useAuthStore().currentEmail;
 defineProps({
   user: {
     type: Object,
@@ -31,13 +31,13 @@ defineProps({
     required: false,
     default: false
   }
-})
+});
 </script>
 
 <template>
   <tr>
     <TableRow align="left">
-      <div class="text-sm font-medium text-gray-900">
+      <div class="text-sm font-medium text-gray-900 dark:text-gray-100">
         {{ user.email }}
       </div>
     </TableRow>
@@ -45,7 +45,7 @@ defineProps({
       <Badge type="success">{{ t('partials.activeUser') }}</Badge>
     </TableRow>
     <TableRow align="center">
-      <span class="text-sm text-gray-700"> {{ t('partials.administrator') }} </span>
+      <span class="text-sm text-gray-700 dark:text-gray-300"> {{ t('partials.administrator') }} </span>
     </TableRow>
     <TableRow align="center" v-if="currentEmail === user.email" flex>
       <FilledButton

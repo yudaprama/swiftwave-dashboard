@@ -36,30 +36,30 @@ const formatCurrency = (cents, currency = 'IDR') => {
 const statusColor = (status) => {
   switch (status) {
     case 'active':
-      return 'bg-green-100 text-green-800';
+      return 'bg-green-100 text-green-800 dark:bg-success-900 dark:text-success-200';
     case 'past_due':
-      return 'bg-yellow-100 text-yellow-800';
+      return 'bg-yellow-100 text-yellow-800 dark:bg-warning-900 dark:text-warning-200';
     case 'suspended':
-      return 'bg-red-100 text-red-800';
+      return 'bg-red-100 text-red-800 dark:bg-danger-900 dark:text-danger-200';
     case 'cancelled':
-      return 'bg-gray-100 text-gray-800';
+      return 'bg-gray-100 text-gray-800 dark:bg-secondary-700 dark:text-gray-200';
     default:
-      return 'bg-gray-100 text-gray-800';
+      return 'bg-gray-100 text-gray-800 dark:bg-secondary-700 dark:text-gray-200';
   }
 };
 
 const invoiceStatusColor = (status) => {
   switch (status) {
     case 'paid':
-      return 'bg-green-100 text-green-800';
+      return 'bg-green-100 text-green-800 dark:bg-success-900 dark:text-success-200';
     case 'pending':
-      return 'bg-yellow-100 text-yellow-800';
+      return 'bg-yellow-100 text-yellow-800 dark:bg-warning-900 dark:text-warning-200';
     case 'failed':
-      return 'bg-red-100 text-red-800';
+      return 'bg-red-100 text-red-800 dark:bg-danger-900 dark:text-danger-200';
     case 'expired':
-      return 'bg-gray-100 text-gray-800';
+      return 'bg-gray-100 text-gray-800 dark:bg-secondary-700 dark:text-gray-200';
     default:
-      return 'bg-gray-100 text-gray-800';
+      return 'bg-gray-100 text-gray-800 dark:bg-secondary-700 dark:text-gray-200';
   }
 };
 
@@ -82,7 +82,7 @@ const payInvoice = (url) => {
   <div class="p-6 px-2 md:px-6">
     <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">{{ $t('billing.title') }}</h1>
 
-    <div class="dark:bg-secondary-800 mt-6 rounded-lg border bg-white p-6 shadow-sm">
+    <div class="dark:bg-secondary-800 mt-6 rounded-lg border bg-white p-6 shadow-sm dark:border-gray-700">
       <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100">{{ $t('billing.subscription') }}</h2>
       <div v-if="billingStore.subscription" class="mt-4">
         <div class="flex items-center gap-3">
@@ -113,7 +113,7 @@ const payInvoice = (url) => {
       <p v-else class="mt-4 text-sm text-gray-500 dark:text-gray-400">{{ $t('billing.noSubscription') }}</p>
     </div>
 
-    <div class="dark:bg-secondary-800 mt-6 rounded-lg border bg-white shadow-sm">
+    <div class="dark:bg-secondary-800 mt-6 rounded-lg border bg-white shadow-sm dark:border-gray-700">
       <div class="border-b p-6 pb-3 dark:border-gray-700">
         <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100">{{ $t('billing.invoices') }}</h2>
       </div>

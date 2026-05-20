@@ -64,13 +64,13 @@ const formatDate = (date) => {
 const statusBadgeColor = (status) => {
   switch (status) {
     case 'pending':
-      return 'bg-yellow-100 text-yellow-800';
+      return 'bg-yellow-100 text-yellow-800 dark:bg-warning-900 dark:text-warning-200';
     case 'approved':
-      return 'bg-green-100 text-green-800';
+      return 'bg-green-100 text-green-800 dark:bg-success-900 dark:text-success-200';
     case 'rejected':
-      return 'bg-red-100 text-red-800';
+      return 'bg-red-100 text-red-800 dark:bg-danger-900 dark:text-danger-200';
     default:
-      return 'bg-gray-100 text-gray-800';
+      return 'bg-gray-100 text-gray-800 dark:bg-secondary-700 dark:text-gray-200';
   }
 };
 </script>

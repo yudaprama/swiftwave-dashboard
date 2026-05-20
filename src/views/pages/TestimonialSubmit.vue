@@ -110,13 +110,13 @@ const statusColor = computed(() => {
   if (!existingTestimonial.value) return '';
   switch (existingTestimonial.value.status) {
     case 'pending':
-      return 'bg-yellow-100 text-yellow-800';
+      return 'bg-yellow-100 text-yellow-800 dark:bg-warning-900 dark:text-warning-200';
     case 'approved':
-      return 'bg-green-100 text-green-800';
+      return 'bg-green-100 text-green-800 dark:bg-success-900 dark:text-success-200';
     case 'rejected':
-      return 'bg-red-100 text-red-800';
+      return 'bg-red-100 text-red-800 dark:bg-danger-900 dark:text-danger-200';
     default:
-      return 'bg-gray-100 text-gray-800';
+      return 'bg-gray-100 text-gray-800 dark:bg-secondary-700 dark:text-gray-200';
   }
 });
 </script>
@@ -147,7 +147,9 @@ const statusColor = computed(() => {
       </div>
 
       <!-- Voucher code -->
-      <div v-if="voucherCode" class="rounded-lg border-2 border-dashed border-green-300 bg-green-50 p-6">
+      <div
+        v-if="voucherCode"
+        class="dark:border-success-700 dark:bg-success-900/30 rounded-lg border-2 border-dashed border-green-300 bg-green-50 p-6">
         <p class="mb-2 text-sm font-medium text-green-800">{{ t('testimonial.voucherTitle') }}</p>
         <p class="mb-1 font-mono text-2xl font-bold text-green-900">{{ voucherCode }}</p>
         <p class="text-sm text-green-700">{{ t('testimonial.voucherExpires') }}</p>

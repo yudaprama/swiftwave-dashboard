@@ -234,12 +234,12 @@ onCancelDeploymentError((err) => {
     </div>
     <div
       v-if="deployment.status === 'pending'"
-      class="mt-2 flex flex-row items-center justify-between rounded-md bg-red-100 px-3 py-2">
+      class="dark:bg-danger-900/30 mt-2 flex flex-row items-center justify-between rounded-md bg-red-100 px-3 py-2">
       <div>
         <p class="inline-flex items-center gap-2 text-lg font-medium">
           {{ $t('applicationDetails.cancelDeployment') }}
         </p>
-        <p class="text-secondary-700 text-sm">
+        <p class="text-secondary-700 text-sm dark:text-gray-300">
           {{ $t('applicationDetails.cancelDeploymentHint') }}
         </p>
       </div>
@@ -253,7 +253,7 @@ onCancelDeploymentError((err) => {
       {{ $t('applicationDetails.deploymentLogs') }}
       <StatusPulse v-if="isTerminalLoading" type="success" :label="$t('common.loading')" />
     </p>
-    <p class="text-secondary-700 text-sm">
+    <p class="text-secondary-700 text-sm dark:text-gray-300">
       {{ $t('applicationDetails.deploymentLogsHint') }}
     </p>
   </section>

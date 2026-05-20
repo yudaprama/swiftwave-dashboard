@@ -409,7 +409,7 @@ onChangePasswordDone((res) => {
           v-for="appBasicAuthAccessControlList in appBasicAuthAccessControlLists"
           v-bind:key="appBasicAuthAccessControlList.id">
           <TableRow align="left">
-            <div class="text-sm font-medium text-gray-900">
+            <div class="text-sm font-medium text-gray-900 dark:text-gray-100">
               {{ appBasicAuthAccessControlList.name }}
             </div>
           </TableRow>
@@ -424,7 +424,7 @@ onChangePasswordDone((res) => {
               <div
                 v-for="user in appBasicAuthAccessControlList.users"
                 v-bind:key="user.id"
-                class="flex w-min flex-row items-center justify-center gap-2.5 rounded-md border px-2 py-1 text-sm">
+                class="flex w-min flex-row items-center justify-center gap-2.5 rounded-md border px-2 py-1 text-sm dark:border-gray-700 dark:text-gray-200">
                 <p>{{ user.username }}</p>
                 <TextButton slim class="has-tooltip" :click="() => openChangePasswordModal(user)">
                   <span class="tooltip">{{ $t('appAuth.changePassword') }}</span>
@@ -452,13 +452,15 @@ onChangePasswordDone((res) => {
         {{ $t('appAuth.newUserListHint') }} <br />{{ $t('appAuth.tryUniqueName') }}
         <form @submit.prevent="">
           <div class="mt-4">
-            <label class="block text-sm font-medium text-gray-700" for="name">{{ $t('appAuth.userListName') }}</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300" for="name">{{
+              $t('appAuth.userListName')
+            }}</label>
             <div class="mt-1">
               <input
                 id="name"
                 v-model="newACLName"
                 autocomplete="off"
-                class="focus:border-primary-500 focus:ring-primary-500 block w-full rounded-md border-gray-300 shadow-xs sm:text-sm"
+                class="focus:border-primary-500 focus:ring-primary-500 dark:bg-secondary-700 block w-full rounded-md border-gray-300 shadow-xs sm:text-sm dark:border-gray-600 dark:text-gray-100"
                 :placeholder="$t('appAuth.userListNamePlaceholder')"
                 type="text" />
             </div>
@@ -500,33 +502,37 @@ onChangePasswordDone((res) => {
         {{ $t('appAuth.addToUserList') }} <b>{{ selectedACLForAddingUser?.name ?? '' }}</b>
         <form @submit.prevent="" class="mt-2">
           <div class="mt-4">
-            <label class="block text-sm font-medium text-gray-700" for="name">{{ $t('appAuth.username') }}</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300" for="name">{{
+              $t('appAuth.username')
+            }}</label>
             <div class="mt-1">
               <input
                 id="name"
                 v-model="addUserInfo.username"
                 @keydown="preventSpaceInput"
                 autocomplete="off"
-                class="focus:border-primary-500 focus:ring-primary-500 block w-full rounded-md border-gray-300 shadow-xs sm:text-sm"
+                class="focus:border-primary-500 focus:ring-primary-500 dark:bg-secondary-700 block w-full rounded-md border-gray-300 shadow-xs sm:text-sm dark:border-gray-600 dark:text-gray-100"
                 :placeholder="$t('appAuth.enterUsername')"
                 type="text" />
             </div>
           </div>
           <div class="mt-4">
-            <label class="block text-sm font-medium text-gray-700" for="password">{{ $t('appAuth.password') }}</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300" for="password">{{
+              $t('appAuth.password')
+            }}</label>
             <div class="mt-1">
               <input
                 id="password"
                 v-model="addUserInfo.password"
                 @keydown="preventSpaceInput"
                 autocomplete="off"
-                class="focus:border-primary-500 focus:ring-primary-500 block w-full rounded-md border-gray-300 shadow-xs sm:text-sm"
+                class="focus:border-primary-500 focus:ring-primary-500 dark:bg-secondary-700 block w-full rounded-md border-gray-300 shadow-xs sm:text-sm dark:border-gray-600 dark:text-gray-100"
                 :placeholder="$t('appAuth.enterPassword')"
                 type="password" />
             </div>
           </div>
           <div class="mt-4">
-            <label class="block text-sm font-medium text-gray-700" for="confirmPassword">{{
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300" for="confirmPassword">{{
               $t('appAuth.confirmPassword')
             }}</label>
             <div class="mt-1">
@@ -535,7 +541,7 @@ onChangePasswordDone((res) => {
                 v-model="addUserInfo.confirmPassword"
                 @keydown="preventSpaceInput"
                 autocomplete="off"
-                class="focus:border-primary-500 focus:ring-primary-500 block w-full rounded-md border-gray-300 shadow-xs sm:text-sm"
+                class="focus:border-primary-500 focus:ring-primary-500 dark:bg-secondary-700 block w-full rounded-md border-gray-300 shadow-xs sm:text-sm dark:border-gray-600 dark:text-gray-100"
                 :placeholder="$t('appAuth.confirmPassword')"
                 type="password" />
             </div>
@@ -574,20 +580,22 @@ onChangePasswordDone((res) => {
         {{ $t('appAuth.userLabel') }}
         <form @submit.prevent="" class="mt-2">
           <div class="mt-4">
-            <label class="block text-sm font-medium text-gray-700" for="password">{{ $t('appAuth.password') }}</label>
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300" for="password">{{
+              $t('appAuth.password')
+            }}</label>
             <div class="mt-1">
               <input
                 id="password"
                 v-model="changePasswordInfo.password"
                 @keydown="preventSpaceInput"
                 autocomplete="off"
-                class="focus:border-primary-500 focus:ring-primary-500 block w-full rounded-md border-gray-300 shadow-xs sm:text-sm"
+                class="focus:border-primary-500 focus:ring-primary-500 dark:bg-secondary-700 block w-full rounded-md border-gray-300 shadow-xs sm:text-sm dark:border-gray-600 dark:text-gray-100"
                 :placeholder="$t('appAuth.enterPassword')"
                 type="password" />
             </div>
           </div>
           <div class="mt-4">
-            <label class="block text-sm font-medium text-gray-700" for="confirmPassword">{{
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300" for="confirmPassword">{{
               $t('appAuth.confirmPassword')
             }}</label>
             <div class="mt-1">
@@ -596,7 +604,7 @@ onChangePasswordDone((res) => {
                 v-model="changePasswordInfo.confirmPassword"
                 @keydown="preventSpaceInput"
                 autocomplete="off"
-                class="focus:border-primary-500 focus:ring-primary-500 block w-full rounded-md border-gray-300 shadow-xs sm:text-sm"
+                class="focus:border-primary-500 focus:ring-primary-500 dark:bg-secondary-700 block w-full rounded-md border-gray-300 shadow-xs sm:text-sm dark:border-gray-600 dark:text-gray-100"
                 :placeholder="$t('appAuth.confirmPassword')"
                 type="password" />
             </div>

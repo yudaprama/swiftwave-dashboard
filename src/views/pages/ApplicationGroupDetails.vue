@@ -627,15 +627,16 @@ const applyChanges = async () => {
         <!--  Persistent Volume    -->
         <div v-else-if="pageName === 'persistent-volumes'" class="flex w-full flex-col gap-3">
           <div class="flex flex-row flex-wrap gap-2">
-            <div class="text-secondary-700 w-min cursor-pointer rounded-md px-2 py-2 text-sm font-medium">
+            <div
+              class="text-secondary-700 w-min cursor-pointer rounded-md px-2 py-2 text-sm font-medium dark:text-gray-300">
               {{ t('groups.applications') }}
             </div>
             <div
               v-for="application in applications"
               v-bind:key="application.id"
-              class="border-secondary-200 text-secondary-700 hover:bg-secondary-100 w-min cursor-pointer rounded-md border px-3 py-2 text-sm"
+              class="border-secondary-200 text-secondary-700 hover:bg-secondary-100 dark:hover:bg-secondary-700 w-min cursor-pointer rounded-md border px-3 py-2 text-sm dark:border-gray-700 dark:text-gray-300"
               :class="{
-                'border-secondary-400 bg-secondary-50':
+                'border-secondary-400 bg-secondary-50 dark:bg-secondary-700 dark:border-gray-500':
                   pageInfo.currentSelectedPersistentVolumeApplicationId === application.id
               }"
               @click="pageInfo.currentSelectedPersistentVolumeApplicationId = application.id">
@@ -659,15 +660,16 @@ const applyChanges = async () => {
         <!--  Environment Variables  -->
         <div v-else-if="pageName === 'environment-variables'" class="flex w-full flex-col gap-3">
           <div class="flex flex-row flex-wrap gap-2">
-            <div class="text-secondary-700 w-min cursor-pointer rounded-md px-2 py-2 text-sm font-medium">
+            <div
+              class="text-secondary-700 w-min cursor-pointer rounded-md px-2 py-2 text-sm font-medium dark:text-gray-300">
               {{ t('groups.applications') }}
             </div>
             <div
               v-for="application in applications"
               v-bind:key="application.id"
-              class="border-secondary-200 text-secondary-700 hover:bg-secondary-100 w-min cursor-pointer rounded-md border px-3 py-2 text-sm"
+              class="border-secondary-200 text-secondary-700 hover:bg-secondary-100 dark:hover:bg-secondary-700 w-min cursor-pointer rounded-md border px-3 py-2 text-sm dark:border-gray-700 dark:text-gray-300"
               :class="{
-                'border-secondary-400 bg-secondary-50':
+                'border-secondary-400 bg-secondary-50 dark:bg-secondary-700 dark:border-gray-500':
                   pageInfo.currentSelectedEnvironmentVariableApplicationId === application.id
               }"
               @click="pageInfo.currentSelectedEnvironmentVariableApplicationId = application.id">
@@ -688,15 +690,16 @@ const applyChanges = async () => {
         <!--   Config Mounts   -->
         <div v-else-if="pageName === 'static-app-config'" class="flex w-full flex-col gap-3">
           <div class="flex flex-row flex-wrap gap-2">
-            <div class="text-secondary-700 w-min cursor-pointer rounded-md px-2 py-2 text-sm font-medium">
+            <div
+              class="text-secondary-700 w-min cursor-pointer rounded-md px-2 py-2 text-sm font-medium dark:text-gray-300">
               {{ t('groups.applications') }}
             </div>
             <div
               v-for="application in applications"
               v-bind:key="application.id"
-              class="border-secondary-200 text-secondary-700 hover:bg-secondary-100 w-min cursor-pointer rounded-md border px-3 py-2 text-sm"
+              class="border-secondary-200 text-secondary-700 hover:bg-secondary-100 dark:hover:bg-secondary-700 w-min cursor-pointer rounded-md border px-3 py-2 text-sm dark:border-gray-700 dark:text-gray-300"
               :class="{
-                'border-secondary-400 bg-secondary-50':
+                'border-secondary-400 bg-secondary-50 dark:bg-secondary-700 dark:border-gray-500':
                   pageInfo.currentSelectedConfigMountApplicationId === application.id
               }"
               @click="pageInfo.currentSelectedConfigMountApplicationId = application.id">
@@ -750,11 +753,11 @@ const applyChanges = async () => {
 }
 
 .navbar {
-  @apply border-secondary-200 flex h-min w-full gap-1 overflow-x-auto rounded-lg border p-1.5 select-none md:w-auto md:flex-col md:overflow-x-visible;
+  @apply border-secondary-200 flex h-min w-full gap-1 overflow-x-auto rounded-lg border p-1.5 select-none md:w-auto md:flex-col md:overflow-x-visible dark:border-gray-700;
 }
 
 .nav-element {
-  @apply text-secondary-700 hover:bg-secondary-100 min-w-max cursor-pointer rounded-md px-3 py-2 text-sm md:min-w-44;
+  @apply text-secondary-700 hover:bg-secondary-100 dark:hover:bg-secondary-700 min-w-max cursor-pointer rounded-md px-3 py-2 text-sm md:min-w-44 dark:text-gray-300;
 }
 
 .router-link-exact-active {

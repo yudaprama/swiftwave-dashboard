@@ -42,16 +42,16 @@ const closeDropdown = () => {
     </button>
     <div
       v-if="isOpen"
-      class="absolute bottom-full left-0 mb-1 w-44 rounded-md border border-gray-200 bg-white py-1 shadow-lg"
+      class="dark:bg-secondary-800 absolute bottom-full left-0 mb-1 w-44 rounded-md border border-gray-200 bg-white py-1 shadow-lg dark:border-gray-700"
       role="menu">
       <button
         v-for="lang in languages"
         :key="lang.code"
         type="button"
         @click="setLocale(lang.code)"
-        class="focus-visible:outline-primary-600 flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 focus-visible:outline-2 focus-visible:outline-offset-0"
+        class="focus-visible:outline-primary-600 dark:hover:bg-secondary-700 flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 focus-visible:outline-2 focus-visible:outline-offset-0 dark:text-gray-200"
         role="menuitem"
-        :class="{ 'bg-gray-50 font-medium': locale === lang.code }">
+        :class="{ 'dark:bg-secondary-700 bg-gray-50 font-medium': locale === lang.code }">
         <span v-if="locale === lang.code">
           <font-awesome-icon icon="fa-solid fa-check" class="text-primary-600" aria-hidden="true" />
         </span>

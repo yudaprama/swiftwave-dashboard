@@ -1,64 +1,64 @@
 <script setup>
-import { computed, nextTick, onMounted, ref, shallowRef, watch } from 'vue'
-import ModalDialog from '@/views/components/ModalDialog.vue'
-import OutlinedButton from '@/views/components/OutlinedButton.vue'
-import DotLoader from '@/views/components/DotLoader.vue'
-import { useRouter } from 'vue-router'
+import { computed, nextTick, onMounted, ref, shallowRef, watch } from 'vue';
+import ModalDialog from '@/views/components/ModalDialog.vue';
+import OutlinedButton from '@/views/components/OutlinedButton.vue';
+import DotLoader from '@/views/components/DotLoader.vue';
+import { useRouter } from 'vue-router';
 
-const router = useRouter()
-const storeEndpoints = shallowRef(['https://raw.githubusercontent.com/swiftwave-org/app-store/main/store.json'])
-const apps = ref([])
-const appsShown = ref([])
-const searchText = ref('')
-const isOptionsModalOpen = ref(false)
-const selectedApp = ref({})
-const selectedCategory = ref('')
-const isLoading = ref(false)
+const router = useRouter();
+const storeEndpoints = shallowRef(['https://raw.githubusercontent.com/swiftwave-org/app-store/main/store.json']);
+const apps = ref([]);
+const appsShown = ref([]);
+const searchText = ref('');
+const isOptionsModalOpen = ref(false);
+const selectedApp = ref({});
+const selectedCategory = ref('');
+const isLoading = ref(false);
 
 watch(apps, () => {
-  if (!apps.value.length) return
-  searchApps()
-})
+  if (!apps.value.length) return;
+  searchApps();
+});
 
 onMounted(() => {
-  fetchApps()
-})
+  fetchApps();
+});
 
 const closeModal = () => {
-  isOptionsModalOpen.value = false
-}
+  isOptionsModalOpen.value = false;
+};
 
 const openModal = () => {
-  isOptionsModalOpen.value = true
-}
+  isOptionsModalOpen.value = true;
+};
 
 function fetchApps() {
-  isLoading.value = true
+  isLoading.value = true;
   // for each endpoint, fetch apps
   storeEndpoints.value.forEach((endpoint) => {
     fetch(endpoint)
       .then((response) => response.json())
       .then((data) => {
-        apps.value = apps.value.concat(data)
-        isLoading.value = false
+        apps.value = apps.value.concat(data);
+        isLoading.value = false;
       })
       .catch((error) => {
-        console.log(error)
-      })
-  })
+        console.log(error);
+      });
+  });
 }
 
 const categories = computed(() => {
-  const appCategories = new Set()
+  const appCategories = new Set();
   apps.value.forEach((app) => {
-    appCategories.add(app.category)
-  })
-  return Array.from(appCategories).sort()
-})
+    appCategories.add(app.category);
+  });
+  return Array.from(appCategories).sort();
+});
 
 function searchApps() {
   // split search text by space and search for each word
-  const searchWords = searchText.value.split(' ')
+  const searchWords = searchText.value.split(' ');
   appsShown.value = apps.value.filter((app) => {
     return (
       (selectedCategory.value === '' || app.category === selectedCategory.value) &&
@@ -66,29 +66,29 @@ function searchApps() {
         return (
           app.title.toLowerCase().includes(word.toLowerCase()) ||
           app.description.toLowerCase().includes(word.toLowerCase())
-        )
+        );
       })
-    )
-  })
+    );
+  });
 }
 
 const chooseApp = (app) => {
-  if (!app) return
+  if (!app) return;
   if (app.stacks.length === 1) {
-    openStackFileForInstall(app.stacks[0])
-    return
+    openStackFileForInstall(app.stacks[0]);
+    return;
   }
-  selectedApp.value = app
-  openModal()
-}
+  selectedApp.value = app;
+  openModal();
+};
 
 const chooseCategory = (category) => {
-  selectedCategory.value = category
-  searchText.value = ''
+  selectedCategory.value = category;
+  searchText.value = '';
   nextTick(() => {
-    searchApps()
-  })
-}
+    searchApps();
+  });
+};
 
 const openStackFileForInstall = (stack) => {
   router.push({
@@ -96,8 +96,8 @@ const openStackFileForInstall = (stack) => {
     query: {
       stack: stack.stack
     }
-  })
-}
+  });
+};
 </script>
 
 <template>
@@ -109,13 +109,15 @@ const openStackFileForInstall = (stack) => {
   <section v-else class="flex w-full flex-row items-start gap-2 overflow-hidden px-2 md:px-0">
     <div class="navbar">
       <input
-        class="block w-full rounded-md border-gray-300 text-sm shadow-xs focus:border-primary-500 focus:ring-primary-500"
+        class="focus:border-primary-500 focus:ring-primary-500 block w-full rounded-md border-gray-300 text-sm shadow-xs"
         :placeholder="$t('appStore.searchApps')"
         v-model="searchText"
         @keydown.enter="searchApps"
         v-debounce:200ms="searchApps"
         type="text" />
-      <div class="w-full select-none rounded-md px-2 py-2 text-sm font-medium text-black">{{ $t('appStore.chooseCategory') }}</div>
+      <div class="w-full rounded-md px-2 py-2 text-sm font-medium text-black select-none">
+        {{ $t('appStore.chooseCategory') }}
+      </div>
       <div
         class="nav-element"
         @click="chooseCategory('')"
@@ -140,11 +142,12 @@ const openStackFileForInstall = (stack) => {
       <!--    No app available -->
       <div v-if="appsShown.length === 0" class="flex h-full w-full flex-col items-center justify-center">
         <p class="text-5xl">🤔</p>
-        <p class="ml-4 mt-10 text-xl font-medium">{{ $t('appStore.noAppsFound') }}</p>
+        <p class="mt-10 ml-4 text-xl font-medium">{{ $t('appStore.noAppsFound') }}</p>
         <p class="mt-3">
           {{ $t('appStore.noAppsHint') }}
-          <a href="https://github.com/swiftwave-org/app-store" target="_blank" class="font-semibold text-primary-600"
-            >{{ $t('appStore.swiftwaveAppStore') }}</a
+          <a href="https://github.com/swiftwave-org/app-store" target="_blank" class="text-primary-600 font-semibold">{{
+            $t('appStore.swiftwaveAppStore')
+          }}</a
           >.
         </p>
       </div>
@@ -155,9 +158,9 @@ const openStackFileForInstall = (stack) => {
           @click="() => chooseApp(app)"
           v-for="app in appsShown"
           :key="app.id"
-          class="flex h-[200px] cursor-pointer flex-col overflow-hidden rounded-xl border border-secondary-300 dark:border-gray-600 p-2 hover:border-primary-500 hover:shadow-xs">
+          class="border-secondary-300 hover:border-primary-500 flex h-[200px] cursor-pointer flex-col overflow-hidden rounded-xl border p-2 hover:shadow-xs dark:border-gray-600">
           <!--    Header    -->
-          <div class="flex flex-row gap-3 border-b dark:border-gray-700 pb-2">
+          <div class="flex flex-row gap-3 border-b pb-2 dark:border-gray-700">
             <div class="h-12 w-12 rounded-md p-1.5">
               <img :src="app.logo" class="h-full w-full" :alt="app.title" />
             </div>
@@ -167,7 +170,8 @@ const openStackFileForInstall = (stack) => {
             </div>
           </div>
           <!--    Description Body    -->
-          <div class="mt-2 h-full overflow-hidden text-ellipsis p-1 text-justify text-sm text-secondary-800 dark:text-gray-300">
+          <div
+            class="text-secondary-800 mt-2 h-full overflow-hidden p-1 text-justify text-sm text-ellipsis dark:text-gray-300">
             {{ app.description }}
           </div>
         </div>
@@ -200,19 +204,19 @@ const openStackFileForInstall = (stack) => {
 }
 
 .scrollbox::-webkit-scrollbar-track {
-  @apply rounded-full bg-gray-200;
+  @apply rounded-full bg-gray-200 dark:bg-gray-700;
 }
 
 .scrollbox::-webkit-scrollbar-thumb {
-  @apply rounded-full bg-primary-500;
+  @apply bg-primary-500 rounded-full;
 }
 
 .navbar {
-  @apply flex h-min min-w-[200px] max-w-[200px] select-none flex-col flex-wrap gap-1 rounded-lg border border-secondary-300 dark:border-gray-600 p-1.5;
+  @apply border-secondary-300 flex h-min max-w-[200px] min-w-[200px] flex-col flex-wrap gap-1 rounded-lg border p-1.5 select-none dark:border-gray-600;
 }
 
 .nav-element {
-  @apply min-w-max cursor-pointer rounded-md px-3 py-2 text-sm text-secondary-700 hover:bg-secondary-100;
+  @apply text-secondary-700 hover:bg-secondary-100 dark:hover:bg-secondary-700 min-w-max cursor-pointer rounded-md px-3 py-2 text-sm dark:text-gray-300;
 }
 
 .nav-active {

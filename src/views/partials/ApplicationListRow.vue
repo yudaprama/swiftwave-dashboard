@@ -1,12 +1,12 @@
 <script setup>
-import TableRow from '@/views/components/Table/TableRow.vue'
-import FilledButton from '@/views/components/FilledButton.vue'
-import { computed } from 'vue'
-import moment from 'moment'
-import router from '@/router/index.js'
-import { camelCaseToSpacedCapitalized } from '@/vendor/utils.js'
-import StatusBadge from '@/views/components/StatusBadge.vue'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import TableRow from '@/views/components/Table/TableRow.vue';
+import FilledButton from '@/views/components/FilledButton.vue';
+import { computed } from 'vue';
+import moment from 'moment';
+import router from '@/router/index.js';
+import { camelCaseToSpacedCapitalized } from '@/vendor/utils.js';
+import StatusBadge from '@/views/components/StatusBadge.vue';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 const props = defineProps({
   application: {
@@ -17,14 +17,14 @@ const props = defineProps({
     type: Boolean,
     default: true
   }
-})
+});
 
 const createdAtFormatted = computed(() => {
-  return moment(props.application.latestDeployment.createdAt).format('DD/MM/YYYY HH:mm')
-})
+  return moment(props.application.latestDeployment.createdAt).format('DD/MM/YYYY HH:mm');
+});
 const viewApplicationDetails = () => {
-  router.push(`/application/${props.application.id}/deployments`)
-}
+  router.push(`/application/${props.application.id}/deployments`);
+};
 </script>
 
 <template>
@@ -52,23 +52,29 @@ const viewApplicationDetails = () => {
       <div
         v-else-if="application.realtimeInfo.HealthStatus === 'healthy'"
         class="flex flex-row items-center text-sm text-gray-700 dark:text-gray-300">
-        <font-awesome-icon icon="fa-solid fa-heart-circle-check" class="me-1 text-success-500" />
+        <font-awesome-icon icon="fa-solid fa-heart-circle-check" class="text-success-500 me-1" />
         {{ $t('partials.healthy') }}
       </div>
       <div
         v-else-if="application.realtimeInfo.HealthStatus === 'unhealthy'"
         class="flex flex-row items-center text-sm text-gray-700 dark:text-gray-300">
-        <font-awesome-icon icon="fa-solid fa-heart-circle-exclamation" class="me-1 text-danger-500" />
+        <font-awesome-icon icon="fa-solid fa-heart-circle-exclamation" class="text-danger-500 me-1" />
         {{ $t('partials.unhealthy') }}
       </div>
       <div v-else class="text-sm text-gray-700 dark:text-gray-300">----</div>
     </TableRow>
     <!-- Replicas -->
     <TableRow v-if="application.realtimeInfo.InfoFound" align="center">
-      <div v-if="application.realtimeInfo.DeploymentMode === 'replicated'" class="text-sm text-gray-700 dark:text-gray-300">
+      <div
+        v-if="application.realtimeInfo.DeploymentMode === 'replicated'"
+        class="text-sm text-gray-700 dark:text-gray-300">
         {{ application.realtimeInfo.RunningReplicas }} / {{ application.realtimeInfo.DesiredReplicas }}
       </div>
-      <div v-else-if="application.realtimeInfo.DeploymentMode === 'global'" class="text-sm text-gray-700 dark:text-gray-300">{{ $t('partials.global') }}</div>
+      <div
+        v-else-if="application.realtimeInfo.DeploymentMode === 'global'"
+        class="text-sm text-gray-700 dark:text-gray-300">
+        {{ $t('partials.global') }}
+      </div>
     </TableRow>
     <TableRow v-else align="center">
       <div class="text-sm text-gray-700 dark:text-gray-300">----</div>
@@ -84,42 +90,42 @@ const viewApplicationDetails = () => {
         >{{ camelCaseToSpacedCapitalized(application.latestDeployment.status) }}
       </StatusBadge>
       <StatusBadge
-        class="text-gray-700"
+        class="text-gray-700 dark:text-gray-300"
         v-else-if="application.latestDeployment.status === 'pending'"
         type="warning"
         small
         >{{ camelCaseToSpacedCapitalized(application.latestDeployment.status) }}
       </StatusBadge>
       <StatusBadge
-        class="text-gray-700"
+        class="text-gray-700 dark:text-gray-300"
         v-else-if="application.latestDeployment.status === 'deployPending'"
         type="warning"
         small
         >{{ camelCaseToSpacedCapitalized(application.latestDeployment.status) }}
       </StatusBadge>
       <StatusBadge
-        class="text-gray-700"
+        class="text-gray-700 dark:text-gray-300"
         v-else-if="application.latestDeployment.status === 'deploying'"
         type="warning"
         small
         >{{ camelCaseToSpacedCapitalized(application.latestDeployment.status) }}
       </StatusBadge>
       <StatusBadge
-        class="text-gray-700"
+        class="text-gray-700 dark:text-gray-300"
         v-else-if="application.latestDeployment.status === 'failed'"
         type="danger"
         small
         >{{ camelCaseToSpacedCapitalized(application.latestDeployment.status) }}
       </StatusBadge>
       <StatusBadge
-        class="text-gray-700"
+        class="text-gray-700 dark:text-gray-300"
         v-else-if="application.latestDeployment.status === 'stopped'"
         type="secondary"
         small
         >{{ camelCaseToSpacedCapitalized(application.latestDeployment.status) }}
       </StatusBadge>
       <StatusBadge
-        class="text-gray-700"
+        class="text-gray-700 dark:text-gray-300"
         v-else-if="application.latestDeployment.status === 'stalled'"
         type="secondary"
         small
@@ -127,7 +133,7 @@ const viewApplicationDetails = () => {
       </StatusBadge>
     </TableRow>
     <TableRow align="center">
-      <span class="text-sm text-gray-700"> {{ createdAtFormatted }} </span>
+      <span class="text-sm text-gray-700 dark:text-gray-300"> {{ createdAtFormatted }} </span>
     </TableRow>
     <TableRow align="right" flex>
       <FilledButton :click="viewApplicationDetails" slim type="primary">{{ $t('partials.viewDetails') }}</FilledButton>
