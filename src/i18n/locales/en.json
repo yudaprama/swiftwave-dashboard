@@ -129,9 +129,9 @@
   "login": {
     "title": "@:brand.name",
     "subtitle": "open source paas",
-    "heading1": "Simple Lightweight",
-    "heading2": "PaaS",
-    "heading3": "for self-hosting",
+    "heading1": "Deploy Your Apps",
+    "heading2": "in a Matter of",
+    "heading3": "Minutes",
     "github": "Github",
     "reportBug": "Report Bug",
     "joinCommunity": "Join our community",
