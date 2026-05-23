@@ -128,9 +128,9 @@
   "login": {
     "title": "@:brand.name",
     "subtitle": "open source paas",
-    "heading1": "Simple Lightweight",
-    "heading2": "PaaS",
-    "heading3": "untuk self-hosting",
+    "heading1": "Deploy Aplikasi Kamu",
+    "heading2": "dalam Hitungan",
+    "heading3": "Menit",
     "github": "Github",
     "reportBug": "Laporkan Bug",
     "joinCommunity": "Bergabung komunitas kami",
