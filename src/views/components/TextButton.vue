@@ -41,7 +41,7 @@ const onClick = () => {
       'text-warning-600 dark:text-warning-400': type === 'warning',
       'cursor-not-allowed! text-gray-400!': disabled
     }"
-    class="cursor-pointer"
+    class="interactive cursor-pointer inline-flex items-center justify-center min-h-[44px] min-w-[44px] rounded-md px-2 py-1.5 focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600 dark:focus-visible:outline-primary-400"
     @click.prevent="onClick">
     <slot v-if="!loading"></slot>
     <DotLoader v-else />

@@ -43,7 +43,7 @@ const openDetailsModal = () => {
   <!-- Git Credential details modal -->
   <GitCredentialDetailsModal :git-credential-id="gitCredential.id" ref="gitCredentialDetailsModalRef" />
 
-  <tr>
+  <tr class="table-row-interactive">
     <TableRow align="left">
       <div class="text-sm font-medium text-gray-900">
         {{ gitCredential.name }}

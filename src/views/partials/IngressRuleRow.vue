@@ -99,7 +99,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <tr :key="ingressRule.id">
+  <tr :key="ingressRule.id" class="table-row-interactive">
     <TableRow align="left">
       <div class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ ingressRule.id }}</div>
     </TableRow>

@@ -28,7 +28,7 @@ const viewApplicationDetails = () => {
 </script>
 
 <template>
-  <tr v-show="isVisible">
+  <tr v-show="isVisible" class="table-row-interactive">
     <TableRow align="left">
       <div class="text-sm font-medium text-gray-900 dark:text-gray-100">
         <span v-if="application.latestDeployment.upstreamType === 'git'">

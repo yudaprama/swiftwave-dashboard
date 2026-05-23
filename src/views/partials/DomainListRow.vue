@@ -59,7 +59,7 @@ const verifyDnsPointing = async () => {
 </script>
 
 <template>
-  <tr>
+  <tr class="table-row-interactive">
     <TableRow align="left">
       <div class="text-sm font-medium text-gray-900 dark:text-gray-100">{{ domain.name }}</div>
     </TableRow>

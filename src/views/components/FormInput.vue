@@ -75,7 +75,7 @@ const helperId = computed(() => `${props.id}-helper`)
       :aria-invalid="error ? 'true' : undefined"
       :aria-describedby="hasHelperText ? helperId : undefined"
       :aria-required="required ? 'true' : undefined"
-      class="block w-full rounded-md border px-3 py-2 text-sm shadow-xs transition-colors focus:outline-none focus:ring-2 focus:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50"
+      class="interactive block w-full rounded-md border px-3 py-2 text-sm shadow-xs focus:outline-none focus:ring-2 focus:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50"
       :class="{
         'border-gray-300 bg-white text-gray-900 placeholder-gray-400 focus:border-primary-500 focus:ring-primary-500 dark:border-gray-600 dark:bg-secondary-700 dark:text-gray-100 dark:placeholder-gray-500 dark:focus:border-primary-400 dark:focus:ring-primary-400': !error,
         'border-danger-500 bg-white text-gray-900 placeholder-gray-400 focus:border-danger-500 focus:ring-danger-500 dark:border-danger-400 dark:bg-secondary-700 dark:text-gray-100 dark:placeholder-gray-500 dark:focus:border-danger-400 dark:focus:ring-danger-400': error

@@ -35,7 +35,7 @@ const openEditModal = () => {
     ref="updateImageRegistryCredential"
     :callback-on-pop="onUpdateImageRegistryCredential" />
 
-  <tr>
+  <tr class="table-row-interactive">
     <TableRow align="left">
       <div class="text-sm font-medium text-gray-900">
         {{ imageRegistryCredential.url }}

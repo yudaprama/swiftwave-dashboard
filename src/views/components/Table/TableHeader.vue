@@ -17,7 +17,7 @@ defineProps({
       'text-center': align === 'center',
       'text-right': align === 'right'
     }"
-    class="px-4 py-3.5 text-sm font-normal text-gray-700 dark:text-gray-300"
+    class="px-4 py-3.5 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400"
     scope="col">
     <span>
       <slot></slot>

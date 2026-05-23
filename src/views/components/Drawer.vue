@@ -81,7 +81,13 @@ defineProps({
   .sidebar {
     opacity: 0;
     transform: translateX(100%);
+    box-shadow: -8px 0 24px rgba(0, 0, 0, 0);
   }
+}
+
+.v-enter-to .sidebar,
+.v-leave-from .sidebar {
+  box-shadow: -8px 0 24px rgba(0, 0, 0, 0.12);
 }
 
 .body::-webkit-scrollbar {

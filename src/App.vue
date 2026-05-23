@@ -90,7 +90,7 @@ const isShowSideBar = computed(() => {
       <SideBar :collapsed="isSidebarCollapsed" />
       <button
         type="button"
-        class="dark:bg-secondary-700 dark:hover:bg-secondary-600 absolute top-8 -right-3 z-10 flex h-6 w-6 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 shadow-sm transition-colors hover:bg-gray-50 dark:border-gray-600 dark:text-gray-400"
+        class="interactive dark:bg-secondary-700 dark:hover:bg-secondary-600 absolute top-8 -right-3 z-10 flex h-8 w-8 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 shadow-sm hover:bg-gray-50 dark:border-gray-600 dark:text-gray-400"
         :aria-label="isSidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'"
         @click="toggleSidebar">
         <font-awesome-icon
@@ -108,7 +108,18 @@ const isShowSideBar = computed(() => {
         'p-4': !isLoginPage
       }">
       <Breadcrumb class="mb-4" />
-      <RouterView />
+      <RouterView v-slot="{ Component, route }">
+        <Transition
+          mode="out-in"
+          enter-active-class="transition duration-200 ease-out"
+          enter-from-class="opacity-0 translate-y-1"
+          enter-to-class="opacity-100 translate-y-0"
+          leave-active-class="transition duration-150 ease-in"
+          leave-from-class="opacity-100 translate-y-0"
+          leave-to-class="opacity-0 -translate-y-1">
+          <component :is="Component" :key="route.path" />
+        </Transition>
+      </RouterView>
     </main>
     <GlobalWarning />
   </div>

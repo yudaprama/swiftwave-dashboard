@@ -46,7 +46,7 @@ const viewApplicationGroupDetails = () => {
 </script>
 
 <template>
-  <tr v-show="isVisible">
+  <tr v-show="isVisible" class="table-row-interactive">
     <TableRow align="left">
       <div class="flex items-center gap-2 text-sm font-medium text-gray-900">
         <img v-if="project.logo" :src="project.logo" class="h-4 w-4 rounded-xs" alt="logo" />

@@ -4,6 +4,7 @@ import FilledButton from '@/views/components/FilledButton.vue'
 import { useRouter } from 'vue-router'
 import TableHeader from '@/views/components/Table/TableHeader.vue'
 import TableMessage from '@/views/components/Table/TableMessage.vue'
+import SkeletonTable from '@/views/components/SkeletonTable.vue'
 import Table from '@/views/components/Table/Table.vue'
 import { useQuery } from '@vue/apollo-composable'
 import gql from 'graphql-tag'
@@ -144,12 +145,10 @@ const applicationGroups = computed(() => applicationGroupsResult.value?.applicat
         <TableHeader align="right">{{ $t('applications.viewDetails') }}</TableHeader>
       </template>
       <template v-slot:message>
-        <TableMessage v-if="applications.length === 0">
+        <SkeletonTable v-if="isApplicationsLoading && applications.length === 0" :rows="5" :columns="6" />
+        <TableMessage v-if="applications.length === 0 && !isApplicationsLoading">
           {{ $t('applications.noApps') }}<br />
           {{ $t('applications.clickDeploy') }}
-        </TableMessage>
-        <TableMessage v-if="isApplicationsLoading && applications.length === 0">
-          {{ $t('applications.loadingApps') }}
         </TableMessage>
       </template>
       <template v-slot:body>

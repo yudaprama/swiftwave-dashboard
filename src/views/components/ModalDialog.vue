@@ -70,7 +70,7 @@ const closeModalWithValidation = () => {
                 <!-- Close button -->
                 <button
                   v-show="!nonCancelable"
-                  class="absolute top-4 right-4 rounded-md border-2 p-1 text-gray-400 transition-shadow duration-200 hover:text-gray-500 hover:ring-2 hover:ring-gray-400"
+                  class="interactive absolute top-4 right-4 rounded-md border-2 p-2 text-gray-400 hover:text-gray-500 hover:ring-2 hover:ring-gray-400"
                   type="button"
                   :aria-label="$t('common.close')"
                   @click="closeModalWithValidation">

@@ -148,10 +148,21 @@ onBeforeUnmount(() => {
     class="scrollbox bg-primary-600 dark:bg-secondary-900 flex h-screen flex-col overflow-y-auto border-r px-2 pt-6 pb-2 transition-all duration-300 dark:border-gray-700"
     :class="collapsed ? 'w-16 items-center' : 'w-80'">
     <div :class="collapsed ? 'px-0' : 'px-3'">
-      <RouterLink to="/" class="flex items-center justify-center">
-        <img v-if="!collapsed" :src="Logo" :alt="t('brand.name') + ' logo'" class="w-full max-w-40" />
-        <img v-else src="@/assets/images/logo.png" :alt="t('brand.name')" class="h-8 w-8" />
-      </RouterLink>
+      <Transition
+        mode="out-in"
+        enter-active-class="transition-opacity duration-200"
+        enter-from-class="opacity-0"
+        enter-to-class="opacity-100"
+        leave-active-class="transition-opacity duration-150"
+        leave-from-class="opacity-100"
+        leave-to-class="opacity-0">
+        <RouterLink v-if="!collapsed" to="/" class="flex items-center justify-center" key="full">
+          <img :src="Logo" :alt="t('brand.name') + ' logo'" class="w-full max-w-40" />
+        </RouterLink>
+        <RouterLink v-else to="/" class="flex items-center justify-center" key="icon">
+          <img src="@/assets/images/logo.png" :alt="t('brand.name')" class="h-8 w-8" />
+        </RouterLink>
+      </Transition>
     </div>
     <div class="mt-6 flex flex-1 flex-col justify-between">
       <nav>

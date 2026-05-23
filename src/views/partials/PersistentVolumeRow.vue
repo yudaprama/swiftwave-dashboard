@@ -146,7 +146,7 @@ const createBackup = () => {
       </template>
     </ModalDialog>
   </Teleport>
-  <tr :key="volume.id">
+  <tr :key="volume.id" class="table-row-interactive">
     <TableRow align="left">
       <div class="text-sm font-medium text-gray-900">
         <Badge class="mr-1" type="success" v-if="volume.type === 'local'">Local</Badge>

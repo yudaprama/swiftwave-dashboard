@@ -7,7 +7,7 @@ const themeStore = useThemeStore()
 <template>
   <button
     type="button"
-    class="rounded-md p-1.5 text-gray-200 transition-colors hover:bg-gray-200/20"
+    class="interactive rounded-md p-2.5 text-gray-200 hover:bg-gray-200/20"
     :aria-label="themeStore.isDark ? 'Switch to light mode' : 'Switch to dark mode'"
     @click="themeStore.toggleTheme()">
     <font-awesome-icon
