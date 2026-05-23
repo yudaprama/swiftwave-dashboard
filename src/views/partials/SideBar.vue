@@ -149,8 +149,8 @@ onBeforeUnmount(() => {
     :class="collapsed ? 'w-16 items-center' : 'w-80'">
     <div :class="collapsed ? 'px-0' : 'px-3'">
       <RouterLink to="/" class="flex items-center justify-center">
-        <img v-if="!collapsed" :src="Logo" alt="SwiftWave logo" class="w-full max-w-40" />
-        <img v-else src="@/assets/images/logo.png" alt="SwiftWave" class="h-8 w-8" />
+        <img v-if="!collapsed" :src="Logo" :alt="t('brand.name') + ' logo'" class="w-full max-w-40" />
+        <img v-else src="@/assets/images/logo.png" :alt="t('brand.name')" class="h-8 w-8" />
       </RouterLink>
     </div>
     <div class="mt-6 flex flex-1 flex-col justify-between">

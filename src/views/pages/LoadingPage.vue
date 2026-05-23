@@ -12,7 +12,7 @@ defineProps({
 
 <template>
 <div class="loading-page" v-show="show">
-  <img alt="swiftwave brand logo" :src="logo" class="h-20" />
+  <img :alt="$t('brand.name') + ' logo'" :src="logo" class="h-20" />
   <div class="spinner-box">
     <div class="pulse-container">
       <div class="pulse-bubble pulse-bubble-1"></div>

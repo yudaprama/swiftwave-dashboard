@@ -36,7 +36,7 @@ onMounted(async () => {
   <div class="flex h-full w-full items-center justify-center bg-[#F9F8F8] dark:bg-secondary-900">
     <div class="w-full max-w-md rounded-lg bg-white p-8 shadow-lg dark:bg-secondary-800">
       <div class="mb-6 text-center">
-        <img src="@/assets/images/logo.png" class="mx-auto mb-4 w-14" alt="swiftwave logo" />
+        <img src="@/assets/images/logo.png" class="mx-auto mb-4 w-14" :alt="t('brand.name') + ' logo'" />
         <h1 class="font-prompt text-2xl">{{ $t('login.title') }}</h1>
       </div>
 

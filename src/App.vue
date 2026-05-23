@@ -1,6 +1,6 @@
 <script setup>
 import { RouterView, useRouter } from 'vue-router';
-import { computed, onBeforeMount, onMounted, ref } from 'vue';
+import { computed, onBeforeMount, onMounted, ref, watchEffect } from 'vue';
 import { useAuthStore } from '@/store/auth.js';
 import { useThemeStore } from '@/store/theme.js';
 import SideBar from '@/views/partials/SideBar.vue';
@@ -37,6 +37,10 @@ onMounted(() => {
   });
 });
 
+watchEffect(() => {
+  document.title = t('brand.name');
+});
+
 const isLoginPage = computed(() => router.currentRoute.value.name === 'Login');
 const isShowSideBar = computed(() => {
   if (!authStore.IsLoggedIn) {
@@ -71,7 +75,7 @@ const isShowSideBar = computed(() => {
         <font-awesome-icon icon="fa-solid fa-bars" class="text-lg" />
       </button>
       <RouterLink to="/">
-        <img src="@/assets/images/logo.png" alt="SwiftWave" class="h-8" />
+        <img src="@/assets/images/logo.png" :alt="t('brand.name')" class="h-8" />
       </RouterLink>
       <div class="w-10" />
     </header>

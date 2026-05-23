@@ -201,7 +201,7 @@ defineExpose({
               newPersistentVolumeDetails.nfsConfig.version === '3'
             ">
             <p class="block text-justify text-sm text-gray-900 dark:text-gray-100">
-              During the installation of <b>swiftwave</b>, <b>rpcbind</b> service has been disabled to keep the servers
+              During the installation of <b>{{ $t('brand.name') }}</b>, <b>rpcbind</b> service has been disabled to keep the servers
               secured. But, NFS v2, v3 has requirement of <b>rpcbind</b> service. Kindly enable <b>rpcbind</b> service
               on the servers before proceeding.
 

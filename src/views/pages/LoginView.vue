@@ -26,7 +26,7 @@ const login = () => {
       class="dark:bg-secondary-900 relative flex min-h-[46dvh] min-w-0 flex-col items-center justify-between bg-[#F9F8F8] px-4 py-8 text-center select-none md:h-full md:min-w-[60vw] md:justify-start md:px-6 md:pt-52 md:text-left">
       <!--   Logo with title/subtitle   -->
       <div class="flex w-fit flex-row items-center justify-center gap-2">
-        <img src="@/assets/images/logo.png" class="w-12 md:w-14" alt="SwiftWave logo" />
+        <img src="@/assets/images/logo.png" class="w-12 md:w-14" :alt="$t('brand.name') + ' logo'" />
         <div class="flex flex-col items-start justify-between">
           <p class="font-prompt text-2xl text-gray-900 md:text-3xl dark:text-gray-100">{{ $t('login.title') }}</p>
           <p class="font-prompt text-sm text-gray-700 md:text-base dark:text-gray-300">{{ $t('login.subtitle') }}</p>

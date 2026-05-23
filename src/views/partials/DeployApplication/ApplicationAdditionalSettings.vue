@@ -559,7 +559,7 @@ const openConfigureDeploymentPreferredServers = () => {
             <p class="font-medium">Docker Socket Proxy Usage Guide</p>
             <p class="mt-2">
               1. Use <span class="font-semibold" v-html="`{{DOCKER_PROXY_HOST}}`"></span> as value of environment
-              variable. While deploying app, swiftwave will inject the docker proxy host.
+              variable. While deploying app, {{ $t('brand.name') }} will inject the docker proxy host.
             </p>
           </div>
         </div>

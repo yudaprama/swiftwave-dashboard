@@ -40,7 +40,7 @@ const register = async () => {
   <div class="flex h-full w-full flex-row">
     <div class="relative flex h-full min-w-[60vw] select-none flex-col items-center bg-[#F9F8F8] pt-52 dark:bg-secondary-900">
       <div class="flex w-fit flex-row items-center justify-center gap-2">
-        <img src="@/assets/images/logo.png" class="w-14" alt="swiftwave logo" />
+        <img src="@/assets/images/logo.png" class="w-14" :alt="t('brand.name') + ' logo'" />
         <div class="flex flex-col items-start justify-between">
           <p class="font-prompt text-3xl">{{ $t('login.title') }}</p>
           <p class="font-prompt text-base">{{ $t('login.subtitle') }}</p>
