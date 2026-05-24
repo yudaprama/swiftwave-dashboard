@@ -3,12 +3,13 @@ import { computed, nextTick, onMounted, ref, watch } from 'vue';
 import ModalDialog from '@/views/components/ModalDialog.vue';
 import OutlinedButton from '@/views/components/OutlinedButton.vue';
 import DotLoader from '@/views/components/DotLoader.vue';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import { getHttpBaseUrl } from '@/vendor/utils.js';
 import { useAuthStore } from '@/store/auth.js';
 import { toast } from 'vue-sonner';
 
 const router = useRouter();
+const route = useRoute();
 const authStore = useAuthStore();
 const apps = ref([]);
 const appsShown = ref([]);
@@ -29,8 +30,19 @@ watch(apps, () => {
   searchApps();
 });
 
-onMounted(() => {
-  fetchApps();
+onMounted(async () => {
+  await fetchApps();
+  // Auto-trigger renewal if query params present
+  if (route.query.renew === 'true') {
+    const catalogId = parseInt(route.query.catalog_id);
+    const stackId = parseInt(route.query.stack_id);
+    const groupId = route.query.group_id || null;
+    const app = apps.value.find((a) => a.id === catalogId);
+    const stack = app?.stacks?.find((s) => s.id === stackId);
+    if (app && stack) {
+      startCheckout(app, stack, groupId);
+    }
+  }
 });
 
 const closeModal = () => {
@@ -51,7 +63,7 @@ const openModal = () => {
 
 function fetchApps() {
   isLoading.value = true;
-  fetch(`${getHttpBaseUrl()}/api/app-catalog`, {
+  return fetch(`${getHttpBaseUrl()}/api/app-catalog`, {
     headers: {
       Authorization: authStore.FetchBearerToken()
     }
@@ -129,20 +141,24 @@ const openStackFileForInstall = (stack, app = selectedApp.value, purchase = null
   });
 };
 
-const startCheckout = async (app, stack) => {
+const startCheckout = async (app, stack, applicationGroupID = null) => {
   checkoutLoading.value = true;
   checkoutPurchase.value = null;
   checkoutStack.value = stack;
   selectedApp.value = app;
   isCheckoutModalOpen.value = true;
   try {
+    const body = {};
+    if (applicationGroupID) {
+      body.application_group_id = applicationGroupID;
+    }
     const response = await fetch(`${getHttpBaseUrl()}/api/app-catalog/${app.id}/stacks/${stack.id}/checkout`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Authorization: authStore.FetchBearerToken()
       },
-      body: JSON.stringify({})
+      body: JSON.stringify(body)
     });
     const data = await response.json();
     if (!response.ok) {

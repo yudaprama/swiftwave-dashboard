@@ -194,7 +194,15 @@
     "noAppsHint": "Jika menurut Anda aplikasi seharusnya ada di sini, Ajukan permintaan di",
     "swiftwaveAppStore": "@:brand.name App Store",
     "install": "Instal",
-    "chooseVersion": "Pilih versi yang diinginkan -"
+    "chooseVersion": "Pilih versi yang diinginkan -",
+    "expiredTitle": "Akses berbayar telah kedaluwarsa",
+    "expiredMessage": "Pengelolaan aplikasi ini dibatasi. Perbarui akses Anda untuk melanjutkan penggunaan.",
+    "renewAccess": "Perbarui Akses",
+    "accessExpires": "Akses kedaluwarsa",
+    "checkoutTitle": "Pembayaran",
+    "payNow": "Bayar Sekarang",
+    "paymentPending": "Menunggu pembayaran...",
+    "paymentConfirmed": "Pembayaran dikonfirmasi!"
   },
   "applications": {
     "deployedServices": "Layanan yang Dideploy",

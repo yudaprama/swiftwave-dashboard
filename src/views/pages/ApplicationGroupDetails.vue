@@ -20,10 +20,48 @@ import { v4 as uuidv4 } from 'uuid';
 import PersistentVolumeBindingEditor from '@/views/partials/DeployApplication/PersistentVolumeBindingEditor.vue';
 import ConfigMountsEditor from '@/views/partials/DeployApplication/ConfigMountsEditor.vue';
 import FilledButton from '@/views/components/FilledButton.vue';
+import OutlinedButton from '@/views/components/OutlinedButton.vue';
+import { getHttpBaseUrl } from '@/vendor/utils.js';
+import { useAuthStore } from '@/store/auth.js';
 
 // Get the application ID from the URL
 const router = useRouter();
 const applicationGroupId = router.currentRoute.value.params.id;
+const authStore = useAuthStore();
+
+// Paid app catalog expiry state
+const catalogPurchaseInfo = ref(null);
+const isPaidAppExpired = computed(() => catalogPurchaseInfo.value?.status === 'expired');
+
+const fetchPurchaseInfo = async () => {
+  try {
+    // Use first application in group to look up purchase info
+    const firstApp = applications.value?.[0];
+    if (!firstApp) return;
+    const response = await fetch(
+      `${getHttpBaseUrl()}/api/app-catalog/applications/${firstApp.id}/purchase-info`,
+      { headers: { Authorization: authStore.FetchBearerToken() } }
+    );
+    if (response.ok) {
+      catalogPurchaseInfo.value = await response.json();
+    }
+  } catch {
+    // Not a paid app or no purchase found — ignore
+  }
+};
+
+const renewPaidAccess = () => {
+  if (!catalogPurchaseInfo.value) return;
+  router.push({
+    name: 'App Store',
+    query: {
+      renew: 'true',
+      catalog_id: catalogPurchaseInfo.value.catalog_id,
+      stack_id: catalogPurchaseInfo.value.stack_id,
+      group_id: applicationGroupId
+    }
+  });
+};
 
 // Fetch the application details
 const {
@@ -158,6 +196,10 @@ onErrorGroupApplicationDetails(() => {
 });
 
 onResultGroupApplicationDetails(() => {
+  // Fetch purchase info for paid app expiry check
+  if (!catalogPurchaseInfo.value && applications.value?.length > 0) {
+    fetchPurchaseInfo();
+  }
   for (const application of applications.value) {
     let envVariablesMap = {};
     application.environmentVariables.forEach((variable) => {
@@ -502,6 +544,21 @@ const applyChanges = async () => {
         </div>
       </div>
     </div>
+    <!-- Expired paid app banner -->
+    <div
+      v-if="isPaidAppExpired"
+      class="mt-3 flex flex-col gap-2 rounded-lg border border-amber-400 bg-amber-50 p-4 sm:flex-row sm:items-center sm:justify-between dark:border-amber-600 dark:bg-amber-900/30">
+      <div class="flex items-start gap-3">
+        <font-awesome-icon icon="fa-solid fa-triangle-exclamation" class="mt-0.5 text-amber-600 dark:text-amber-400" />
+        <div>
+          <p class="font-semibold text-amber-800 dark:text-amber-200">{{ t('appStore.expiredTitle') }}</p>
+          <p class="text-sm text-amber-700 dark:text-amber-300">{{ t('appStore.expiredMessage') }}</p>
+        </div>
+      </div>
+      <OutlinedButton type="primary" :click="renewPaidAccess" class="shrink-0">
+        {{ t('appStore.renewAccess') }}
+      </OutlinedButton>
+    </div>
     <!--  Second line  -->
     <div class="mt-3.5 flex w-full flex-col gap-3 md:flex-row md:items-center md:justify-between">
       <div class="flex min-w-0 gap-2">
@@ -550,12 +607,12 @@ const applyChanges = async () => {
       <!--    Quick Actions    -->
       <div class="quick-actions">
         <div class="divider"></div>
-        <button type="button" class="button" @click="rebuildApplications">
+        <button type="button" class="button" :disabled="isPaidAppExpired" @click="rebuildApplications">
           <font-awesome-icon icon="fa-solid fa-hammer" class="mr-1" aria-hidden="true" />
           {{ t('groups.rebuildDeploy') }}
         </button>
         <div class="divider"></div>
-        <button type="button" class="button" @click="restartApplications">
+        <button type="button" class="button" :disabled="isPaidAppExpired" @click="restartApplications">
           <font-awesome-icon icon="fa-solid fa-rotate-right" class="mr-1" aria-hidden="true" />
           {{ t('groups.restartAll') }}
         </button>
@@ -744,7 +801,7 @@ const applyChanges = async () => {
   @apply border-secondary-300 text-secondary-700 flex w-full flex-wrap overflow-hidden rounded-lg border text-sm md:w-auto md:rounded-full;
 
   .button {
-    @apply hover:bg-secondary-200 focus-visible:bg-secondary-200 focus-visible:outline-primary-600 dark:focus-visible:outline-primary-400 min-h-10 flex-1 cursor-pointer px-2.5 py-1 focus-visible:outline-2 focus-visible:outline-offset-2 md:min-h-0 md:flex-none dark:hover:bg-gray-700 dark:focus-visible:bg-gray-700;
+    @apply hover:bg-secondary-200 focus-visible:bg-secondary-200 focus-visible:outline-primary-600 dark:focus-visible:outline-primary-400 min-h-10 flex-1 cursor-pointer px-2.5 py-1 focus-visible:outline-2 focus-visible:outline-offset-2 md:min-h-0 md:flex-none disabled:cursor-not-allowed disabled:opacity-40 dark:hover:bg-gray-700 dark:focus-visible:bg-gray-700;
   }
 
   .divider {

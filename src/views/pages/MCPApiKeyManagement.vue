@@ -205,7 +205,7 @@ fetchApiKeys();
       "command": "swiftwave",
       "args": ["mcp"],
       "env": {
-        "SWIFTWAVE_API_KEY": "{{ createdPlainKey }}"
+        "KAWAICLOUD_API_KEY": "{{ createdPlainKey }}"
       }
     }
   }

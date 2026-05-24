@@ -195,7 +195,15 @@
     "noAppsHint": "If you think the app should be here, Raise a request in",
     "swiftwaveAppStore": "@:brand.name App Store",
     "install": "Install",
-    "chooseVersion": "Choose the preferred version -"
+    "chooseVersion": "Choose the preferred version -",
+    "expiredTitle": "Paid access has expired",
+    "expiredMessage": "Management of this application is restricted. Renew your access to continue using it.",
+    "renewAccess": "Renew Access",
+    "accessExpires": "Access expires",
+    "checkoutTitle": "Checkout",
+    "payNow": "Pay Now",
+    "paymentPending": "Waiting for payment...",
+    "paymentConfirmed": "Payment confirmed!"
   },
   "applications": {
     "deployedServices": "Deployed Services",

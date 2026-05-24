@@ -2,22 +2,62 @@
 import { useRouter } from 'vue-router';
 import { useMutation, useQuery } from '@vue/apollo-composable';
 import gql from 'graphql-tag';
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import Badge from '@/views/components/Badge.vue';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import ApplicationDetailsNavbar from '@/views/partials/ApplicationDetailsNavbar.vue';
 import NewApplicationUpdaterStore from '@/store/applicationUpdater.js';
 import FilledButton from '@/views/components/FilledButton.vue';
+import OutlinedButton from '@/views/components/OutlinedButton.vue';
 import { toast } from 'vue-sonner';
 import { isNaN } from 'lodash';
 import UptimeChart from '@/views/components/UptimeChart.vue';
 import UpdateApplicationGroupModal from '@/views/partials/UpdateApplicationGroupModal.vue';
-import { camelCaseToSpacedCapitalized } from '@/vendor/utils.js';
+import { camelCaseToSpacedCapitalized, getHttpBaseUrl } from '@/vendor/utils.js';
 import { useI18n } from 'vue-i18n';
 import { useConfirmDialog } from '@/composables/useConfirmDialog.js';
 import ConfirmDialog from '@/views/components/ConfirmDialog.vue';
+import { useAuthStore } from '@/store/auth.js';
 
 const { t } = useI18n();
+const authStore = useAuthStore();
+
+// Paid app catalog expiry state
+const catalogPurchaseInfo = ref(null);
+const isPaidAppExpired = computed(() => catalogPurchaseInfo.value?.status === 'expired');
+
+const fetchPurchaseInfo = async () => {
+  try {
+    const response = await fetch(
+      `${getHttpBaseUrl()}/api/app-catalog/applications/${applicationId}/purchase-info`,
+      { headers: { Authorization: authStore.FetchBearerToken() } }
+    );
+    if (response.ok) {
+      catalogPurchaseInfo.value = await response.json();
+    }
+  } catch {
+    // Not a paid app or no purchase found — ignore
+  }
+};
+
+watch(applicationDetailsLoading, (loading) => {
+  if (!loading && applicationId) {
+    fetchPurchaseInfo();
+  }
+});
+
+const renewPaidAccess = () => {
+  if (!catalogPurchaseInfo.value) return;
+  router.push({
+    name: 'App Store',
+    query: {
+      renew: 'true',
+      catalog_id: catalogPurchaseInfo.value.catalog_id,
+      stack_id: catalogPurchaseInfo.value.stack_id,
+      group_id: applicationDetails.value?.applicationGroup?.id ?? ''
+    }
+  });
+};
 
 const {
   isOpen: isRestartConfirmOpen,
@@ -351,6 +391,21 @@ const openApplicationGroupUpdateModal = () => {
         <p v-else class="text-warning-600 text-sm">{{ $t('applicationDetails.healthInfoNotAvailable') }}</p>
       </div>
     </div>
+    <!-- Expired paid app banner -->
+    <div
+      v-if="isPaidAppExpired"
+      class="mt-3 flex flex-col gap-2 rounded-lg border border-amber-400 bg-amber-50 p-4 sm:flex-row sm:items-center sm:justify-between dark:border-amber-600 dark:bg-amber-900/30">
+      <div class="flex items-start gap-3">
+        <font-awesome-icon icon="fa-solid fa-triangle-exclamation" class="mt-0.5 text-amber-600 dark:text-amber-400" />
+        <div>
+          <p class="font-semibold text-amber-800 dark:text-amber-200">{{ $t('appStore.expiredTitle') }}</p>
+          <p class="text-sm text-amber-700 dark:text-amber-300">{{ $t('appStore.expiredMessage') }}</p>
+        </div>
+      </div>
+      <OutlinedButton type="primary" :click="renewPaidAccess" class="shrink-0">
+        {{ $t('appStore.renewAccess') }}
+      </OutlinedButton>
+    </div>
     <!--  Second line  -->
     <div class="mt-3.5 flex w-full flex-col gap-3 md:flex-row md:items-center md:justify-between">
       <!--   Deployment info   -->
@@ -458,22 +513,22 @@ const openApplicationGroupUpdateModal = () => {
       </div>
       <!--    Quick Actions    -->
       <div class="quick-actions">
-        <button v-if="applicationDetails.isSleeping" type="button" class="button" @click="wakeApplication">
+        <button v-if="applicationDetails.isSleeping" type="button" class="button" :disabled="isPaidAppExpired" @click="wakeApplication">
           <font-awesome-icon icon="fa-solid fa-play" class="mr-1" aria-hidden="true" />
           {{ $t('applicationDetails.resume') }}
         </button>
         <div class="divider" v-if="applicationDetails.isSleeping"></div>
-        <button v-if="!applicationDetails.isSleeping" type="button" class="button" @click="sleepApplication">
+        <button v-if="!applicationDetails.isSleeping" type="button" class="button" :disabled="isPaidAppExpired" @click="sleepApplication">
           <font-awesome-icon icon="fa-solid fa-pause" class="mr-1" aria-hidden="true" />
           {{ $t('applicationDetails.pause') }}
         </button>
         <div class="divider" v-if="!applicationDetails.isSleeping"></div>
-        <button type="button" class="button" @click="rebuildApplicationWithConfirmation">
+        <button type="button" class="button" :disabled="isPaidAppExpired" @click="rebuildApplicationWithConfirmation">
           <font-awesome-icon icon="fa-solid fa-hammer" class="mr-1" aria-hidden="true" />
           {{ $t('applicationDetails.rebuild') }}
         </button>
         <div class="divider"></div>
-        <button type="button" class="button" @click="restartApplicationWithConfirmation">
+        <button type="button" class="button" :disabled="isPaidAppExpired" @click="restartApplicationWithConfirmation">
           <font-awesome-icon icon="fa-solid fa-rotate-right" class="mr-1" aria-hidden="true" />
           {{ $t('applicationDetails.restart') }}
         </button>
@@ -532,7 +587,7 @@ const openApplicationGroupUpdateModal = () => {
   @apply border-secondary-300 text-secondary-700 flex w-full flex-wrap overflow-hidden rounded-lg border text-sm md:w-auto md:rounded-full dark:border-gray-600 dark:text-gray-300;
 
   .button {
-    @apply hover:bg-secondary-200 focus-visible:bg-secondary-200 focus-visible:outline-primary-600 dark:focus-visible:outline-primary-400 min-h-10 flex-1 cursor-pointer px-2.5 py-1 focus-visible:outline-2 focus-visible:outline-offset-2 md:min-h-0 md:flex-none dark:hover:bg-gray-700 dark:focus-visible:bg-gray-700;
+    @apply hover:bg-secondary-200 focus-visible:bg-secondary-200 focus-visible:outline-primary-600 dark:focus-visible:outline-primary-400 min-h-10 flex-1 cursor-pointer px-2.5 py-1 focus-visible:outline-2 focus-visible:outline-offset-2 md:min-h-0 md:flex-none disabled:cursor-not-allowed disabled:opacity-40 dark:hover:bg-gray-700 dark:focus-visible:bg-gray-700;
   }
 
   .divider {
