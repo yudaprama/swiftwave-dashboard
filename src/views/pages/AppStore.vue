@@ -1,12 +1,15 @@
 <script setup>
-import { computed, nextTick, onMounted, ref, shallowRef, watch } from 'vue';
+import { computed, nextTick, onMounted, ref, watch } from 'vue';
 import ModalDialog from '@/views/components/ModalDialog.vue';
 import OutlinedButton from '@/views/components/OutlinedButton.vue';
 import DotLoader from '@/views/components/DotLoader.vue';
 import { useRouter } from 'vue-router';
+import { getHttpBaseUrl } from '@/vendor/utils.js';
+import { useAuthStore } from '@/store/auth.js';
+import { toast } from 'vue-sonner';
 
 const router = useRouter();
-const storeEndpoints = shallowRef(['https://raw.githubusercontent.com/swiftwave-org/app-store/main/store.json']);
+const authStore = useAuthStore();
 const apps = ref([]);
 const appsShown = ref([]);
 const searchText = ref('');
@@ -14,6 +17,12 @@ const isOptionsModalOpen = ref(false);
 const selectedApp = ref({});
 const selectedCategory = ref('');
 const isLoading = ref(false);
+const isCheckoutModalOpen = ref(false);
+const checkoutLoading = ref(false);
+const checkoutPurchase = ref(null);
+const checkoutStack = ref(null);
+let checkoutPollTimer = null;
+const idrPerUsd = 20000;
 
 watch(apps, () => {
   if (!apps.value.length) return;
@@ -28,24 +37,34 @@ const closeModal = () => {
   isOptionsModalOpen.value = false;
 };
 
+const closeCheckoutModal = () => {
+  isCheckoutModalOpen.value = false;
+  if (checkoutPollTimer) {
+    clearInterval(checkoutPollTimer);
+    checkoutPollTimer = null;
+  }
+};
+
 const openModal = () => {
   isOptionsModalOpen.value = true;
 };
 
 function fetchApps() {
   isLoading.value = true;
-  // for each endpoint, fetch apps
-  storeEndpoints.value.forEach((endpoint) => {
-    fetch(endpoint)
-      .then((response) => response.json())
-      .then((data) => {
-        apps.value = apps.value.concat(data);
-        isLoading.value = false;
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  });
+  fetch(`${getHttpBaseUrl()}/api/app-catalog`, {
+    headers: {
+      Authorization: authStore.FetchBearerToken()
+    }
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      apps.value = data || [];
+      isLoading.value = false;
+    })
+    .catch((error) => {
+      console.log(error);
+      isLoading.value = false;
+    });
 }
 
 const categories = computed(() => {
@@ -75,7 +94,7 @@ function searchApps() {
 const chooseApp = (app) => {
   if (!app) return;
   if (app.stacks.length === 1) {
-    openStackFileForInstall(app.stacks[0]);
+    openStackFileForInstall(app.stacks[0], app);
     return;
   }
   selectedApp.value = app;
@@ -90,13 +109,117 @@ const chooseCategory = (category) => {
   });
 };
 
-const openStackFileForInstall = (stack) => {
+const openStackFileForInstall = (stack, app = selectedApp.value, purchase = null) => {
+  if (isPaid(app) && !purchase) {
+    startCheckout(app, stack);
+    return;
+  }
+  const query = purchase
+    ? {
+        stack_id: stack.id,
+        catalog_id: app.id,
+        purchase_id: purchase.id
+      }
+    : {
+        stack: stack.stack_url
+      };
   router.push({
     name: 'Install from App Store',
-    query: {
-      stack: stack.stack
-    }
+    query
   });
+};
+
+const startCheckout = async (app, stack) => {
+  checkoutLoading.value = true;
+  checkoutPurchase.value = null;
+  checkoutStack.value = stack;
+  selectedApp.value = app;
+  isCheckoutModalOpen.value = true;
+  try {
+    const response = await fetch(`${getHttpBaseUrl()}/api/app-catalog/${app.id}/stacks/${stack.id}/checkout`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: authStore.FetchBearerToken()
+      },
+      body: JSON.stringify({})
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.error || 'Failed to create checkout');
+    }
+    if (data.has_access && data.purchase) {
+      openStackFileForInstall(stack, app, data.purchase);
+      return;
+    }
+    checkoutPurchase.value = data.purchase;
+    startCheckoutPolling(app, stack, data.purchase.id);
+  } catch (error) {
+    toast.error(error.message);
+    closeCheckoutModal();
+  } finally {
+    checkoutLoading.value = false;
+  }
+};
+
+const startCheckoutPolling = (app, stack, purchaseId) => {
+  if (checkoutPollTimer) {
+    clearInterval(checkoutPollTimer);
+  }
+  checkoutPollTimer = setInterval(async () => {
+    try {
+      const response = await fetch(`${getHttpBaseUrl()}/api/app-catalog/purchases/${purchaseId}`, {
+        headers: {
+          Authorization: authStore.FetchBearerToken()
+        }
+      });
+      const purchase = await response.json();
+      if (!response.ok) return;
+      checkoutPurchase.value = purchase;
+      if (purchase.status === 'paid') {
+        closeCheckoutModal();
+        openStackFileForInstall(stack, app, purchase);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }, 3000);
+};
+
+const openCheckoutInvoice = () => {
+  if (!checkoutPurchase.value?.xendit_invoice_url) return;
+  window.open(checkoutPurchase.value.xendit_invoice_url, '_blank');
+};
+
+const formatUsd = (amount) => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD'
+  }).format(amount);
+};
+
+const formatIdr = (amount) => {
+  return new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: 'IDR',
+    minimumFractionDigits: 0
+  }).format(amount);
+};
+
+const isPaid = (app) => {
+  return (app?.price_cents ?? 0) > 0;
+};
+
+const formatPrice = (app) => {
+  const price = app?.price_cents ?? 0;
+  if (price <= 0) return 'Free';
+
+  const usdAmount = price / idrPerUsd;
+  if ((app?.price_currency || 'IDR').toUpperCase() === 'USD') {
+    return `${formatUsd(usdAmount)} / ${formatIdr(price)}`;
+  }
+
+  return `${formatIdr(price)} / ${formatUsd(usdAmount)}`;
 };
 </script>
 
@@ -164,9 +287,15 @@ const openStackFileForInstall = (stack) => {
             <div class="h-12 w-12 rounded-md p-1.5">
               <img :src="app.logo" class="h-full w-full" :alt="app.title" />
             </div>
-            <div>
-              <p class="text-base font-semibold text-gray-800 dark:text-gray-200">{{ app.title }}</p>
+            <div class="flex-1 min-w-0">
+              <p class="text-base font-semibold text-gray-800 dark:text-gray-200 truncate">{{ app.title }}</p>
               <p class="text-sm">{{ app.category }}</p>
+            </div>
+            <!--    Price Badge    -->
+            <div
+              :class="isPaid(app) ? 'bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200' : 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'"
+              class="shrink-0 rounded-full px-2 py-0.5 text-xs font-semibold">
+              {{ formatPrice(app) }}
             </div>
           </div>
           <!--    Description Body    -->
@@ -180,18 +309,52 @@ const openStackFileForInstall = (stack) => {
   </section>
   <!-- Modal to show options -->
   <ModalDialog :close-modal="closeModal" :is-open="isOptionsModalOpen">
-    <template v-slot:header>{{ $t('appStore.install') }} {{ selectedApp.title }}</template>
+    <template v-slot:header>
+      {{ $t('appStore.install') }} {{ selectedApp.title }}
+      <span
+        :class="isPaid(selectedApp) ? 'bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200' : 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200'"
+        class="ml-2 rounded-full px-2 py-0.5 text-xs font-semibold">
+        {{ formatPrice(selectedApp) }}
+      </span>
+    </template>
     <template v-slot:body>
       <p>{{ $t('appStore.chooseVersion') }}</p>
       <div class="mt-6 flex flex-col gap-2">
         <OutlinedButton
-          :click="() => openStackFileForInstall(stack)"
+          :click="() => openStackFileForInstall(stack, selectedApp)"
           class="w-full"
           type="primary"
           v-for="stack in selectedApp.stacks"
           :key="stack.id">
           {{ stack.title }}
         </OutlinedButton>
+      </div>
+    </template>
+  </ModalDialog>
+  <ModalDialog :close-modal="closeCheckoutModal" :is-open="isCheckoutModalOpen">
+    <template v-slot:header>
+      Checkout {{ selectedApp.title }}
+    </template>
+    <template v-slot:body>
+      <div class="flex flex-col gap-4">
+        <div>
+          <p class="text-sm text-gray-600 dark:text-gray-300">{{ checkoutStack?.title }}</p>
+          <p class="text-lg font-semibold text-gray-900 dark:text-gray-100">{{ formatPrice(selectedApp) }}</p>
+        </div>
+        <div v-if="checkoutLoading" class="flex justify-center py-6">
+          <DotLoader />
+        </div>
+        <template v-else>
+          <p class="text-sm text-gray-700 dark:text-gray-200">
+            Complete payment in Xendit. This window will continue checking the payment status.
+          </p>
+          <p v-if="checkoutPurchase" class="text-sm capitalize text-gray-600 dark:text-gray-300">
+            Status: {{ checkoutPurchase.status }}
+          </p>
+          <OutlinedButton type="primary" class="w-full" :click="openCheckoutInvoice">
+            Pay Now
+          </OutlinedButton>
+        </template>
       </div>
     </template>
   </ModalDialog>

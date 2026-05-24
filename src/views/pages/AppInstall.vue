@@ -12,7 +12,7 @@ import PersistentVolumeSelector from '@/views/partials/PersistentVolumeSelector.
 import { useLazyQuery, useMutation, useQuery } from '@vue/apollo-composable';
 import gql from 'graphql-tag';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { preventSpaceInput } from '@/vendor/utils.js';
+import { getHttpBaseUrl, preventSpaceInput } from '@/vendor/utils.js';
 import Divider from '@/views/components/Divider.vue';
 import CreateDomainModal from '@/views/partials/CreateDomainModal.vue';
 import OutlinedButton from '@/views/components/OutlinedButton.vue';
@@ -20,6 +20,7 @@ import ServerSelector from '@/views/partials/ServerSelector.vue';
 import { useI18n } from 'vue-i18n';
 import { useConfirmDialog } from '@/composables/useConfirmDialog.js';
 import ConfirmDialog from '@/views/components/ConfirmDialog.vue';
+import { useAuthStore } from '@/store/auth.js';
 
 const { t } = useI18n();
 const {
@@ -33,7 +34,10 @@ const {
 
 const route = useRoute();
 const router = useRouter();
+const authStore = useAuthStore();
 const stackUrl = route.query.stack;
+const appCatalogStackId = route.query.stack_id ? Number(route.query.stack_id) : null;
+const appCatalogPurchaseId = route.query.purchase_id ? Number(route.query.purchase_id) : null;
 const stackDetailsYamlString = shallowRef('');
 const stackDetails = ref(null);
 const isLoadingStack = ref(true);
@@ -127,7 +131,7 @@ onIngressRuleCreateSuccess(() => {
   createIngressRule(ingressRuleMutationIndex.value);
 });
 
-onIngressRuleCreateFail((err) => {
+onIngressRuleCreateFail(() => {
   const record = ingressRuleMutationAppIngressList.value[ingressRuleMutationIndex.value];
   suggestedIngressRules[record[0]][record[1]].info.status = 'failed';
   ingressRuleMutationIndex.value++;
@@ -170,16 +174,30 @@ const createIngressRules = async () => {
 const deployedApplicationsResult = ref(null);
 
 onMounted(() => {
-  if (!stackUrl) {
+  if (!stackUrl && !appCatalogStackId) {
     router.push({ name: 'App Store' });
   }
   fetchStackDetails();
 });
 
 const fetchStackDetails = async () => {
-  if (!stackUrl) return;
-  fetch(stackUrl.toString())
-    .then((response) => response.text())
+  const url = appCatalogStackId
+    ? `${getHttpBaseUrl()}/api/app-catalog/stacks/${appCatalogStackId}/content?purchase_id=${appCatalogPurchaseId || ''}`
+    : stackUrl?.toString();
+  if (!url) return;
+  fetch(url, {
+    headers: appCatalogStackId
+      ? {
+          Authorization: authStore.FetchBearerToken()
+        }
+      : {}
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('Invalid stack file');
+      }
+      return response.text();
+    })
     .then((data) => {
       stackDetailsYamlString.value = data;
       stackDetails.value = parse(data);
@@ -239,7 +257,7 @@ const setupSystem = () => {
 
 const isFormFilled = computed(() => {
   let variables = toRaw(formStateRef);
-  for (const [key, value] of Object.entries(variables)) {
+  for (const key of Object.keys(variables)) {
     if (key.startsWith('IGNORE_')) {
       continue;
     }
@@ -317,7 +335,7 @@ const deployStackHelper = async () => {
   }
   let variablesForSubmission = [];
   const stateRef = toRaw(formStateRef);
-  for (const [key, value] of Object.entries(stateRef)) {
+  for (const key of Object.keys(stateRef)) {
     variablesForSubmission.push({
       name: key,
       value: stateRef[key]
@@ -326,7 +344,9 @@ const deployStackHelper = async () => {
   deployStack({
     input: {
       content: stackDetailsYamlString.value,
-      variables: variablesForSubmission
+      variables: variablesForSubmission,
+      appCatalogStackId,
+      appCatalogPurchaseId
     }
   });
 };
@@ -555,7 +575,7 @@ const noOfBlankFields = computed(() => {
                 :placeholder="$t('deploy.anythingYouLike')" />
             </div>
           </div>
-          <div v-for="key in formVariables">
+          <div v-for="key in formVariables" :key="key">
             <label class="block text-base font-medium text-gray-700 dark:text-gray-300">
               <p v-if="stackDetails.docs.variables[key].title.length > 0">
                 {{ stackDetails.docs.variables[key].title }}
@@ -682,7 +702,7 @@ const noOfBlankFields = computed(() => {
                         class="focus:border-primary-500 focus:ring-primary-500 block w-5/12 rounded-md border-gray-300 shadow-xs sm:text-sm"
                         v-model="config.info.protocol"
                         @change="() => onChangeProtocol(serviceName, ingressRuleName)">
-                        <option :value="protocol" v-for="protocol in config.info.availableProtocols">
+                        <option :value="protocol" v-for="protocol in config.info.availableProtocols" :key="protocol">
                           {{ protocol.toUpperCase() }}
                         </option>
                       </select>
@@ -692,7 +712,7 @@ const noOfBlankFields = computed(() => {
                         v-model="config.info.domainId"
                         class="focus:border-primary-500 focus:ring-primary-500 block w-full rounded-md border-gray-300 shadow-xs sm:text-sm">
                         <option value="0">{{ $t('deploy.selectDomain') }}</option>
-                        <option :value="domain.id" v-for="domain in domainList">
+                        <option :value="domain.id" v-for="domain in domainList" :key="domain.id">
                           {{ domain.name }}
                         </option>
                       </select>
