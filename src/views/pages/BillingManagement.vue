@@ -30,7 +30,8 @@ const formatDate = (date) => {
 
 const formatCurrency = (cents, currency = 'IDR') => {
   if (cents === 0) return t('billing.free');
-  return new Intl.NumberFormat('id-ID', { style: 'currency', currency }).format(cents / 100);
+  const amount = currency === 'IDR' ? cents : cents / 100;
+  return new Intl.NumberFormat('id-ID', { style: 'currency', currency }).format(amount);
 };
 
 const statusColor = (status) => {

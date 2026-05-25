@@ -202,7 +202,10 @@
     "checkoutTitle": "Pembayaran",
     "payNow": "Bayar Sekarang",
     "paymentPending": "Menunggu pembayaran...",
-    "paymentConfirmed": "Pembayaran dikonfirmasi!"
+    "paymentConfirmed": "Pembayaran dikonfirmasi!",
+    "paymentFailed": "Pembayaran gagal. Silakan coba lagi.",
+    "paymentExpired": "Tautan pembayaran kedaluwarsa. Silakan mulai pembayaran baru.",
+    "paymentTimedOut": "Pembayaran habis waktu. Silakan coba lagi."
   },
   "applications": {
     "deployedServices": "Layanan yang Dideploy",

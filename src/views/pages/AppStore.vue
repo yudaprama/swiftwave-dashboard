@@ -1,5 +1,5 @@
 <script setup>
-import { computed, nextTick, onMounted, ref, watch } from 'vue';
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import ModalDialog from '@/views/components/ModalDialog.vue';
 import OutlinedButton from '@/views/components/OutlinedButton.vue';
 import DotLoader from '@/views/components/DotLoader.vue';
@@ -23,6 +23,9 @@ const checkoutLoading = ref(false);
 const checkoutPurchase = ref(null);
 const checkoutStack = ref(null);
 let checkoutPollTimer = null;
+let checkoutPollErrorCount = 0;
+const checkoutPollStartTime = ref(null);
+const POLL_TIMEOUT_MS = 30 * 60 * 1000;
 const idrPerUsd = 20000;
 
 watch(apps, () => {
@@ -42,6 +45,13 @@ onMounted(async () => {
     if (app && stack) {
       startCheckout(app, stack, groupId);
     }
+  }
+});
+
+onBeforeUnmount(() => {
+  if (checkoutPollTimer) {
+    clearInterval(checkoutPollTimer);
+    checkoutPollTimer = null;
   }
 });
 
@@ -182,8 +192,17 @@ const startCheckoutPolling = (app, stack, purchaseId) => {
   if (checkoutPollTimer) {
     clearInterval(checkoutPollTimer);
   }
+  checkoutPollErrorCount = 0;
+  checkoutPollStartTime.value = Date.now();
   checkoutPollTimer = setInterval(async () => {
     try {
+      if (Date.now() - checkoutPollStartTime.value > POLL_TIMEOUT_MS) {
+        clearInterval(checkoutPollTimer);
+        checkoutPollTimer = null;
+        checkoutPurchase.value = { ...checkoutPurchase.value, status: 'timeout' };
+        toast.error('Payment timed out. Please try again.');
+        return;
+      }
       const response = await fetch(`${getHttpBaseUrl()}/api/app-catalog/purchases/${purchaseId}`, {
         headers: {
           Authorization: authStore.FetchBearerToken()
@@ -191,13 +210,26 @@ const startCheckoutPolling = (app, stack, purchaseId) => {
       });
       const purchase = await response.json();
       if (!response.ok) return;
+      checkoutPollErrorCount = 0;
       checkoutPurchase.value = purchase;
       if (purchase.status === 'paid') {
         closeCheckoutModal();
         openStackFileForInstall(stack, app, purchase);
+      } else if (purchase.status === 'failed') {
+        clearInterval(checkoutPollTimer);
+        checkoutPollTimer = null;
+        toast.error('Payment failed. Please try again.');
+      } else if (purchase.status === 'expired') {
+        clearInterval(checkoutPollTimer);
+        checkoutPollTimer = null;
+        toast.error('Payment link expired. Please start a new checkout.');
       }
     } catch (error) {
-      console.log(error);
+      checkoutPollErrorCount++;
+      if (checkoutPollErrorCount >= 3) {
+        toast.error('Having trouble checking payment status. Will keep trying...');
+        checkoutPollErrorCount = 0;
+      }
     }
   }, 3000);
 };
@@ -361,15 +393,23 @@ const formatPrice = (app) => {
           <DotLoader />
         </div>
         <template v-else>
-          <p class="text-sm text-gray-700 dark:text-gray-200">
-            Complete payment in Xendit. This window will continue checking the payment status.
+          <p v-if="checkoutPurchase?.status === 'failed'" class="text-sm text-red-600 dark:text-red-400">
+            {{ $t('appStore.paymentFailed') }}
           </p>
-          <p v-if="checkoutPurchase" class="text-sm capitalize text-gray-600 dark:text-gray-300">
-            Status: {{ checkoutPurchase.status }}
+          <p v-else-if="checkoutPurchase?.status === 'expired'" class="text-sm text-amber-600 dark:text-amber-400">
+            {{ $t('appStore.paymentExpired') }}
           </p>
-          <OutlinedButton type="primary" class="w-full" :click="openCheckoutInvoice">
-            Pay Now
-          </OutlinedButton>
+          <p v-else-if="checkoutPurchase?.status === 'timeout'" class="text-sm text-amber-600 dark:text-amber-400">
+            {{ $t('appStore.paymentTimedOut') }}
+          </p>
+          <template v-else>
+            <p class="text-sm text-gray-700 dark:text-gray-200">
+              {{ $t('appStore.paymentPending') }}
+            </p>
+            <OutlinedButton type="primary" class="w-full" :click="openCheckoutInvoice">
+              {{ $t('appStore.payNow') }}
+            </OutlinedButton>
+          </template>
         </template>
       </div>
     </template>

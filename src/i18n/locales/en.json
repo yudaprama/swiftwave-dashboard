@@ -203,7 +203,10 @@
     "checkoutTitle": "Checkout",
     "payNow": "Pay Now",
     "paymentPending": "Waiting for payment...",
-    "paymentConfirmed": "Payment confirmed!"
+    "paymentConfirmed": "Payment confirmed!",
+    "paymentFailed": "Payment failed. Please try again.",
+    "paymentExpired": "Payment link expired. Please start a new checkout.",
+    "paymentTimedOut": "Payment timed out. Please try again."
   },
   "applications": {
     "deployedServices": "Deployed Services",

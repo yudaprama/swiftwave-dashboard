@@ -31,7 +31,7 @@ onMounted(async () => {
 
 const formatPrice = (cents) => {
   if (cents === 0) return t('plans.free');
-  return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(cents / 100);
+  return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(cents);
 };
 
 const isCurrentPlan = (plan) => {
