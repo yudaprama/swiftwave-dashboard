@@ -43,7 +43,8 @@
     "usage": "Usage",
     "shareFeedback": "Share Feedback",
     "testimonials": "Testimonials",
-    "backends": "Backends"
+    "backends": "Backends",
+    "deploymentPlans": "Deployment Plans"
   },
   "common": {
     "save": "Save",
@@ -1628,5 +1629,25 @@
     "rejectBtn": "Reject",
     "approved": "Testimonial approved",
     "rejected": "Testimonial rejected"
+  },
+  "deploymentPlans": {
+    "title": "Deployment Plans",
+    "subtitle": "Choose a hosting plan for your applications",
+    "errorTitle": "Failed to load deployment plans",
+    "emptyTitle": "No deployment plans available",
+    "emptyDescription": "Contact your administrator to configure deployment plans",
+    "selectPlan": "Select Plan",
+    "checkoutTitle": "Checkout Deployment Plan",
+    "checkoutDescription": "Choose how to use this plan: deploy a new app or renew access for an existing app",
+    "selectApplication": "Application",
+    "newApplication": "New Application (Deploy New)",
+    "applicationHint": "Select an existing app to renew, or leave empty to deploy a new app with this plan",
+    "proceedCheckout": "Proceed to Payment",
+    "paymentTitle": "Complete Payment",
+    "paymentDescription": "Click below to open the secure payment page. Your access will be activated after payment is confirmed.",
+    "openPayment": "Open Payment Page",
+    "newAppRedirect": "Redirecting to deploy app page...",
+    "checkoutSuccess": "Checkout created successfully",
+    "checkoutError": "Failed to create checkout"
   }
 }

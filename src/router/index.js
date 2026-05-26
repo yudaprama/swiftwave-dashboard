@@ -6,6 +6,7 @@ import DeployApplicationPage from '@/views/pages/DeployApplication.vue'
 import DeployStackPage from '@/views/pages/DeployStack.vue'
 import AppStorePage from '@/views/pages/AppStore.vue'
 import AppInstallPage from '@/views/pages/AppInstall.vue'
+import DeploymentPlansPage from '@/views/pages/DeploymentPlans.vue'
 import ApplicationsPage from '@/views/pages/ApplicationManagement.vue'
 import ApplicationDetailsPage from '@/views/pages/ApplicationDetails.vue'
 import ApplicationDetailsDeploymentListPage from '@/views/pages/ApplicationDetails/DeploymentList.vue'
@@ -103,6 +104,12 @@ const router = createRouter({
           name: 'Install from App Store',
           component: AppInstallPage,
           meta: { breadcrumb: 'sidebar.appStore' }
+        },
+        {
+          path: 'deployment-plans',
+          name: 'Deployment Plans',
+          component: DeploymentPlansPage,
+          meta: { breadcrumb: 'sidebar.deploymentPlans' }
         }
       ]
     },

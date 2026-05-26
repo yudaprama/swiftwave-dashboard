@@ -43,7 +43,8 @@
     "usage": "Penggunaan",
     "shareFeedback": "Bagikan Feedback",
     "testimonials": "Testimonial",
-    "backends": "Backend"
+    "backends": "Backend",
+    "deploymentPlans": "Deployment Plans"
   },
   "common": {
     "save": "Simpan",
@@ -1605,5 +1606,25 @@
     "rejectBtn": "Tolak",
     "approved": "Testimonial disetujui",
     "rejected": "Testimonial ditolak"
+  },
+  "deploymentPlans": {
+    "title": "Deployment Plans",
+    "subtitle": "Pilih paket hosting untuk aplikasi Anda",
+    "errorTitle": "Gagal memuat deployment plans",
+    "emptyTitle": "Tidak ada deployment plan tersedia",
+    "emptyDescription": "Hubungi administrator untuk mengkonfigurasi deployment plans",
+    "selectPlan": "Pilih Plan",
+    "checkoutTitle": "Checkout Deployment Plan",
+    "checkoutDescription": "Pilih cara menggunakan plan ini: deploy app baru atau perpanjang akses untuk app yang sudah ada",
+    "selectApplication": "Aplikasi",
+    "newApplication": "Aplikasi Baru (Deploy Baru)",
+    "applicationHint": "Pilih app yang sudah ada untuk perpanjang, atau kosongkan untuk deploy app baru dengan plan ini",
+    "proceedCheckout": "Lanjut ke Pembayaran",
+    "paymentTitle": "Selesaikan Pembayaran",
+    "paymentDescription": "Klik di bawah untuk membuka halaman pembayaran. Akses Anda akan diaktifkan setelah pembayaran dikonfirmasi.",
+    "openPayment": "Buka Halaman Pembayaran",
+    "newAppRedirect": "Mengalihkan ke halaman deploy app...",
+    "checkoutSuccess": "Checkout berhasil dibuat",
+    "checkoutError": "Gagal membuat checkout"
   }
 }
