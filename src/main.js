@@ -303,7 +303,7 @@ router.beforeEach(async (to) => {
   if ((to.name === 'Setup' && parseInt(to.query?.update ?? 0) === 0) || to.name === 'Maintenance') {
     return
   }
-  if (!authStore.IsLoggedIn && to.name !== 'Login') {
+  if (!authStore.IsLoggedIn && to.name !== 'Login' && to.name !== 'Auth Callback') {
     return { name: 'Login', query: { redirect: to.path } }
   }
   if (authStore.IsLoggedIn && to.name === 'Login') {
