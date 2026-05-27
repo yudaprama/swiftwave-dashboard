@@ -3,8 +3,7 @@ import { useAuthStore } from '@/store/auth.js';
 import { RouterLink, useRouter } from 'vue-router';
 import Logo from '@/assets/images/logo-full-inverse-subtitle.png';
 import ChangePasswordModal from '@/views/partials/ChangePasswordModal.vue';
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue';
-import SideBarOption from '@/views/partials/SideBarOption.vue';
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { useMutation } from '@vue/apollo-composable';
 import gql from 'graphql-tag';
 import { toast } from 'vue-sonner';
@@ -14,33 +13,162 @@ import ThemeToggle from '@/views/components/ThemeToggle.vue';
 import { useI18n } from 'vue-i18n';
 import { useConfirmDialog } from '@/composables/useConfirmDialog.js';
 import ConfirmDialog from '@/views/components/ConfirmDialog.vue';
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
+  useSidebar
+} from '@/components/ui/sidebar';
 
 const { t } = useI18n();
 const emit = defineEmits(['navigate']);
-const props = defineProps({
-  collapsed: {
-    type: Boolean,
-    default: false
-  }
-});
 const authStore = useAuthStore();
 const router = useRouter();
+const { state, setOpenMobile } = useSidebar();
 
+const isCollapsed = computed(() => state.value === 'collapsed');
 const isChangePasswordModalOpen = ref(false);
 const swVersion = ref('');
+const openSections = ref(new Set());
+const timeCount = ref(5);
+const isSystemRestartModalOpen = ref(false);
+
+const menuSections = computed(() => {
+  const sections = [
+    {
+      key: 'deploy',
+      label: t('sidebar.deployApplication'),
+      icon: 'fa-solid fa-hammer',
+      activeUrls: ['Deploy Application', 'Deploy Stack', 'App Store', 'Install from App Store', 'Deployment Plans'],
+      items: [
+        { label: t('sidebar.appStore'), icon: 'fa-solid fa-store', to: '/deploy/app-store' },
+        { label: t('sidebar.deployApp'), icon: 'fa-solid fa-hammer', to: '/deploy/application' },
+        { label: t('sidebar.deployStack'), icon: 'fa-solid fa-cubes-stacked', to: '/deploy/stack' },
+        { label: t('sidebar.deploymentPlans'), icon: 'fa-solid fa-layer-group', to: '/deploy/deployment-plans' }
+      ]
+    },
+    {
+      key: 'applications',
+      label: t('sidebar.applicationsVolumes'),
+      icon: 'fa-solid fa-box',
+      activeUrls: ['Applications', 'Persistent Volumes'],
+      items: [
+        { label: t('sidebar.applications'), icon: 'fa-solid fa-box', to: '/applications' },
+        { label: t('sidebar.persistentVolumes'), icon: 'fa-solid fa-hard-drive', to: '/persistent-volumes' }
+      ]
+    },
+    {
+      key: 'routing',
+      label: t('sidebar.manageRouting'),
+      icon: 'fa-solid fa-route',
+      activeUrls: ['Domains', 'Redirect Rules', 'Ingress Rules'],
+      items: [
+        { label: t('sidebar.domains'), icon: 'fa-solid fa-link', to: '/domains' },
+        { label: t('sidebar.ingressRules'), icon: 'fa-solid fa-network-wired', to: '/ingress-rules' },
+        { label: t('sidebar.redirectRules'), icon: 'fa-solid fa-location-arrow', to: '/redirect-rules' }
+      ]
+    },
+    {
+      key: 'credentials',
+      label: t('sidebar.manageCredentials'),
+      icon: 'fa-solid fa-vault',
+      activeUrls: ['Git Credentials', 'Image Registry Credentials', 'MCP API Keys'],
+      items: [
+        { label: t('sidebar.gitCredentials'), icon: 'fa-solid fa-code-branch', to: '/git-credentials' },
+        { label: t('sidebar.imageRegCredentials'), icon: 'fa-solid fa-cloud', to: '/image-registry-credentials' },
+        { label: t('sidebar.mcpApiKeys'), icon: 'fa-solid fa-fingerprint', to: '/mcp-api-keys' }
+      ]
+    },
+    {
+      key: 'protection',
+      label: t('sidebar.protectApplication'),
+      icon: 'fa-solid fa-shield-halved',
+      activeUrls: ['Application Auth Basic ACL'],
+      items: [{ label: t('sidebar.basicAuthentication'), icon: 'fa-solid fa-user-shield', to: '/app_auth/basic_authentication' }]
+    }
+  ];
+
+  if (!authStore.isAdmin) {
+    sections.push({
+      key: 'billing',
+      label: t('sidebar.billing'),
+      icon: 'fa-solid fa-credit-card',
+      activeUrls: ['Plans', 'Billing', 'Usage'],
+      items: [
+        { label: t('plans.title'), icon: 'fa-solid fa-tags', to: '/plans' },
+        { label: t('billing.title'), icon: 'fa-solid fa-file-invoice-dollar', to: '/billing' },
+        { label: t('sidebar.usage'), icon: 'fa-solid fa-chart-bar', to: '/usage' },
+        { label: t('sidebar.shareFeedback'), icon: 'fa-solid fa-comment-dots', to: '/testimonial' }
+      ]
+    });
+  }
+
+  if (authStore.isAdmin) {
+    sections.push(
+      {
+        key: 'system',
+        label: t('sidebar.manageSystem'),
+        icon: 'fa-solid fa-gear',
+        activeUrls: ['System Logs'],
+        items: [
+          { label: t('sidebar.systemLogs'), icon: 'fa-solid fa-file-waveform', to: '/logs' },
+          { label: t('sidebar.systemConfiguration'), icon: 'fa-solid fa-wrench', to: '/setup?update=1' },
+          { label: t('sidebar.systemRestart'), icon: 'fa-solid fa-power-off', action: systemRestart }
+        ]
+      },
+      {
+        key: 'admin',
+        label: t('sidebar.administration'),
+        icon: 'fa-solid fa-user-tie',
+        activeUrls: ['Users'],
+        items: [
+          { label: t('plans.title'), icon: 'fa-solid fa-tags', to: '/plans' },
+          { label: t('sidebar.manageUsers'), icon: 'fa-solid fa-users', to: '/users' },
+          { label: t('sidebar.testimonials'), icon: 'fa-solid fa-quote-left', to: '/testimonials' },
+          { label: t('sidebar.changePassword'), icon: 'fa-solid fa-key', action: openChangePasswordModal },
+          { label: t('sidebar.logout'), icon: 'fa-solid fa-right-from-bracket', action: logoutWithConfirmation }
+        ]
+      }
+    );
+  }
+
+  return sections;
+});
+
 const openChangePasswordModal = () => {
   isChangePasswordModalOpen.value = true;
 };
+
 const closeChangePasswordModal = () => {
   isChangePasswordModalOpen.value = false;
 };
-const isShowSideBar = computed(() => {
-  if (!authStore.IsLoggedIn) {
-    return false;
+
+const isSectionActive = (section) => section.activeUrls.includes(router.currentRoute.value.name);
+const isItemActive = (item) => item.to && router.currentRoute.value.path === item.to.split('?')[0];
+const isSectionOpen = (section) => !isCollapsed.value && (openSections.value.has(section.key) || isSectionActive(section));
+
+const toggleSection = (section) => {
+  const next = new Set(openSections.value);
+  if (next.has(section.key)) {
+    next.delete(section.key);
   } else {
-    return !['Download Persistent Volume Backup', 'Maintenance', 'Setup'].includes(router.currentRoute.value.name);
+    next.add(section.key);
   }
-});
+  openSections.value = next;
+};
+
+const handleAction = (action) => {
+  action();
+  setOpenMobile(false);
+  emit('navigate');
+};
 
 const {
   isOpen: isLogoutConfirmOpen,
@@ -78,10 +206,6 @@ onMounted(() => {
   }, 2000);
 });
 
-// Restart system
-const timeCount = ref(5);
-
-const isSystemRestartModalOpen = ref(false);
 const {
   mutate: restartSystem,
   onDone: onRestartSystemDone,
@@ -132,8 +256,22 @@ const startCountDown = () => {
   }, 1000);
 };
 
-// Emit navigate event when clicking any router link (for mobile drawer close)
+watch(
+  () => router.currentRoute.value.name,
+  () => {
+    const next = new Set(openSections.value);
+    menuSections.value.forEach((section) => {
+      if (isSectionActive(section)) {
+        next.add(section.key);
+      }
+    });
+    openSections.value = next;
+  },
+  { immediate: true }
+);
+
 const removeAfterEachHook = router.afterEach(() => {
+  setOpenMobile(false);
   emit('navigate');
 });
 
@@ -143,319 +281,70 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <aside
-    v-if="isShowSideBar"
-    class="scrollbox bg-primary-600 dark:bg-secondary-900 flex h-screen flex-col overflow-y-auto border-r px-2 pt-6 pb-2 transition-all duration-300 dark:border-gray-700"
-    :class="collapsed ? 'w-16 items-center' : 'w-80'">
-    <div :class="collapsed ? 'px-0' : 'px-3'">
-      <Transition
-        mode="out-in"
-        enter-active-class="transition-opacity duration-200"
-        enter-from-class="opacity-0"
-        enter-to-class="opacity-100"
-        leave-active-class="transition-opacity duration-150"
-        leave-from-class="opacity-100"
-        leave-to-class="opacity-0">
-        <RouterLink v-if="!collapsed" to="/" class="flex items-center justify-center" key="full">
-          <img :src="Logo" :alt="t('brand.name') + ' logo'" class="w-full max-w-40" />
-        </RouterLink>
-        <RouterLink v-else to="/" class="flex items-center justify-center" key="icon">
-          <img src="@/assets/images/logo.png" :alt="t('brand.name')" class="h-8 w-8" />
-        </RouterLink>
-      </Transition>
-    </div>
-    <div class="mt-6 flex flex-1 flex-col justify-between">
-      <nav>
-        <SideBarOption
-          :collapsed="collapsed"
-          :label="$t('sidebar.deployApplication')"
-          :active-urls="['Deploy Application', 'Deploy Stack', 'App Store', 'Install from App Store', 'Deployment Plans']">
-          <template #icon>
-            <font-awesome-icon icon="fa-solid fa-hammer" />
-          </template>
-          <template #title> {{ $t('sidebar.deployApplication') }}</template>
-          <template #content>
-            <div class="space-y-2">
-              <RouterLink
-                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-50 hover:text-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-gray-100"
-                to="/deploy/app-store">
-                <font-awesome-icon icon="fa-solid fa-store" />
-                <span class="mx-2 text-sm font-medium">{{ $t('sidebar.appStore') }}</span>
-              </RouterLink>
-              <RouterLink
-                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-50 hover:text-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-gray-100"
-                to="/deploy/application">
-                <font-awesome-icon icon="fa-solid fa-hammer" />
-                <span class="mx-2 text-sm font-medium">{{ $t('sidebar.deployApp') }}</span>
-              </RouterLink>
-              <RouterLink
-                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-50 hover:text-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-gray-100"
-                to="/deploy/stack">
-                <font-awesome-icon icon="fa-solid fa-cubes-stacked" />
-                <span class="mx-2 text-sm font-medium">{{ $t('sidebar.deployStack') }}</span>
-              </RouterLink>
-              <RouterLink
-                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-50 hover:text-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-gray-100"
-                to="/deploy/deployment-plans">
-                <font-awesome-icon icon="fa-solid fa-layer-group" />
-                <span class="mx-2 text-sm font-medium">{{ $t('sidebar.deploymentPlans') }}</span>
-              </RouterLink>
-            </div>
-          </template>
-        </SideBarOption>
+  <Sidebar collapsible="icon" class="border-sidebar-border">
+    <SidebarHeader class="px-3 pt-5 pb-3">
+      <RouterLink to="/" class="flex items-center justify-center overflow-hidden rounded-md">
+        <img v-if="!isCollapsed" :src="Logo" :alt="t('brand.name') + ' logo'" class="max-h-12 w-full max-w-40 object-contain" />
+        <img v-else src="@/assets/images/logo.png" :alt="t('brand.name')" class="size-8 object-contain" />
+      </RouterLink>
+    </SidebarHeader>
 
-        <SideBarOption
-          :collapsed="collapsed"
-          :label="$t('sidebar.applicationsVolumes')"
-          :active-urls="['Applications', 'Persistent Volumes']">
-          <template #icon>
-            <font-awesome-icon icon="fa-solid fa-box" />
-          </template>
-          <template #title> {{ $t('sidebar.applicationsVolumes') }}</template>
-          <template #content>
-            <div class="space-y-2">
-              <RouterLink
-                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-gray-100"
-                to="/applications">
-                <font-awesome-icon icon="fa-solid fa-box" />
-                <span class="mx-2 text-sm font-medium">{{ $t('sidebar.applications') }}</span>
-              </RouterLink>
-              <RouterLink
-                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-gray-100"
-                to="/persistent-volumes">
-                <font-awesome-icon icon="fa-solid fa-hard-drive" />
-                <span class="mx-2 text-sm font-medium">{{ $t('sidebar.persistentVolumes') }}</span>
-              </RouterLink>
-            </div>
-          </template>
-        </SideBarOption>
+    <SidebarContent class="px-2">
+      <SidebarMenu>
+        <SidebarMenuItem v-for="section in menuSections" :key="section.key">
+          <SidebarMenuButton
+            :tooltip="section.label"
+            :is-active="isSectionActive(section)"
+            class="cursor-pointer"
+            @click="toggleSection(section)">
+            <font-awesome-icon :icon="section.icon" />
+            <span>{{ section.label }}</span>
+            <font-awesome-icon
+              icon="fa-solid fa-chevron-right"
+              class="ml-auto transition-transform group-data-[collapsible=icon]:hidden"
+              :class="{ 'rotate-90': isSectionOpen(section) }" />
+          </SidebarMenuButton>
 
-        <SideBarOption
-          :collapsed="collapsed"
-          :label="$t('sidebar.manageRouting')"
-          :active-urls="['Domains', 'Redirect Rules', 'Ingress Rules']">
-          <template #icon>
-            <font-awesome-icon icon="fa-solid fa-route" />
-          </template>
-          <template #title>{{ $t('sidebar.manageRouting') }}</template>
-          <template #content>
-            <div class="space-y-2">
-              <RouterLink
-                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-gray-100"
-                to="/domains">
-                <font-awesome-icon icon="fa-solid fa-link" />
-                <span class="mx-2 text-sm font-medium">{{ $t('sidebar.domains') }}</span>
-              </RouterLink>
-              <RouterLink
-                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-gray-100"
-                to="/ingress-rules">
-                <font-awesome-icon icon="fa-solid fa-network-wired" />
-                <span class="mx-2 text-sm font-medium">{{ $t('sidebar.ingressRules') }}</span>
-              </RouterLink>
-              <RouterLink
-                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-gray-100"
-                to="/redirect-rules">
-                <font-awesome-icon icon="fa-solid fa-location-arrow" />
-                <span class="mx-2 text-sm font-medium">{{ $t('sidebar.redirectRules') }}</span>
-              </RouterLink>
-            </div>
-          </template>
-        </SideBarOption>
+          <SidebarMenuSub v-if="isSectionOpen(section)">
+            <SidebarMenuSubItem v-for="item in section.items" :key="item.label">
+              <SidebarMenuSubButton v-if="item.to" as-child :is-active="isItemActive(item)">
+                <RouterLink :to="item.to">
+                  <font-awesome-icon :icon="item.icon" />
+                  <span>{{ item.label }}</span>
+                </RouterLink>
+              </SidebarMenuSubButton>
+              <SidebarMenuSubButton v-else as="button" class="w-full cursor-pointer" @click="handleAction(item.action)">
+                <font-awesome-icon :icon="item.icon" />
+                <span>{{ item.label }}</span>
+              </SidebarMenuSubButton>
+            </SidebarMenuSubItem>
+          </SidebarMenuSub>
+        </SidebarMenuItem>
 
-        <RouterLink
-          class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-gray-100"
-          to="/backends">
-          <font-awesome-icon icon="fa-solid fa-database" />
-          <span class="mx-2 text-sm font-medium">{{ $t('sidebar.backends') }}</span>
-        </RouterLink>
+        <SidebarMenuItem>
+          <SidebarMenuButton :tooltip="$t('sidebar.backends')" as-child :is-active="router.currentRoute.value.name === 'Backends'">
+            <RouterLink to="/backends">
+              <font-awesome-icon icon="fa-solid fa-database" />
+              <span>{{ $t('sidebar.backends') }}</span>
+            </RouterLink>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+      </SidebarMenu>
+    </SidebarContent>
 
-        <SideBarOption
-          :collapsed="collapsed"
-          :label="$t('sidebar.manageCredentials')"
-          :active-urls="['Git Credentials', 'Image Registry Credentials', 'MCP API Keys']">
-          <template #icon>
-            <font-awesome-icon icon="fa-solid fa-vault" />
-          </template>
-          <template #title>{{ $t('sidebar.manageCredentials') }}</template>
-          <template #content>
-            <div class="space-y-2">
-              <RouterLink
-                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-gray-100"
-                to="/git-credentials">
-                <font-awesome-icon icon="fa-solid fa-code-branch" />
-                <span class="mx-2 text-sm font-medium">{{ $t('sidebar.gitCredentials') }}</span>
-              </RouterLink>
-              <RouterLink
-                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-gray-100"
-                to="/image-registry-credentials">
-                <font-awesome-icon icon="fa-solid fa-cloud" />
-                <span class="mx-2 text-sm font-medium">{{ $t('sidebar.imageRegCredentials') }}</span>
-              </RouterLink>
-              <RouterLink
-                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-gray-100"
-                to="/mcp-api-keys">
-                <font-awesome-icon icon="fa-solid fa-fingerprint" />
-                <span class="mx-2 text-sm font-medium">{{ $t('sidebar.mcpApiKeys') }}</span>
-              </RouterLink>
-            </div>
-          </template>
-        </SideBarOption>
+    <SidebarFooter class="text-sidebar-foreground/80">
+      <div class="flex items-center justify-between gap-2 px-2 text-sm font-medium group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-0">
+        <LanguageSwitcher v-if="!isCollapsed" />
+        <ThemeToggle />
+        <span v-if="!isCollapsed"> v{{ swVersion }}</span>
+      </div>
+      <div v-if="!isCollapsed" class="px-2 text-sm font-medium">
+        <span>{{ $t('sidebar.autoLogout') }} {{ authStore.sessionRelativeTimeoutStatus }}</span>
+      </div>
+    </SidebarFooter>
 
-        <SideBarOption
-          :collapsed="collapsed"
-          :label="$t('sidebar.protectApplication')"
-          :active-urls="['Application Auth Basic ACL']">
-          <template #icon>
-            <font-awesome-icon icon="fa-solid fa-shield-halved" />
-          </template>
-          <template #title>{{ $t('sidebar.protectApplication') }}</template>
-          <template #content>
-            <div class="space-y-2">
-              <RouterLink
-                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-gray-100"
-                to="/app_auth/basic_authentication">
-                <font-awesome-icon icon="fa-solid fa-user-shield" />
-                <span class="mx-2 text-sm font-medium">{{ $t('sidebar.basicAuthentication') }}</span>
-              </RouterLink>
-            </div>
-          </template>
-        </SideBarOption>
-
-        <SideBarOption
-          v-if="!authStore.isAdmin"
-          :collapsed="collapsed"
-          :label="$t('sidebar.billing')"
-          :active-urls="['Plans', 'Billing', 'Usage']">
-          <template #icon>
-            <font-awesome-icon icon="fa-solid fa-credit-card" />
-          </template>
-          <template #title>{{ $t('sidebar.billing') }}</template>
-          <template #content>
-            <div class="space-y-2">
-              <RouterLink
-                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-gray-100"
-                to="/plans">
-                <font-awesome-icon icon="fa-solid fa-tags" />
-                <span class="mx-2 text-sm font-medium">{{ $t('plans.title') }}</span>
-              </RouterLink>
-              <RouterLink
-                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-gray-100"
-                to="/billing">
-                <font-awesome-icon icon="fa-solid fa-file-invoice-dollar" />
-                <span class="mx-2 text-sm font-medium">{{ $t('billing.title') }}</span>
-              </RouterLink>
-              <RouterLink
-                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-gray-100"
-                to="/usage">
-                <font-awesome-icon icon="fa-solid fa-chart-bar" />
-                <span class="mx-2 text-sm font-medium">{{ $t('sidebar.usage') }}</span>
-              </RouterLink>
-              <RouterLink
-                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-gray-100"
-                to="/testimonial">
-                <font-awesome-icon icon="fa-solid fa-comment-dots" />
-                <span class="mx-2 text-sm font-medium">{{ $t('sidebar.shareFeedback') }}</span>
-              </RouterLink>
-            </div>
-          </template>
-        </SideBarOption>
-
-        <SideBarOption
-          v-if="authStore.isAdmin"
-          :collapsed="collapsed"
-          :label="$t('sidebar.manageSystem')"
-          :active-urls="['System Logs']">
-          <template #icon>
-            <font-awesome-icon icon="fa-solid fa-gear" />
-          </template>
-          <template #title> {{ $t('sidebar.manageSystem') }}</template>
-          <template #content>
-            <div class="space-y-2">
-              <RouterLink
-                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-gray-100"
-                to="/logs">
-                <font-awesome-icon icon="fa-solid fa-file-waveform" />
-                <span class="mx-2 text-sm font-medium">{{ $t('sidebar.systemLogs') }}</span>
-              </RouterLink>
-              <RouterLink
-                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-gray-100"
-                to="/setup?update=1">
-                <font-awesome-icon icon="fa-solid fa-wrench" />
-                <span class="mx-2 text-sm font-medium">{{ $t('sidebar.systemConfiguration') }}</span>
-              </RouterLink>
-              <button
-                type="button"
-                class="flex w-full transform cursor-pointer items-center rounded-lg px-3 py-2 text-left text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-gray-100"
-                @click="systemRestart">
-                <font-awesome-icon icon="fa-solid fa-power-off" />
-                <span class="mx-2 text-sm font-medium">{{ $t('sidebar.systemRestart') }}</span>
-              </button>
-            </div>
-          </template>
-        </SideBarOption>
-
-        <SideBarOption
-          v-if="authStore.isAdmin"
-          :collapsed="collapsed"
-          :label="$t('sidebar.administration')"
-          :active-urls="['Users']">
-          <template #icon>
-            <font-awesome-icon icon="fa-solid fa-user-tie" />
-          </template>
-          <template #title> {{ $t('sidebar.administration') }}</template>
-          <template #content>
-            <div class="space-y-2">
-              <RouterLink
-                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-gray-100"
-                to="/plans">
-                <font-awesome-icon icon="fa-solid fa-tags" />
-                <span class="mx-2 text-sm font-medium">{{ $t('plans.title') }}</span>
-              </RouterLink>
-              <RouterLink
-                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-gray-100"
-                to="/users">
-                <font-awesome-icon icon="fa-solid fa-users" />
-                <span class="mx-2 text-sm font-medium">{{ $t('sidebar.manageUsers') }}</span>
-              </RouterLink>
-              <RouterLink
-                class="flex transform items-center rounded-lg px-3 py-2 text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-gray-100"
-                to="/testimonials">
-                <font-awesome-icon icon="fa-solid fa-quote-left" />
-                <span class="mx-2 text-sm font-medium">{{ $t('sidebar.testimonials') }}</span>
-              </RouterLink>
-              <button
-                type="button"
-                class="flex w-full transform cursor-pointer items-center rounded-lg px-3 py-2 text-left text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-gray-100"
-                @click="openChangePasswordModal">
-                <font-awesome-icon icon="fa-solid fa-key" />
-                <span class="mx-2 text-sm font-medium">{{ $t('sidebar.changePassword') }}</span>
-              </button>
-              <button
-                type="button"
-                class="flex w-full transform cursor-pointer items-center rounded-lg px-3 py-2 text-left text-gray-200 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-gray-100"
-                @click="logoutWithConfirmation">
-                <font-awesome-icon icon="fa-solid fa-right-from-bracket" />
-                <span class="mx-2 text-sm font-medium">{{ $t('sidebar.logout') }}</span>
-              </button>
-            </div>
-          </template>
-        </SideBarOption>
-      </nav>
-    </div>
-    <div v-if="!collapsed" class="flex items-center justify-between px-2 text-sm font-medium text-white">
-      <LanguageSwitcher />
-      <ThemeToggle />
-      <span> v{{ swVersion }}</span>
-    </div>
-    <div v-if="!collapsed" class="px-2 text-sm font-medium text-white">
-      <span>{{ $t('sidebar.autoLogout') }} {{ authStore.sessionRelativeTimeoutStatus }}</span>
-    </div>
-    <div v-else class="flex flex-col items-center gap-2 px-0 pt-2">
-      <ThemeToggle />
-    </div>
     <ChangePasswordModal :is-modal-open="isChangePasswordModalOpen" :close-modal="closeChangePasswordModal" />
     <Teleport to="body">
-      <!-- Modal for restart system -->
       <ModalDialog :is-open="isSystemRestartModalOpen" non-cancelable>
         <template v-slot:header>
           <span>Restarting System</span>
@@ -469,7 +358,6 @@ onBeforeUnmount(() => {
       </ModalDialog>
     </Teleport>
 
-    <!-- Confirm dialogs -->
     <ConfirmDialog
       :is-open="isLogoutConfirmOpen"
       :message="logoutMessage"
@@ -482,21 +370,5 @@ onBeforeUnmount(() => {
       :confirm-type="restartConfirmType"
       :on-confirm="onRestartConfirm"
       :on-cancel="onRestartCancel" />
-  </aside>
+  </Sidebar>
 </template>
-
-<style scoped>
-@reference "../../assets/css/base.css";
-.router-link-exact-active {
-  @apply bg-gray-100 text-gray-700 dark:bg-gray-600 dark:text-gray-100;
-}
-
-.scrollbox::-webkit-scrollbar {
-  width: 12px;
-}
-
-.scrollbox::-webkit-scrollbar-thumb {
-  @apply rounded-full shadow-[inset_0_0_10px_10px_white];
-  border: solid 3px transparent;
-}
-</style>

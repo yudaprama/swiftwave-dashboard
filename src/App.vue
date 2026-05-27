@@ -4,24 +4,23 @@ import { computed, onBeforeMount, onMounted, ref, watchEffect } from 'vue';
 import { useAuthStore } from '@/store/auth.js';
 import { useThemeStore } from '@/store/theme.js';
 import SideBar from '@/views/partials/SideBar.vue';
-import MobileSidebarDrawer from '@/views/partials/MobileSidebarDrawer.vue';
 import Breadcrumb from '@/views/components/Breadcrumb.vue';
 import LoadingPage from '@/views/pages/LoadingPage.vue';
 import GlobalWarning from '@/views/partials/GlobalWarning.vue';
 import { Toaster } from 'vue-sonner';
 import { useI18n } from 'vue-i18n';
+import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 
 const { t } = useI18n();
 const authStore = useAuthStore();
 const themeStore = useThemeStore();
 const router = useRouter();
 
-const isMobileSidebarOpen = ref(false);
-const isSidebarCollapsed = ref(localStorage.getItem('sidebar-collapsed') === 'true');
+const isSidebarOpen = ref(localStorage.getItem('sidebar-collapsed') !== 'true');
 
-const toggleSidebar = () => {
-  isSidebarCollapsed.value = !isSidebarCollapsed.value;
-  localStorage.setItem('sidebar-collapsed', isSidebarCollapsed.value);
+const updateSidebarOpen = (value) => {
+  isSidebarOpen.value = value;
+  localStorage.setItem('sidebar-collapsed', String(!value));
 };
 
 onBeforeMount(() => {
@@ -63,44 +62,51 @@ const isShowSideBar = computed(() => {
   </a>
 
   <div class="app">
-    <!-- Mobile top bar -->
-    <header
+    <SidebarProvider
       v-if="isShowSideBar"
-      class="dark:bg-secondary-800 flex h-14 items-center justify-between border-b bg-white px-4 md:hidden dark:border-gray-700">
-      <button
-        type="button"
-        class="rounded-md p-2 text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
-        aria-label="Open menu"
-        @click="isMobileSidebarOpen = true">
-        <font-awesome-icon icon="fa-solid fa-bars" class="text-lg" />
-      </button>
-      <RouterLink to="/">
-        <img src="@/assets/images/logo.png" :alt="t('brand.name')" class="h-8" />
-      </RouterLink>
-      <div class="w-10" />
-    </header>
+      :open="isSidebarOpen"
+      class="relative h-screen"
+      @update:open="updateSidebarOpen">
+      <header
+        class="dark:bg-secondary-800 fixed inset-x-0 top-0 z-20 flex h-14 items-center justify-between border-b bg-white px-4 md:hidden dark:border-gray-700">
+        <SidebarTrigger aria-label="Open menu" />
+        <RouterLink to="/">
+          <img src="@/assets/images/logo.png" :alt="t('brand.name')" class="h-8" />
+        </RouterLink>
+        <div class="w-7" />
+      </header>
 
-    <!-- Mobile sidebar drawer -->
-    <MobileSidebarDrawer :open="isMobileSidebarOpen" @close="isMobileSidebarOpen = false">
-      <SideBar @navigate="isMobileSidebarOpen = false" />
-    </MobileSidebarDrawer>
+      <SideBar />
+      <SidebarTrigger
+        class="interactive absolute top-8 z-20 hidden rounded-full border border-sidebar-border bg-background shadow-sm md:inline-flex"
+        :class="isSidebarOpen ? 'left-[19rem]' : 'left-[3rem]'"
+        :aria-label="isSidebarOpen ? 'Collapse sidebar' : 'Expand sidebar'" />
 
-    <!-- Desktop sidebar -->
-    <div v-if="isShowSideBar" class="relative hidden md:flex">
-      <SideBar :collapsed="isSidebarCollapsed" />
-      <button
-        type="button"
-        class="interactive dark:bg-secondary-700 dark:hover:bg-secondary-600 absolute top-8 -right-3 z-10 flex h-8 w-8 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-500 shadow-sm hover:bg-gray-50 dark:border-gray-600 dark:text-gray-400"
-        :aria-label="isSidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'"
-        @click="toggleSidebar">
-        <font-awesome-icon
-          :icon="isSidebarCollapsed ? 'fa-solid fa-chevron-right' : 'fa-solid fa-chevron-left'"
-          class="text-xs" />
-      </button>
-    </div>
+      <main
+        id="main-content"
+        tabindex="-1"
+        class="scrollbox dark:bg-secondary-900 flex max-h-screen w-full flex-col items-center overflow-y-auto bg-white pt-18 text-gray-900 md:pt-4 dark:text-gray-100"
+        :class="{
+          'px-4 pb-4': !isLoginPage
+        }">
+        <Breadcrumb class="mb-4" />
+        <RouterView v-slot="{ Component, route }">
+          <Transition
+            mode="out-in"
+            enter-active-class="transition duration-200 ease-out"
+            enter-from-class="opacity-0 translate-y-1"
+            enter-to-class="opacity-100 translate-y-0"
+            leave-active-class="transition duration-150 ease-in"
+            leave-from-class="opacity-100 translate-y-0"
+            leave-to-class="opacity-0 -translate-y-1">
+            <component :is="Component" :key="route.path" />
+          </Transition>
+        </RouterView>
+      </main>
+    </SidebarProvider>
 
-    <!-- Main content -->
     <main
+      v-else
       id="main-content"
       tabindex="-1"
       class="scrollbox dark:bg-secondary-900 flex max-h-screen w-full flex-col items-center overflow-y-auto bg-white text-gray-900 dark:text-gray-100"
