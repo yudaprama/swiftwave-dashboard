@@ -33,7 +33,7 @@ watch(
 
 <template>
   <div class="mt-2.5">
-    <Disclosure v-model:open="isOpen">
+    <Disclosure v-model:open="isOpen" as="div">
       <DisclosureButton
         as="button"
         :aria-label="collapsed ? label : undefined"
