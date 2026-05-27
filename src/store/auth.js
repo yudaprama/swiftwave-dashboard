@@ -167,7 +167,7 @@ export const useAuthStore = defineStore('auth_details', () => {
   }
 
   function StartAuthChecker(callback) {
-    setInterval(() => logoutOnInvalidToken(callback), 5000)
+    setInterval(() => logoutOnInvalidToken(callback), 60000)
   }
 
   const sessionRelativeTimeoutStatus = computed(() => {
